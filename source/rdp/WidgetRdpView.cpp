@@ -53,7 +53,7 @@ void WidgetRdpView::connectViaRdp()
 
   show();
 
-  QString executable= "xfreerdp"; // use version 1.2!
+  QString executable= "./xfreerdp"; // use link to version 1.2 in build directory!
   QStringList arguments;
 
   arguments << QString("/parent-window:0x") + QString::number((ulong)winId(),16);
