@@ -24,7 +24,7 @@ build-essential git-core cmake qt5-default qtmultimedia5-dev libssl-dev libx11-d
    The build-process of this disk is located in packaging/build_base-disk, but it has many external dependencies which are currently only partial documented.
    Please use the ready to use disk from here:     
    cd pm/build/pm  
-   wget https://github.com/privacymachine/src/releases/v0.1/base-disk.vdi.7z.sfx  
+   wget https://github.com/privacymachine/src/releases/download/v0.1/base-disk.vdi.7z.sfx  
    extract with:  
    ./base-disk.vdi.7z.sfx      or      7za e base-disk.vdi.7z.sfx
    cd ..
