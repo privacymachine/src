@@ -1,0 +1,2 @@
+VBoxClient --clipboard
+VBoxClient --display

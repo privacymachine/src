@@ -1,0 +1,13 @@
+[Unit]
+Description=Openbox windowmanager
+
+After=multi-user.target network.target network-online.target
+
+[Service]
+ExecStart=/usr/bin/xinit /usr/bin/openbox-session
+Restart=on-abort
+User=liveuser
+
+[Install]
+WantedBy=multi-user.target
+

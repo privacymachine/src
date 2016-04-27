@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/PrivacyMachine_Logo_Icon32.png</file>
+        <file>images/privacymachine.svg</file>
+    </qresource>
+</RCC>

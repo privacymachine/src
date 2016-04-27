@@ -19,3 +19,39 @@
 *.exe
 *.out
 *.app
+
+# Generated on Windows
+*.ilk
+*.pdb
+
+# generated from CMake:
+CMakeLists.txt.user
+
+# build dir
+source/build
+
+# ignore temporary cmake stuff
+CMakeCache.txt
+cmake_install.cmake
+build/Makefile
+
+# some files from build dir
+build/PrivacyMachine.cbp
+build/CMakeFiles/
+build/RemoteDisplayExample
+build/ext_libs/
+build/pm/CMakeFiles/
+build/pm/Makefile
+build/pm/PrivacyMachine
+build/pm/images.qrc.depends
+build/pm/lang_de.qm
+build/pm/lang_en.qm
+build/pm/base-disk.vdi
+build/pm/moc_*
+build/pm/qrc_images.cxx
+build/pm/rdp/
+build/pm/ui_*
+build/pm/xfreerdp
+ext_libs/FreeRDP/
+ext_libs/RemoteDisplay/
+

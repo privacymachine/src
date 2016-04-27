@@ -1,0 +1,12 @@
+<?xml version="1.0" ?>
+<vbox xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+  <setting data-jetpack-id="youtubeunblocker@unblocker.yt" pref="extensions.youtubeunblocker@unblocker.yt.unblock_youtube" pref-name="unblock_youtube" title="YouTube - www.youtube.com" type="bool">Unlock videos and search automatically</setting>
+  <setting data-jetpack-id="youtubeunblocker@unblocker.yt" pref="extensions.youtubeunblocker@unblocker.yt.unblock_websites" pref-name="unblock_websites" title="Websites - e.g. facebook.com" type="bool">Unlock embedded YouTube videos</setting>
+  <setting data-jetpack-id="youtubeunblocker@unblocker.yt" pref="extensions.youtubeunblocker@unblocker.yt.trusted_links" pref-name="trusted_links" title="Trusted-Links for search-engines:" type="bool">En-/disable Trusted-Links</setting>
+  <setting data-jetpack-id="youtubeunblocker@unblocker.yt" pref="extensions.youtubeunblocker@unblocker.yt.delete_storage" pref-name="delete_storage" title="Clear proxie filters?" type="control">
+    <button data-jetpack-id="youtubeunblocker@unblocker.yt" label="Clear proxies" oncommand="Services.obs.notifyObservers(null, 'youtubeunblocker@unblocker.yt-cmdPressed', 'delete_storage');" pref-name="delete_storage"/>
+  </setting>
+  <setting data-jetpack-id="youtubeunblocker@unblocker.yt" pref="extensions.youtubeunblocker@unblocker.yt.send_feedback" pref-name="send_feedback" title="Questions, suggestions or critics?" type="control">
+    <button data-jetpack-id="youtubeunblocker@unblocker.yt" label="Send feedback" oncommand="Services.obs.notifyObservers(null, 'youtubeunblocker@unblocker.yt-cmdPressed', 'send_feedback');" pref-name="send_feedback"/>
+  </setting>
+</vbox>

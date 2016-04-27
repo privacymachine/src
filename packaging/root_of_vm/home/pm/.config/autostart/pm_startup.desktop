@@ -1,4 +1,0 @@
-[Desktop Entry]
-Type=Application
-Name=PMAutostart
-Exec=/pm/scripts/autostart_after_x_login.sh

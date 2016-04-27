@@ -1,0 +1,9 @@
+# Set up the prompt
+zstyle ':prompt:grml:*:items:user' pre $'%{\e[1;32m%}'
+zstyle ':prompt:grml:*:items:host' pre $'%{\e[1;34m%}'
+zstyle ':prompt:grml:*:items:path' pre $'%{\e[1;31m%}'
+zstyle ':prompt:grml:left:setup' items change-root user at host path vcs percent
+
+# ls colors
+alias l="ls -la --color"
+

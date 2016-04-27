@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+</head>
+<body>
+<div id="YouTubeUnblockerSearch" style="display:none;">
+    <div id="YouTubeUnblockerSearchContent">
+        <a href="http://www.unblocker.yt" target="_blank"><i id="YouTubeUnblockerIcon"></i></a>
+        <i id="YouTubeUnblockerLoader"></i>
+        <i id="YouTubeUnblockerFlag" class="us"></i>
+
+        <div id="YouTubeUnblockerSearchContentStart">
+            <span data-l10n-id="search_text_start">YouTube Unblocker: Find more blocked search results...</span>
+
+            <div class="YouTubeUnblockerSearchControls">
+                <button id="YouTubeUnblockerSearchButtonUnblock" class="YouTubeUnblockerSearchButton" type="button"
+                        role="button">
+                    <span data-l10n-id="search_text_start_button">Unlock results</span>
+                </button>
+                <label id="YouTubeSearchLabelUnblock">
+                    <select id="YouTubeSearchSelectUnblock" name="YouTubeSearchSelectUnblock"></select>
+                </label>
+            </div>
+        </div>
+        <span id="YouTubeUnblockerSearchContentUnblocking" data-l10n-id="search_text_unblocking">YouTube Unblocker tries to unlock search results...</span>
+
+        <div id="YouTubeUnblockerSearchContentUnblocked">
+            <span data-l10n-id="search_text_stop">YouTube Unblocker: Results unblocked successfully...</span>
+
+            <div class="YouTubeUnblockerSearchControls">
+                <button id="YouTubeUnblockerSearchButtonCancel" class="YouTubeUnblockerSearchButton" type="button"
+                        role="button">
+                    <span data-l10n-id="search_text_stop_button">Lock results</span>
+                </button>
+            </div>
+        </div>
+        <div id="YouTubeUnblockerSearchTextFailed">
+            <span data-l10n-id="search_text_failed">YouTube Unblocker: Something went wrong :(</span>
+
+            <div class="YouTubeUnblockerSearchControls">
+                <button id="YouTubeUnblockerSearchButtonReload" class="YouTubeUnblockerSearchButton" type="button"
+                        role="button" onclick="javascript:location.reload();">
+                    <span data-l10n-id="search_text_failed_button">Try it again</span>
+                </button>
+            </div>
+        </div>
+        <div id="YouTubeUnblockerSearchTextError">
+            <span data-l10n-id="watch_headline_error">Sorry, our proxy server is currently down... :(</span>
+
+            <div class="YouTubeUnblockerSearchControls">
+                <button id="YouTubeUnblockerSearchButtonReload" class="YouTubeUnblockerSearchButton" type="button"
+                        role="button" onclick="javascript:location.reload();">
+                    <span data-l10n-id="watch_headline_error_button">Try it again</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
