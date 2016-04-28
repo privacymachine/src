@@ -23,19 +23,24 @@ build-essential git-core cmake qt5-default qtmultimedia5-dev libssl-dev libx11-d
 2. "base-disk.vdi": This is used as immutable disk in all new created virtual machines
    The build-process of this disk is located in packaging/build_base-disk, but it has many external dependencies which are currently only partial documented.
    Please use the ready to use disk from here:     
-   cd pm/build/pm  
+   cd src/build/pm  
    wget https://github.com/privacymachine/src/releases/download/v0.1.2/base-disk.vdi.7z.sfx  
    extract with:  
-   ./base-disk.vdi.7z.sfx      or      7za e base-disk.vdi.7z.sfx
-   cd ..
+   chmod+x base-disk.vdi.7z.sfx  
+   ./base-disk.vdi.7z.sfx  
+   or extract with:  
+   7za e base-disk.vdi.7z.sfx  
+   cd ../../  
 
 3. We are using two external github repositories which you have to checkout: FreeRDP and RemoteDisplay  
    cd ext_libs  
    ./checkoutExternal.sh  
+   cd ..  
 
 4. Start the build process  
    cd build  
    ./buildAll.sh  
+   cd ..  
 
 5. Launch the PrivacyMachine!  
    cd build/pm  
