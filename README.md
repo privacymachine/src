@@ -26,7 +26,7 @@ build-essential git-core cmake qt5-default qtmultimedia5-dev libssl-dev libx11-d
    cd src/build/pm  
    wget https://github.com/privacymachine/src/releases/download/v0.1.2/base-disk.vdi.7z.sfx  
    extract with:  
-   chmod+x base-disk.vdi.7z.sfx  
+   chmod +x base-disk.vdi.7z.sfx  
    ./base-disk.vdi.7z.sfx  
    or extract with:  
    7za e base-disk.vdi.7z.sfx  
