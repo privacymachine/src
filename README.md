@@ -15,6 +15,15 @@ __So use it carefully!!__
 __Currently only linux is supported.__
 
 
+### Requirements
+
+1. VirtualBox  
+   We have only tested the version 5.0.x
+
+2. VirtualBox Extension Pack is needed (please download and install it from [https://www.virtualbox.org/wiki/Downloads](https://www.virtualbox.org/wiki/Downloads)  
+   This is needed because we currently use the VRDP-Server from VirtualBox  
+   The long term plan is to replace it with the FreeRDP-Server  
+
 ### Build-HowTo 
 
 1. check that you have these packages installed (tested on ubuntu 14.04 and debian jessie, list can maybe smaller, but this works):
