@@ -1,0 +1,12 @@
+# Tries to make sure that firefox gets started exactly and only after openvpn has updated
+# resolv.conf
+# This might be jeopardised by modifying resolv.conf by some other means than openvpn's
+# update-resolv-conf.
+
+[Unit]
+Description=Firefox trigger after updating resolv.conf
+# After=openvpn_pm.service
+Requires=openvpn_pm.service
+
+[Path]
+PathChanged=/etc/resolv.conf

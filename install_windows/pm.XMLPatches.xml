@@ -1,0 +1,8 @@
+<CPackWiXPatch>
+  <!--
+  <CPackWiXFragment Id="CM_CP_pm_binaries.PrivacyMachine.exe">
+    <Environment Id="MyEnvironment" Action="set"
+      Name="MyVariableName" Value="MyVariableValue"/>
+  </CPackWiXFragment>
+  -->
+</CPackWiXPatch>

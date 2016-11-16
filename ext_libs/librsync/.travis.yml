@@ -1,0 +1,20 @@
+# "It took the night to believe"
+
+language: c
+
+compiler:
+  - gcc
+  - clang
+
+before_script:
+  - cmake .
+  
+sudo: false
+
+addons:
+  apt:
+    packages:
+    - cmake
+    - libpopt-dev
+
+script: make && make test

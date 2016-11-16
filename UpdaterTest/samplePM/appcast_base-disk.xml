@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss
+	version="2.0"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle"
+	xmlns:fervor="https://github.com/pypt/fervor"
+	xmlns:dc="http://purl.org/dc/elements/1.1/">
+
+
+
+	<channel>
+		<title>PM UpdaterTest Changelog</title>
+		<link>file://localhost/media/samplePM/appcast_base-disk.xml</link>
+		<description>PM UpdaterTest App Cast.</description>
+		<language>en</language>
+		<atom:link href="file://localhost/media/samplePM/appcast_base-disk.xml" rel="self" type="application/rss+xml" />
+        <item>
+            <title>pmApi_0_base1_4.vmdk</title>
+			<pubDate>Thu 15 Sep 2016 13:53:34 CEST</pubDate>
+			<link>file://localhost/media/samplePM/releaseNotes_base-disk.html</link>
+			<enclosurepath
+				url="file://localhost/media/samplePM/downloads/"
+				fervor:version="1.0.1.4"
+				fervor:platform="Q_OS_WIN32"
+				type="application/octet-stream" />
+			<enclosurepath
+				url="file://localhost/media/samplePM/downloads/"
+				fervor:version="1.0.1.4"
+				fervor:platform="Q_OS_LINUX"
+				type="application/octet-stream" />
+            <checksum
+                filename="pmApi_0_base1_4.vmdk"
+                sha256="5755faa2cf9fc87ed60adb14789170d2df4412c06b4b94a4c4a5a5048daea609" />
+            <checksum
+                filename="pmApi_0_delta1_3-1_4.zip"
+                sha256="4dcb4aa7f622f9014710fbbb1ae0dde5a5f3207884de85ce94041197b6cafa7b" />
+            <checksum
+                filename="pmApi_0_delta1_2-1_4.zip"
+                sha256="4927dfd1a05712acd5d8ecbbea8a2679e5be4598bbbbee2e829e7a7fc62b4e02" />
+            <checksum
+                filename="pmApi_0_delta1_1-1_4.zip"
+                sha256="40a95d905a44f5cc5841b9a1fbaceea80fbefdf0bf6966349999d48ce9e56857" />
+            <checksum
+                filename="pmApi_0_delta1_0-1_4.zip"
+                sha256="e49feb6f512fde523d9b491534ae352057f2ba726d1513f82623ce9a03326441" />
+        </item>
+        <item>
+            <title>pmApi_0_base1_3.vmdk</title>
+			<pubDate>Wed 14 Sep 2016 13:54:34 CEST</pubDate>
+			<link>file://localhost/media/samplePM/releaseNotes_base-disk.html</link>
+			<enclosurepath
+				url="file://localhost/media/samplePM/downloads/"
+				fervor:version="1.0.1.3"
+				fervor:platform="Q_OS_WIN32"
+				type="application/octet-stream" />
+			<enclosurepath
+				url="file://localhost/media/samplePM/downloads/"
+				fervor:version="1.0.1.3"
+				fervor:platform="Q_OS_LINUX"
+				type="application/octet-stream" />
+            <checksum
+                filename="pmApi_0_base1_3.vmdk"
+                sha256="1a3ede63e66ab0d7d6f5d38feb678cffc61dbe2d1fe15cf960a081ac3d8d9672" />
+            <checksum
+                filename="pmApi_0_delta1_2-1_3.zip"
+                sha256="74566219ba1676a0ec134ce3b9d9ce7a3d7cacb138b14ca71bc7d5d7d88ec054" />
+            <checksum
+                filename="pmApi_0_delta1_1-1_3.zip"
+                sha256="096b38d7bfbe9814857b0454409dde2e1b2aa1e9041d3f3ab544d03201901a1a" />
+            <checksum
+                filename="pmApi_0_delta1_0-1_3.zip"
+                sha256="f212a892547a3b4c4cb70886def00bce113355666e536d5222cf0474ea796a86" />
+        </item>
+        <item>
+            <title>pmApi_0_base1_2.vmdk</title>
+			<pubDate>Tue 13 Sep 2016 13:55:34 CEST</pubDate>
+			<link>file://localhost/media/samplePM/releaseNotes_base-disk.html</link>
+			<enclosurepath
+				url="file://localhost/media/samplePM/downloads/"
+				fervor:version="1.0.1.2"
+				fervor:platform="Q_OS_WIN32"
+				type="application/octet-stream" />
+			<enclosurepath
+				url="file://localhost/media/samplePM/downloads/"
+				fervor:version="1.0.1.2"
+				fervor:platform="Q_OS_LINUX"
+				type="application/octet-stream" />
+            <checksum
+                filename="pmApi_0_base1_2.vmdk"
+                sha256="bac561c4cd5d033e4ada4f669763209af47364cb8d313b41a11a07eccc08b408" />
+            <checksum
+                filename="pmApi_0_delta1_1-1_2.zip"
+                sha256="810fb2cb3ccf7ece8a1b9ac524484d83c292ad365f4a3fa037649c6702440a25" />
+            <checksum
+                filename="pmApi_0_delta1_0-1_2.zip"
+                sha256="e824e5b81722459b64f03c1cd56ef812318753a4ec1cca97c71f71ff4b2a2019" />
+        </item>
+        <item>
+            <title>pmApi_0_base1_1.vmdk</title>
+			<pubDate>Mon 12 Sep 2016 13:56:34 CEST</pubDate>
+			<link>file://localhost/media/samplePM/releaseNotes_base-disk.html</link>
+			<enclosurepath
+				url="file://localhost/media/samplePM/downloads/"
+				fervor:version="1.0.1.1"
+				fervor:platform="Q_OS_WIN32"
+				type="application/octet-stream" />
+			<enclosurepath
+				url="file://localhost/media/samplePM/downloads/"
+				fervor:version="1.0.1.1"
+				fervor:platform="Q_OS_LINUX"
+				type="application/octet-stream" />
+            <checksum
+                filename="pmApi_0_base1_1.vmdk"
+                sha256="91300c6526a7f448b89ba85749eb5dcd3792d75e0b80fb454daac86ae3168103" />
+            <checksum
+                filename="pmApi_0_delta1_0-1_1.zip"
+                sha256="9f170b6ffec39215a5f613fec7c2d052fda678d6b672bdf1c39146df3d5f3862" />
+        </item>
+        <item>
+            <title>pmApi_0_base1_0.vmdk</title>
+			<pubDate>Sun 11 Sep 2016 13:57:34 CEST</pubDate>
+			<link>file://localhost/media/samplePM/releaseNotes_base-disk.html</link>
+			<enclosurepath
+				url="file://localhost/media/samplePM/downloads/"
+				fervor:version="1.0.1.0"
+				fervor:platform="Q_OS_WIN32"
+				type="application/octet-stream" />
+			<enclosurepath
+				url="file://localhost/media/samplePM/downloads/"
+				fervor:version="1.0.1.0"
+				fervor:platform="Q_OS_LINUX"
+				type="application/octet-stream" />
+            <checksum
+                filename="pmApi_0_base1_0.vmdk"
+                sha256="91407688aeedd4c4eae5953b1e2dd7bf028a880de086716747747537453da9bd" />
+            <checksum
+                filename="pmApi_0_delta0_4-1_0.zip"
+                sha256="bd87262b552279580d40c5958976baca7bb00473a1507d46d07e7aed4d4eb17e" />
+        </item>
+        <item>
+            <title>pmApi_0_base0_4.vmdk</title>
+			<pubDate>Sat 10 Sep 2016 13:58:34 CEST</pubDate>
+			<link>file://localhost/media/samplePM/releaseNotes_base-disk.html</link>
+			<enclosurepath
+				url="file://localhost/media/samplePM/downloads/"
+				fervor:version="1.0.0.4"
+				fervor:platform="Q_OS_WIN32"
+				type="application/octet-stream" />
+			<enclosurepath
+				url="file://localhost/media/samplePM/downloads/"
+				fervor:version="1.0.0.4"
+				fervor:platform="Q_OS_LINUX"
+				type="application/octet-stream" />
+            <checksum
+                filename="pmApi_0_base0_4.vmdk"
+                sha256="622aad8b32a840a220c4aec79b2c60d21e2a56d12879df058fa87c7813944a60" />
+            <checksum
+                filename="pmApi_0_delta0_3-0_4.zip"
+                sha256="3a04a380687124304be06ee6ad910cf123a6a5c9e286aae95287eec8d8ecb4c0" />
+            <checksum
+                filename="pmApi_0_delta0_2-0_4.zip"
+                sha256="4e94a602349326d83ffd2ebd22bbd534a88e919e9c4790f2f686196043ddb939" />
+            <checksum
+                filename="pmApi_0_delta0_1-0_4.zip"
+                sha256="3f3b909383cc7116d4b5dbb4d03a726e102ac817d3ef338492bbf7b66080399c" />
+            <checksum
+                filename="pmApi_0_delta0_0-0_4.zip"
+                sha256="e46a33a5774a149cb901ffefda6f520f9112db3fce06d63c4307e447fe59c12a" />
+        </item>
+        <item>
+            <title>pmApi_0_base0_3.vmdk</title>
+			<pubDate>Fri 9 Sep 2016 13:59:34 CEST</pubDate>
+			<link>file://localhost/media/samplePM/releaseNotes_base-disk.html</link>
+			<enclosurepath
+				url="file://localhost/media/samplePM/downloads/"
+				fervor:version="1.0.0.3"
+				fervor:platform="Q_OS_WIN32"
+				type="application/octet-stream" />
+			<enclosurepath
+				url="file://localhost/media/samplePM/downloads/"
+				fervor:version="1.0.0.3"
+				fervor:platform="Q_OS_LINUX"
+				type="application/octet-stream" />
+            <checksum
+                filename="pmApi_0_base0_3.vmdk"
+                sha256="d756d6406e2e115b77ca604c4b663e7684fec1271e7bdeb9f189ea59e35999c5" />
+            <checksum
+                filename="pmApi_0_delta0_2-0_3.zip"
+                sha256="822e0397873ddba531c39c0c011960fe823a9d83199c4e3cc96748596bc8dbb3" />
+            <checksum
+                filename="pmApi_0_delta0_1-0_3.zip"
+                sha256="0f50b3a9df87dddb68cffdee84d18e64e1f5dd279f1de5e7875f3e3727e9c672" />
+            <checksum
+                filename="pmApi_0_delta0_0-0_3.zip"
+                sha256="a91e643f9b0260a3836cec7047143dc14d880a86985d0a511b18b47e26ab50b2" />
+        </item>
+        <item>
+            <title>pmApi_0_base0_2.vmdk</title>
+			<pubDate>Thu 8 Sep 2016 14:00:34 CEST</pubDate>
+			<link>file://localhost/media/samplePM/releaseNotes_base-disk.html</link>
+			<enclosurepath
+				url="file://localhost/media/samplePM/downloads/"
+				fervor:version="1.0.0.2"
+				fervor:platform="Q_OS_WIN32"
+				type="application/octet-stream" />
+			<enclosurepath
+				url="file://localhost/media/samplePM/downloads/"
+				fervor:version="1.0.0.2"
+				fervor:platform="Q_OS_LINUX"
+				type="application/octet-stream" />
+            <checksum
+                filename="pmApi_0_base0_2.vmdk"
+                sha256="135760e0b894d62e9b06dfb5c8102cda667790e071c68cd2865a459b9bfc5ed0" />
+            <checksum
+                filename="pmApi_0_delta0_1-0_2.zip"
+                sha256="76bf7f93ec954edf43210572d2bc0597d2ff8aad595acf63cb77e812062fe955" />
+            <checksum
+                filename="pmApi_0_delta0_0-0_2.zip"
+                sha256="f9cde148818b83314387913970192961fed38d971e9d7e334df49562014e5aff" />
+        </item>
+        <item>
+            <title>pmApi_0_base0_1.vmdk</title>
+			<pubDate>Wed 7 Sep 2016 14:01:34 CEST</pubDate>
+			<link>file://localhost/media/samplePM/releaseNotes_base-disk.html</link>
+			<enclosurepath
+				url="file://localhost/media/samplePM/downloads/"
+				fervor:version="1.0.0.1"
+				fervor:platform="Q_OS_WIN32"
+				type="application/octet-stream" />
+			<enclosurepath
+				url="file://localhost/media/samplePM/downloads/"
+				fervor:version="1.0.0.1"
+				fervor:platform="Q_OS_LINUX"
+				type="application/octet-stream" />
+            <checksum
+                filename="pmApi_0_base0_1.vmdk"
+                sha256="7ff087329a5ad66c3e70d6be7d873176dd4cde483c18fb10a629fce94255300c" />
+            <checksum
+                filename="pmApi_0_delta0_0-0_1.zip"
+                sha256="dd276019de5fa5fb14427a61b2c50ae25e0f7fbc3a1774627d59a35138b328a8" />
+        </item>
+        <item>
+            <title>pmApi_0_base0_0.vmdk</title>
+			<pubDate>Tue 6 Sep 2016 13:02:34 CEST</pubDate>
+			<link>file://localhost/media/samplePM/releaseNotes_base-disk.html</link>
+			<enclosurepath
+				url="file://localhost/media/samplePM/downloads/"
+				fervor:version="1.0.0.0"
+				fervor:platform="Q_OS_WIN32"
+				type="application/octet-stream" />
+			<enclosurepath
+				url="file://localhost/media/samplePM/downloads/"
+				fervor:version="1.0.0.0"
+				fervor:platform="Q_OS_LINUX"
+				type="application/octet-stream" />
+            <checksum
+                filename="pmApi_0_base0_0.vmdk"
+                sha256="358fb33687132b4c1c9b289c7c25865d60a2bad41f2bfe9d060f5d3c1757d0ec" />
+        </item>
+	</channel>
+</rss>

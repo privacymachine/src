@@ -1,0 +1,16 @@
+[Unit]
+Description=Firefox-ESR Web-Browser
+
+After=multi-user.target network.target network-online.target openbox.service openvpn_log.service
+
+[Service]
+# As we are obfuscating the locale during each start, make sure that the browser uses this new
+# locale
+EnvironmentFile=/etc/default/locale
+ExecStart=/usr/bin/firefox-esr --display=:0 https://startpage.com
+Restart=always
+User=liveuser
+
+[Install]
+WantedBy=multi-user.target
+

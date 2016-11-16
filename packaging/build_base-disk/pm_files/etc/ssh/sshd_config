@@ -9,9 +9,9 @@ Port 22
 Protocol 2
 # HostKeys for protocol version 2
 HostKey /etc/ssh/ssh_host_rsa_key
-HostKey /etc/ssh/ssh_host_dsa_key
-HostKey /etc/ssh/ssh_host_ecdsa_key
-HostKey /etc/ssh/ssh_host_ed25519_key
+#HostKey /etc/ssh/ssh_host_dsa_key
+#HostKey /etc/ssh/ssh_host_ecdsa_key
+#HostKey /etc/ssh/ssh_host_ed25519_key
 #Privilege Separation is turned on for security
 UsePrivilegeSeparation yes
 
@@ -24,9 +24,11 @@ SyslogFacility AUTH
 LogLevel INFO
 
 # Authentication:
+UseDNS no
 LoginGraceTime 120
 PermitRootLogin yes
 StrictModes yes
+MaxAuthTries 100
 
 RSAAuthentication yes
 PubkeyAuthentication yes

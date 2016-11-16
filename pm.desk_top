@@ -1,0 +1,13 @@
+[Desktop Entry]
+Type=Application
+Comment=Browser which protects your Privacy
+GenericName=Web Browser
+Keywords=Internet;WWW;Browser;Web;Explorer
+Categories=GNOME;GTK;Network;WebBrowser;
+#Icon=/media/data_ext4/projekte_div/PrivacyMachine/git/pm/pm/images/PrivacyMachine_Logo.svg
+#Icon=/usr/share/icons/hicolor/scalable/apps/privacymachine.svg
+#Icon=/usr/share/icons/hicolor/32x32/apps/privacymachine.png
+Icon=privacymachine
+Name=PrivacyMachine
+Terminal=false
+Hidden=false

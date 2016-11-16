@@ -24,34 +24,48 @@
 *.ilk
 *.pdb
 
+# Python precomiled files
+*.pyc
+
 # generated from CMake:
 CMakeLists.txt.user
 
+# ext_libs
+ext_libs/FreeRDP/
+ext_libs/RemoteDisplay/
+
 # build dir
-source/build
+build/*
 
 # ignore temporary cmake stuff
 CMakeCache.txt
 cmake_install.cmake
-build/Makefile
 
-# some files from build dir
-build/PrivacyMachine.cbp
-build/CMakeFiles/
-build/RemoteDisplayExample
-build/ext_libs/
-build/pm/CMakeFiles/
-build/pm/Makefile
-build/pm/PrivacyMachine
-build/pm/images.qrc.depends
-build/pm/lang_de.qm
-build/pm/lang_en.qm
-build/pm/base-disk.vdi
-build/pm/moc_*
-build/pm/qrc_images.cxx
-build/pm/rdp/
-build/pm/ui_*
-build/pm/xfreerdp
-ext_libs/FreeRDP/
-ext_libs/RemoteDisplay/
+# base-disk fonts and browser profiles
+packaging/build_base-disk/pm_files/pm/fonts/*
+packaging/build_base-disk/pm_files/home/liveuser/.mozilla
 
+
+# executeables in working_dir
+working_dir/PrivacyMachine
+working_dir/ProblemReporter
+working_dir/xfreerdp
+working_dir/UpdaterTest
+working_dir/TestGui
+working_dir/RemoteDisplay-client
+working_dir/TestPatching
+working_dir/TestUserConfigOpenVPN
+working_dir/UserConfigTest
+working_dir/base-disk*
+working_dir/lib/
+working_dir/build_libs
+working_dir/winpr-hash
+working_dir/winpr-makecert
+working_dir/*.manifest
+working_dir/*.exp
+working_dir/isprefix_test
+working_dir/logs
+
+# from UnitTests
+Testing/
+working_dir/testresults.xml

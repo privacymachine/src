@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss
+	version="2.0"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle"
+	xmlns:fervor="https://github.com/pypt/fervor"
+	xmlns:dc="http://purl.org/dc/elements/1.1/">
+
+
+
+	<channel>
+		<title>PM UpdaterTest Changelog</title>
+		<link>file://localhost/media/pmTests/TestPatching/appcast_base-disk.xml</link>
+		<description>PM UpdaterTest App Cast.</description>
+		<language>en</language>
+		<atom:link href="file://localhost/media/pmTests/TestPatching/appcast_base-disk.xml" rel="self" type="application/rss+xml" />
+        <item>
+            <title>base-disk_6.zip</title>
+			<pubDate>Mon 12 Sep 2016 13:56:34 CEST</pubDate>
+			<link>file://localhost/media/pmTests/TestPatching/releaseNotes_base-disk.html</link>
+			<enclosurepath
+				url="file://localhost/media/pmTests/TestPatching/downloads/"
+				fervor:version="1.0.6.0"
+				fervor:platform="Q_OS_WIN32"
+				type="application/octet-stream" />
+			<enclosurepath
+				url="file://localhost/media/pmTests/TestPatching/downloads/"
+				fervor:version="1.0.6.0"
+				fervor:platform="Q_OS_LINUX"
+				type="application/octet-stream" />
+            <checksum
+                filename="base-disk_6.zip"
+                sha256="5c886b33d43f2c5915558019c2f57305be4f610e3da1360af8cac79f3a07a5bd" />
+            <checksum
+                filename="base-disk_delta_5-6.zip"
+                sha256="1398d21bf4ddf33a562cbacf73661a9b0e3bd4a08ecba1ba73741ace3637f294" />
+            <checksum
+                filename="base-disk_delta_4-6.zip"
+                sha256="71d88d15a6e6d1a9812c7ba8826086761b80f0326a24b13fa8d612993d8c1ace" />
+            <checksum
+                filename="base-disk_delta_3-6.zip"
+                sha256="27627f575fd6d8c01816f985e652ab1df39084aadff7a5faf977d93ef721eb6c" />
+            <checksum
+                filename="base-disk_delta_2-6.zip"
+                sha256="a22a939ac7f199963ba67f4909f498876c4723060207d5155eaadea0cc9f8907" />
+            <checksum
+                filename="base-disk_delta_1-6.zip"
+                sha256="ae54822fb023160340720f34b3380bda8427a2e9ff1c006c47d4649b599e7383" />
+            <checksum
+                filename="base-disk_delta_0-6.zip"
+                sha256="e748c55cf4c9e4a442f2b64c27907376c78ae1ab8f1aa61b9f7ba9780afa2ddf" />
+        </item>
+        <item>
+            <title>base-disk_5.zip</title>
+			<pubDate>Sun 11 Sep 2016 13:57:34 CEST</pubDate>
+			<link>file://localhost/media/pmTests/TestPatching/releaseNotes_base-disk.html</link>
+			<enclosurepath
+				url="file://localhost/media/pmTests/TestPatching/downloads/"
+				fervor:version="1.0.5.0"
+				fervor:platform="Q_OS_WIN32"
+				type="application/octet-stream" />
+			<enclosurepath
+				url="file://localhost/media/pmTests/TestPatching/downloads/"
+				fervor:version="1.0.5.0"
+				fervor:platform="Q_OS_LINUX"
+				type="application/octet-stream" />
+            <checksum
+                filename="base-disk_5.zip"
+                sha256="011db23e89e932fd0ae1d2e9c5ba926424892ca8fc49f2cb454cdfbf78a63d69" />
+            <checksum
+                filename="base-disk_delta_4-5.zip"
+                sha256="8e8d0588cc498d83e92ec941902e911d6c5258069bfacd1752d3dcaf494da80e" />
+            <checksum
+                filename="base-disk_delta_3-5.zip"
+                sha256="f1527e3da56d24ef28e0c3fb0885b4be1988459de9cd3e0e271daa164ebbe72d" />
+            <checksum
+                filename="base-disk_delta_2-5.zip"
+                sha256="9975d9568ac3e0b7822627a978af8bdb7f930680023b36281a9e486ebbdfd7fb" />
+            <checksum
+                filename="base-disk_delta_1-5.zip"
+                sha256="286f51946ab3fd3dcaed704d7d4103c7f39ac5fcc7893dc4c5d9a7a71a71f88b" />
+            <checksum
+                filename="base-disk_delta_0-5.zip"
+                sha256="6b7d09474a6889e7b51237f56634181fee01218eecfcc65c2087fb0bd0c1a75a" />
+        </item>
+        <item>
+            <title>base-disk_4.zip</title>
+			<pubDate>Sat 10 Sep 2016 13:58:34 CEST</pubDate>
+			<link>file://localhost/media/pmTests/TestPatching/releaseNotes_base-disk.html</link>
+			<enclosurepath
+				url="file://localhost/media/pmTests/TestPatching/downloads/"
+				fervor:version="1.0.4.0"
+				fervor:platform="Q_OS_WIN32"
+				type="application/octet-stream" />
+			<enclosurepath
+				url="file://localhost/media/pmTests/TestPatching/downloads/"
+				fervor:version="1.0.4.0"
+				fervor:platform="Q_OS_LINUX"
+				type="application/octet-stream" />
+            <checksum
+                filename="base-disk_4.zip"
+                sha256="41812c570090c2df6d92daefce1cb08781c74712ccfed831f443ca8088b2737c" />
+            <checksum
+                filename="base-disk_delta_3-4.zip"
+                sha256="fc12ae1e7802dd8ef3fcd40565f24fe4d0a82adb0b0a5df0e0f2171898d10319" />
+            <checksum
+                filename="base-disk_delta_2-4.zip"
+                sha256="91a1d580107f39a3cf33585e61eafc2d963606120958f12b62c708988ab4f491" />
+            <checksum
+                filename="base-disk_delta_1-4.zip"
+                sha256="693f80463cde2a0fdb0d9ea195982289c1beaa11dad5657c333b822792fddb19" />
+            <checksum
+                filename="base-disk_delta_0-4.zip"
+                sha256="98044cbddb9e8d348e88628d7ce91154772e1d2d403278a7d4900f6197164eb0" />
+        </item>
+        <item>
+            <title>base-disk_3.zip</title>
+			<pubDate>Fri 9 Sep 2016 13:59:34 CEST</pubDate>
+			<link>file://localhost/media/pmTests/TestPatching/releaseNotes_base-disk.html</link>
+			<enclosurepath
+				url="file://localhost/media/pmTests/TestPatching/downloads/"
+				fervor:version="1.0.3.0"
+				fervor:platform="Q_OS_WIN32"
+				type="application/octet-stream" />
+			<enclosurepath
+				url="file://localhost/media/pmTests/TestPatching/downloads/"
+				fervor:version="1.0.3.0"
+				fervor:platform="Q_OS_LINUX"
+				type="application/octet-stream" />
+            <checksum
+                filename="base-disk_3.zip"
+                sha256="1fe079a9b1034b7248dadee6c18604287aaf0e5073cc3e0c332d2574c944c30d" />
+            <checksum
+                filename="base-disk_delta_2-3.zip"
+                sha256="7c629c18a4d40db5d6c68ba8de508a0fee99d7dd174f801688a6e2d657a850d7" />
+            <checksum
+                filename="base-disk_delta_1-3.zip"
+                sha256="738696999f71bd0bcfc4c6e53cd923aecfb31a22d9a0e4cf8e082de40430112c" />
+            <checksum
+                filename="base-disk_delta_0-3.zip"
+                sha256="2bea721c15b0f9152e4a4ee52e8d83866863853545740297e01814f523e7b6ef" />
+        </item>
+        <item>
+            <title>base-disk_2.zip</title>
+			<pubDate>Thu 8 Sep 2016 14:00:34 CEST</pubDate>
+			<link>file://localhost/media/pmTests/TestPatching/releaseNotes_base-disk.html</link>
+			<enclosurepath
+				url="file://localhost/media/pmTests/TestPatching/downloads/"
+				fervor:version="1.0.2.0"
+				fervor:platform="Q_OS_WIN32"
+				type="application/octet-stream" />
+			<enclosurepath
+				url="file://localhost/media/pmTests/TestPatching/downloads/"
+				fervor:version="1.0.2.0"
+				fervor:platform="Q_OS_LINUX"
+				type="application/octet-stream" />
+            <checksum
+                filename="base-disk_2.zip"
+                sha256="f7c82c6af9943d5660c7fee09a9b31745c56062a086c937e72cf6ce5fd41e6ef" />
+            <checksum
+                filename="base-disk_delta_1-2.zip"
+                sha256="fcae6de3f3cf367fac420c771c1ddcb7a3eb6dde92eb7421b3037a2750bdc2e8" />
+            <checksum
+                filename="base-disk_delta_0-2.zip"
+                sha256="3c86da77782cf1370e3ad4d6a9fe0d99c82b9ec8cf0ab091b53e41a5f71e6fbf" />
+        </item>
+        <item>
+            <title>base-disk_1.zip</title>
+			<pubDate>Wed 7 Sep 2016 14:01:34 CEST</pubDate>
+			<link>file://localhost/media/pmTests/TestPatching/releaseNotes_base-disk.html</link>
+			<enclosurepath
+				url="file://localhost/media/pmTests/TestPatching/downloads/"
+				fervor:version="1.0.1.0"
+				fervor:platform="Q_OS_WIN32"
+				type="application/octet-stream" />
+			<enclosurepath
+				url="file://localhost/media/pmTests/TestPatching/downloads/"
+				fervor:version="1.0.1.0"
+				fervor:platform="Q_OS_LINUX"
+				type="application/octet-stream" />
+            <checksum
+                filename="base-disk_1.zip"
+                sha256="2ade460b8693ccc0712fdbe370cd8215a9e56e805309a3d90bdbba865218063e" />
+            <checksum
+                filename="base-disk_delta_0-1.zip"
+                sha256="a1531a8e9275a5b5f477409793c4570263ab165f19efe56fa7adf70c5ed35742" />
+        </item>
+        <item>
+            <title>base-disk_0.zip</title>
+			<pubDate>Tue 6 Sep 2016 13:02:34 CEST</pubDate>
+			<link>file://localhost/media/pmTests/TestPatching/releaseNotes_base-disk.html</link>
+			<enclosurepath
+				url="file://localhost/media/pmTests/TestPatching/downloads/"
+				fervor:version="1.0.0.0"
+				fervor:platform="Q_OS_WIN32"
+				type="application/octet-stream" />
+			<enclosurepath
+				url="file://localhost/media/pmTests/TestPatching/downloads/"
+				fervor:version="1.0.0.0"
+				fervor:platform="Q_OS_LINUX"
+				type="application/octet-stream" />
+            <checksum
+                filename="base-disk_0.zip"
+                sha256="583d46bbe543aeeead47e21a2c55b745ca4ca368bb32ca44522b33e3cf0a58d7" />
+        </item>
+	</channel>
+</rss>

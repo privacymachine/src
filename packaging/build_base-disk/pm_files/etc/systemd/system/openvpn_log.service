@@ -1,0 +1,16 @@
+[Unit]
+Description=Show OpenVPN log file
+
+After=multi-user.target network.target network-online.target openbox.service
+
+[Service]
+Environment=DISPLAY=:0
+# -maximized option is not passed, as this only maximizes xterm at startup. We
+# let the window manager take care of keeping it maximized, especially on
+# resizing the screen / resolution.
+ExecStart=/usr/bin/xterm -T "OpenVPN Connection Log" -e tail -f /var/log/openvpn.log
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+

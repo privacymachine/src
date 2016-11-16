@@ -1,0 +1,86 @@
+/*==============================================================================
+        Copyright (c) 2013-2016 by the Developers of PrivacyMachine.eu
+                         contact@privacymachine.eu
+     OpenPGP-Fingerprint: 0C93 F15A 0ECA D404 413B 5B34 C6DE E513 0119 B175
+
+                     Licensed under the EUPL, Version 1.1
+     European Commission - subsequent versions of the EUPL (the "Licence");
+        You may not use this work except in compliance with the Licence.
+                  You may obtain a copy of the Licence at:
+                        http://ec.europa.eu/idabc/eupl
+
+ Unless required by applicable law or agreed to in writing, software distributed
+              under the Licence is distributed on an "AS IS" basis,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+      See the Licence for the specific language governing permissions and
+                        limitations under the Licence.
+==============================================================================*/
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#ifndef APSTUDIO_INVOKED
+//#include "targetver.h"
+#endif
+#define APSTUDIO_HIDDEN_SYMBOLS
+#include "windows.h"
+#undef APSTUDIO_HIDDEN_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+LANGUAGE 9, 1
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+
+// Overlap all Icons to one Icon (No compression!)
+IDI_ICON1               ICON    DISCARDABLE     "..\\artwork\\PrivacyMachine_Logo_AllIcons.ico"
+/////////////////////////////////////////////////////////////////////////////
+#endif
+
+
+
+//// Include the manifest (we need admin rights)
+//CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "win7UAC.manifest"
+
+// Executable version information.
+VS_VERSION_INFO    VERSIONINFO
+FILEVERSION        0,2,0,0
+PRODUCTVERSION     0,2,0,0
+FILEFLAGSMASK      VS_FFI_FILEFLAGSMASK
+#ifdef _DEBUG
+  FILEFLAGS        VS_FF_DEBUG | VS_FF_PRERELEASE
+#else
+  FILEFLAGS        0
+#endif
+FILEOS             VOS_NT_WINDOWS32
+FILETYPE           VFT_APP
+FILESUBTYPE        VFT2_UNKNOWN
+BEGIN
+  BLOCK "StringFileInfo"
+  BEGIN
+    BLOCK "080904b0"
+    BEGIN
+      VALUE "CompanyName", "PrivacyMachine-Team"
+      VALUE "FileDescription", "PrivacyMachine"
+      VALUE "InternalName", "PrivacyMachine"
+      VALUE "LegalCopyright", "(c) 2016 PrivacyMachine-Team (EUPL v1.1 licensed)"
+      VALUE "OriginalFilename", "ProblemReporter.exe"
+      VALUE "ProductName", "PrivacyMachine"
+      VALUE "ProductVersion", "0.9.0.0"
+    END
+  END
+  BLOCK "VarFileInfo"
+  BEGIN
+    VALUE "Translation", 0x809, 1200
+  END
+END

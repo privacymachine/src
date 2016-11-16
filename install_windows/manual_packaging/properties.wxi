@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Include xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Property Id="ARPCOMMENTS" Value="PrivacyMachine: a browser which protects your privacy"/>
+    <Property Id="ARPCONTACT" Value="PrivacyMachine-Team"/>
+    <Property Id="ARPURLINFOABOUT" Value="https://www.privacymachine.eu"/>
+    <Property Id="INSTALL_ROOT" Secure="yes">
+        <RegistrySearch Id="FindInstallLocation" Root="HKLM" Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\[WIX_UPGRADE_DETECTED]" Name="InstallLocation" Type="raw"/>
+    </Property>
+    <SetProperty Id="ARPINSTALLLOCATION" Value="[INSTALL_ROOT]" After="CostFinalize"/>
+</Include>

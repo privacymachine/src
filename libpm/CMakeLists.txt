@@ -1,0 +1,294 @@
+################################################################################
+#        Copyright (c) 2013-2016 by the Developers of PrivacyMachine.eu
+#                         contact@privacymachine.eu
+#     OpenPGP-Fingerprint: 0C93 F15A 0ECA D404 413B 5B34 C6DE E513 0119 B175
+#
+#                     Licensed under the EUPL, Version 1.1
+#     European Commission - subsequent versions of the EUPL (the "Licence");
+#        You may not use this work except in compliance with the Licence.
+#                  You may obtain a copy of the Licence at:
+#                        http://ec.europa.eu/idabc/eupl
+#
+# Unless required by applicable law or agreed to in writing, software distributed
+#              under the Licence is distributed on an "AS IS" basis,
+#    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#      See the Licence for the specific language governing permissions and
+#                        limitations under the Licence.
+################################################################################
+cmake_minimum_required(VERSION 2.8.11)
+include(CPackComponent)
+
+project(PrivacyMachine)
+set (PM_STATIC_LIB pm)
+
+# Add CMake submodules to the path
+set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake_modules ${CMAKE_MODULE_PATH})
+
+if(MSVC)
+  set (PM_WINDOWS TRUE)
+  add_definitions(-DPM_WINDOWS)
+endif()
+
+
+# add the build dir to the include path
+# because moc generates the files there
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
+# automatic handle qrc files
+set(CMAKE_AUTORCC ON)
+
+find_package(Qt5Core)
+find_package(Qt5Gui)
+find_package(Qt5Widgets)
+find_package(Qt5Multimedia)
+find_package(Qt5LinguistTools)
+find_package(Qt5Test)
+
+# needed for quazip
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../ext_libs/quazip/quazip)
+link_directories(${CMAKE_BINARY_DIR}/../working_dir)
+link_directories(${CMAKE_BINARY_DIR}/../working_dir/lib)
+set (QUAZIP_LIBRARIES quazip5${PM_DEBUG_D_SUFFIX})
+
+# needed for librsync
+set (RSYNC_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../ext_libs/librsync/src)
+include_directories(${RSYNC_INCLUDE_DIR})
+include_directories(../build/ext_libs/librsync/src)
+
+if(MSVC)
+  GET_FILENAME_COMPONENT(Installed64BitVersionFromRegistry
+                         "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\OpenSSL (64-bit)_is1;Inno Setup: App Path]" 
+                         ABSOLUTE CACHE)
+
+  FIND_PATH(OPENSSL_BINARY_DIR
+    NAMES
+      ssleay32.dll
+    HINTS
+      ${Installed64BitVersionFromRegistry}
+  )                         
+endif()
+                         
+include_directories(${Qt5Core_INCLUDE_DIRS})
+include_directories(${Qt5Gui_INCLUDE_DIRS})
+include_directories(${Qt5Widgets_INCLUDE_DIRS})
+include_directories(${Qt5Multimedia_INCLUDE_DIRS})
+
+set (PM_USES_QT_LIBRARIES Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Multimedia)
+
+add_definitions(${QT_DEFINITIONS})
+
+# Needed by fvupdater.cpp
+add_definitions(-DFV_GUI)
+
+set (NoMocSources
+                    CpuFeatures.h
+                    getMemorySize.cpp
+                    getMemorySize.h                    
+                    utils.h
+                    utils.cpp
+                    resource.h
+                    PMCommand.h
+                    PMCommand.cpp
+                    PMInstance.h
+                    PMInstance.cpp
+                    PMInstanceConfiguration.h
+                    PMInstanceConfiguration.cpp
+                    PMManager.h
+                    PMManager.cpp
+                    UserConfig.h
+                    UserConfig.cpp
+                    SystemConfig.h
+                    SystemConfig.cpp
+                    PMManager.h
+                    PMManager.cpp
+                    UserConfig.h
+                    UserConfig.cpp
+                    VmInitVpn.h
+                    VmInitVpn.cpp
+                    RunGuard.h
+                    RunGuard.cpp
+                    )
+
+if(MSVC)
+  set (NoMocSources ${NoMocSources} CpuFeaturesWindows.cpp)
+else()
+  set (NoMocSources ${NoMocSources} CpuFeaturesLinux.cpp)
+endif()
+
+set (MocReleatedSources
+                    WindowMain.cpp
+                    WidgetNewTab.cpp
+                    WidgetUpdate.cpp
+                    WidgetAbout.cpp
+                    PMCommandExec.cpp
+                    WidgetCommandExec.cpp
+                    WidgetRdpView.cpp
+                    VmInfoIpAddress.cpp
+                    fvupdatewindow.cpp
+                    fvavailableupdate.cpp
+                    fvversioncomparator.cpp
+                    fvignoredversions.cpp
+                    fvupdater.cpp
+                    fvplatform.cpp
+                    fvupdatedownloadprogress.cpp
+                    images.qrc
+                    )
+
+set (MocReleatedHeaders
+                    WindowMain.h
+                    WidgetNewTab.h
+                    WidgetUpdate.h
+                    WidgetAbout.h
+                    PMCommandExec.h
+                    WidgetCommandExec.h
+                    WidgetRdpView.h
+                    VmInfoIpAddress.h
+                    fvupdatewindow.h
+                    fvavailableupdate.h
+                    fvversioncomparator.h
+                    fvignoredversions.h
+                    fvupdater.h
+                    fvplatform.h
+                    fvupdatedownloadprogress.h
+                    )
+
+set(MocReleatedForms
+                WindowMain.ui
+                WidgetNewTab.ui
+                WidgetUpdate.ui
+                WidgetAbout.ui
+                WidgetCommandExec.ui
+                fvupdatewindow.ui
+                fvupdatedownloadprogress.ui
+                )
+
+#set(MocReleatedResources images.qrc)
+qt5_add_resources(RESOURCES images.qrc)
+
+qt5_wrap_cpp(MocReleatedHeaders_MOC ${MocReleatedHeaders})
+qt5_wrap_ui(MocReleatedForms_MOC ${MocReleatedForms})
+
+add_library(${PM_STATIC_LIB} STATIC
+            ${NoMocSources}
+            ${MocReleatedSources}
+            ${MocReleatedHeaders_MOC}
+            ${MocReleatedForms_MOC}
+            #resources.rc
+            )
+            
+add_executable(PrivacyMachine
+               ${RESOURCES}
+               resources.rc
+               main.cpp                  
+               )
+
+               
+if(MSVC)
+  # find the installed openssl libraries
+  GET_FILENAME_COMPONENT(Installed64BitVersionFromRegistry
+                         "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\OpenSSL (64-bit)_is1;Inno Setup: App Path]" 
+                         ABSOLUTE CACHE)
+
+  FIND_PATH(OPENSSL_BINARY_DIR
+    NAMES
+      ssleay32.dll
+    HINTS
+      ${Installed64BitVersionFromRegistry}
+  )                         
+
+  # copy main qt libraries to the working dir
+  get_target_property(_qtCore Qt5::Core LOCATION)
+  get_target_property(_qtGui Qt5::Gui LOCATION)
+  get_target_property(_qtWidgets Qt5::Widgets LOCATION)
+  get_target_property(_qtNetwork Qt5::Network LOCATION)
+  get_target_property(_qtPluginWindows Qt5::QWindowsIntegrationPlugin LOCATION)
+
+  STRING(REGEX REPLACE "\\\\" "/" VS140COMNTOOLS_DIR $ENV{VS140COMNTOOLS}) # Needs installed Visual Studio 2015 (community edition is enough)
+
+  add_custom_command(TARGET PrivacyMachine POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    ${_qtCore}
+    ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    ${_qtGui}
+    ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    ${_qtWidgets}
+    ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    ${_qtNetwork}
+    ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+
+    # The QT-Plugin 'qwindows.dll' needs to be installed to the subdir 'platforms'
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/platforms
+    
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    ${_qtPluginWindows}
+    ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/platforms
+
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    "${OPENSSL_BINARY_DIR}/libeay32.dll"
+    ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    "${OPENSSL_BINARY_DIR}/ssleay32.dll"
+    ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    "${VS140COMNTOOLS_DIR}../../VC/redist/x64/Microsoft.VC140.CRT/msvcp140.dll"
+    ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    "${VS140COMNTOOLS_DIR}../../VC/redist/x64/Microsoft.VC140.CRT/vcruntime140.dll"
+    ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    "${VS140COMNTOOLS_DIR}../../Team Tools/Performance Tools/x64/msvcr120.dll"
+    ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    "${VS140COMNTOOLS_DIR}../../Team Tools/Performance Tools/x64/msvcp120.dll"
+    ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+
+  )
+endif()
+
+if (NOT SKIP_FREERDP_CODE)
+  if(MSVC)
+    set (AdditionalFreeRDPLibraries ${LIBFREERDPCLIENT_LIBRARIES} RemoteDisplay Mpr.lib)
+  else()
+    set (AdditionalFreeRDPLibraries ${LIBFREERDPCLIENT_LIBRARIES} RemoteDisplay)
+  endif()
+  include_directories(${RemoteDisplay_SOURCE_DIR})
+else()
+  set (AdditionalFreeRDPLibraries "")
+endif()
+
+if(MSVC)
+  set (MICROSOFT_LIBS wsock32)
+endif()
+
+target_link_libraries(${PM_STATIC_LIB}
+  ${Qt5Core_LIBRARIES}
+  ${Qt5Widgets_LIBRARIES}
+  ${Qt5Test_LIBRARIES}
+  ${AdditionalFreeRDPLibraries}
+  ${QUAZIP_LIBRARIES}
+  ${MICROSOFT_LIBS}
+  Qt5::Multimedia
+  librsync
+  )
+
+target_link_libraries(PrivacyMachine
+  ${PM_STATIC_LIB}
+  )
+
+set_target_properties(PrivacyMachine ${PM_STATIC_LIB}
+                      PROPERTIES
+                      SKIP_BUILD_RPATH FALSE
+                      BUILD_WITH_INSTALL_RPATH FALSE
+                      )
+

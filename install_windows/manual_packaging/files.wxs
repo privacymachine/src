@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Fragment>
+        <DirectoryRef Id="INSTALL_ROOT">
+            <Component Id="CM_CP_libraries.freerdp_client.dll" Guid="*">
+                <File Id="CM_FP_libraries.freerdp_client.dll" Source="../../working_dir/freerdp-client.dll" KeyPath="yes"/>
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="INSTALL_ROOT">
+            <Component Id="CM_CP_libraries.freerdp.dll" Guid="*">
+                <File Id="CM_FP_libraries.freerdp.dll" Source="../../working_dir/freerdp.dll" KeyPath="yes"/>
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="INSTALL_ROOT">
+            <Component Id="CM_CP_libraries.RemoteDisplay.dll" Guid="*">
+                <File Id="CM_FP_libraries.RemoteDisplay.dll" Source="../../working_dir/RemoteDisplay.dll" KeyPath="yes"/>
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="INSTALL_ROOT">
+            <Component Id="CM_CP_ms_runtime.msvcp140.dll" Guid="*">
+                <File Id="CM_FP_ms_runtime.msvcp140.dll" Source="../../working_dir/msvcp140.dll" KeyPath="yes"/>
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="INSTALL_ROOT">
+            <Component Id="CM_CP_ms_runtime.msvcp120.dll" Guid="*">
+                <File Id="CM_FP_ms_runtime.msvcp120.dll" Source="../../working_dir/msvcp120.dll" KeyPath="yes"/>
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="INSTALL_ROOT">
+            <Component Id="CM_CP_ms_runtime.msvcr120.dll" Guid="*">
+                <File Id="CM_FP_ms_runtime.msvcr120.dll" Source="../../working_dir/msvcr120.dll" KeyPath="yes"/>
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="INSTALL_ROOT">
+            <Component Id="CM_CP_ms_runtime.vcruntime140.dll" Guid="*">
+                <File Id="CM_FP_ms_runtime.vcruntime140.dll" Source="../../working_dir/vcruntime140.dll" KeyPath="yes"/>
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="INSTALL_ROOT">
+            <Component Id="CM_CP_openssl_libraries.libeay32.dll" Guid="*">
+                <File Id="CM_FP_openssl_libraries.libeay32.dll" Source="../../working_dir/libeay32.dll" KeyPath="yes"/>
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="INSTALL_ROOT">
+            <Component Id="CM_CP_openssl_libraries.ssleay32.dll" Guid="*">
+                <File Id="CM_FP_openssl_libraries.ssleay32.dll" Source="../../working_dir/ssleay32.dll" KeyPath="yes"/>
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="INSTALL_ROOT">
+            <Component Id="CM_CP_pm_binaries.plink.exe" Guid="*">
+                <File Id="CM_FP_pm_binaries.plink.exe" Source="../../working_dir/plink.exe" KeyPath="yes"/>
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="INSTALL_ROOT">
+            <Component Id="CM_CP_pm_binaries.7za.exe" Guid="*">
+                <File Id="CM_FP_pm_binaries.7za.exe" Source="../../working_dir/7za.exe" KeyPath="yes"/>
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="INSTALL_ROOT">
+            <Component Id="CM_CP_pm_binaries.PrivacyMachine.exe" Guid="*">
+                <File Id="CM_FP_pm_binaries.PrivacyMachine.exe" Source="../../working_dir/PrivacyMachine.exe" KeyPath="yes"/>
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="INSTALL_ROOT">
+            <Component Id="CM_CP_pm_binaries.ProblemReporter.exe" Guid="*">
+                <File Id="CM_FP_pm_binaries.ProblemReporter.exe" Source="../../working_dir/ProblemReporter.exe" KeyPath="yes"/>
+            </Component>
+        </DirectoryRef>        
+        <DirectoryRef Id="INSTALL_ROOT">
+            <Component Id="CM_CP_pm_binaries.pscp.exe" Guid="*">
+                <File Id="CM_FP_pm_binaries.pscp.exe" Source="../../working_dir/pscp.exe" KeyPath="yes"/>
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="INSTALL_ROOT">
+            <Component Id="CM_CP_pm_binaries.quazip5.dll" Guid="*">
+                <File Id="CM_FP_pm_binaries.quazip5.dll" Source="../../working_dir/quazip5.dll" KeyPath="yes"/>
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="INSTALL_ROOT">
+            <Component Id="CM_CP_pm_binaries.zlib1.dll" Guid="*">
+                <File Id="CM_FP_pm_binaries.zlib1.dll" Source="../../working_dir/zlib1.dll" KeyPath="yes"/>
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="CM_DP_pm_stuff.conf">
+            <Component Id="CM_CP_pm_stuff.conf.PrivacyMachine_Example_de.ini" Guid="*">
+                <File Id="CM_FP_pm_stuff.conf.PrivacyMachine_Example_de.ini" Source="../../working_dir/conf/PrivacyMachine_Example_de.ini" KeyPath="yes"/>
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="CM_DP_pm_stuff.conf">
+            <Component Id="CM_CP_pm_stuff.conf.PrivacyMachine_Example_en.ini" Guid="*">
+                <File Id="CM_FP_pm_stuff.conf.PrivacyMachine_Example_en.ini" Source="../../working_dir/conf/PrivacyMachine_Example_en.ini" KeyPath="yes"/>
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="CM_DP_pm_stuff.conf.vpn.CryptoFree">
+            <Component Id="CM_CP_pm_stuff.conf.vpn.CryptoFree.cryptofree_linux.ovpn" Guid="*">
+                <File Id="CM_FP_pm_stuff.conf.vpn.CryptoFree.cryptofree_linux.ovpn" Source="../../working_dir/conf/vpn/CryptoFree/cryptofree_linux.ovpn" KeyPath="yes"/>
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="CM_DP_pm_stuff.conf.vpn.CryptoFree">
+            <Component Id="CM_CP_pm_stuff.conf.vpn.CryptoFree.up.txt" Guid="*">
+                <File Id="CM_FP_pm_stuff.conf.vpn.CryptoFree.up.txt" Source="../../working_dir/conf/vpn/CryptoFree/up.txt" KeyPath="yes"/>
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="CM_DP_pm_stuff.conf.vpn.VpnGate">
+            <Component Id="CM_CH_bb20813_vpngate_vpn770434362.opengw.net_udp_1950.ovpn" Guid="*">
+                <File Id="CM_FH_bb20813_vpngate_vpn770434362.opengw.net_udp_1950.ovpn" Source="../../working_dir/conf/vpn/VpnGate/vpngate_vpn770434362.opengw.net_udp_1950.ovpn" KeyPath="yes"/>
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="INSTALL_ROOT">
+            <Component Id="CM_CP_pm_binaries.UserGuide_de.pdf" Guid="*">
+                <File Id="CM_FP_pm_binaries.UserGuide_de.pdf" Source="../../working_dir/UserGuide_de.pdf" KeyPath="yes"/>
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="CM_DP_qtlibs.platforms">
+            <Component Id="CM_CP_qtlibs.platforms.qwindows.dll" Guid="*">
+                <File Id="CM_FP_qtlibs.platforms.qwindows.dll" Source="../../working_dir/platforms/qwindows.dll" KeyPath="yes"/>
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="INSTALL_ROOT">
+            <Component Id="CM_CP_qtlibs.Qt5Core.dll" Guid="*">
+                <File Id="CM_FP_qtlibs.Qt5Core.dll" Source="../../working_dir/Qt5Core.dll" KeyPath="yes"/>
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="INSTALL_ROOT">
+            <Component Id="CM_CP_qtlibs.Qt5Gui.dll" Guid="*">
+                <File Id="CM_FP_qtlibs.Qt5Gui.dll" Source="../../working_dir/Qt5Gui.dll" KeyPath="yes"/>
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="INSTALL_ROOT">
+            <Component Id="CM_CP_qtlibs.Qt5Network.dll" Guid="*">
+                <File Id="CM_FP_qtlibs.Qt5Network.dll" Source="../../working_dir/Qt5Network.dll" KeyPath="yes"/>
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="INSTALL_ROOT">
+            <Component Id="CM_CP_qtlibs.Qt5Widgets.dll" Guid="*">
+                <File Id="CM_FP_qtlibs.Qt5Widgets.dll" Source="../../working_dir/Qt5Widgets.dll" KeyPath="yes"/>
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="INSTALL_ROOT">
+            <Component Id="CM_CP_tools.winpr.dll" Guid="*">
+                <File Id="CM_FP_tools.winpr.dll" Source="../../working_dir/winpr.dll" KeyPath="yes"/>
+            </Component>
+        </DirectoryRef>
+    </Fragment>
+</Wix>

@@ -1,0 +1,18 @@
+# Disk DescriptorFile
+version=1
+CID=a31364e4
+parentCID=ffffffff
+createType="monolithicFlat"
+
+# Extent description
+RW 8388608 FLAT "__magic_word__" 0
+
+# The disk Data Base 
+#DDB
+
+ddb.virtualHWVersion = "4"
+ddb.adapterType="ide"
+ddb.uuid.image="0ac66e6e-2a04-4d75-9357-c5c3bc87dcf2"
+ddb.uuid.parent="00000000-0000-0000-0000-000000000000"
+ddb.uuid.modification="00000000-0000-0000-0000-000000000000"
+ddb.uuid.parentmodification="00000000-0000-0000-0000-000000000000"

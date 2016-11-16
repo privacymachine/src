@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Fragment>
+        <Feature Id="ProductFeature" Display="expand" Absent="disallow" ConfigurableDirectory="INSTALL_ROOT" Title="PrivacyMachine" Level="1">
+            <Feature Id="CM_G_needed" Title="needed">
+                <Feature Id="CM_C_ms_runtime" Title="Visual Studio Runtimes" Description="Runtime dll's needed by Microsoft Visual Studio" Display="hidden"/>
+                <Feature Id="CM_C_openssl_libraries" Title="OpenSSL - Libraries" Display="hidden"/>
+                <Feature Id="CM_C_pm_binaries" Title="PrivacyMachine - Binaries" Display="hidden"/>
+                <Feature Id="CM_C_pm_stuff" Title="PrivacyMachine - Additional Components" Display="hidden"/>
+                <Feature Id="CM_C_qtlibs" Title="Qt Libraries" Display="hidden"/>
+            </Feature>
+            <Feature Id="CM_C_Unspecified" Title="Unspecified" Absent="disallow" Display="hidden"/>
+            <Feature Id="CM_C_libraries" Title="libraries"/>
+            <Feature Id="CM_C_tools" Title="tools"/>
+        </Feature>
+        <FeatureRef Id="CM_C_libraries">
+            <ComponentRef Id="CM_CP_libraries.freerdp_client.dll"/>
+            <ComponentRef Id="CM_CP_libraries.freerdp.dll"/>
+            <ComponentRef Id="CM_CP_libraries.RemoteDisplay.dll"/>
+        </FeatureRef>
+        <FeatureRef Id="CM_C_ms_runtime">
+            <ComponentRef Id="CM_CP_ms_runtime.msvcp140.dll"/>
+            <ComponentRef Id="CM_CP_ms_runtime.msvcp120.dll"/>
+            <ComponentRef Id="CM_CP_ms_runtime.msvcr120.dll"/>
+            <ComponentRef Id="CM_CP_ms_runtime.vcruntime140.dll"/>
+        </FeatureRef>
+        <FeatureRef Id="CM_C_openssl_libraries">
+            <ComponentRef Id="CM_CP_openssl_libraries.libeay32.dll"/>
+            <ComponentRef Id="CM_CP_openssl_libraries.ssleay32.dll"/>
+        </FeatureRef>
+        <FeatureRef Id="CM_C_pm_binaries">
+            <ComponentRef Id="CM_CP_pm_binaries.plink.exe"/>
+            <ComponentRef Id="CM_CP_pm_binaries.7za.exe"/>
+            <ComponentRef Id="CM_CP_pm_binaries.PrivacyMachine.exe"/>
+            <ComponentRef Id="CM_CP_pm_binaries.ProblemReporter.exe"/>
+            <ComponentRef Id="CM_CP_pm_binaries.pscp.exe"/>
+            <ComponentRef Id="CM_CP_pm_binaries.quazip5.dll"/>
+            <ComponentRef Id="CM_CP_pm_binaries.zlib1.dll"/>
+            <!-- Manual Inserted Shorcuts -->
+            <ComponentRef Id="CompShortcut_PrivacyMachine" />   
+            <ComponentRef Id="CompShortcut_ProblemReporter" />               
+            <ComponentRef Id="CompShortcut_UserGuide_de" />   
+            <ComponentRef Id="CM_CP_pm_binaries.UserGuide_de.pdf"/>
+        </FeatureRef>
+        <FeatureRef Id="CM_C_pm_stuff">
+            <ComponentRef Id="CM_CP_pm_stuff.conf.PrivacyMachine_Example_de.ini"/>
+            <ComponentRef Id="CM_CP_pm_stuff.conf.PrivacyMachine_Example_en.ini"/>
+            <ComponentRef Id="CM_CP_pm_stuff.conf.vpn.CryptoFree.cryptofree_linux.ovpn"/>
+            <ComponentRef Id="CM_CP_pm_stuff.conf.vpn.CryptoFree.up.txt"/>
+            <ComponentRef Id="CM_CH_bb20813_vpngate_vpn770434362.opengw.net_udp_1950.ovpn"/>
+        </FeatureRef>
+        <FeatureRef Id="CM_C_qtlibs">
+            <ComponentRef Id="CM_CP_qtlibs.platforms.qwindows.dll"/>
+            <ComponentRef Id="CM_CP_qtlibs.Qt5Core.dll"/>
+            <ComponentRef Id="CM_CP_qtlibs.Qt5Gui.dll"/>
+            <ComponentRef Id="CM_CP_qtlibs.Qt5Widgets.dll"/>
+            <ComponentRef Id="CM_CP_qtlibs.Qt5Network.dll"/>
+        </FeatureRef>
+        <FeatureRef Id="CM_C_tools">
+            <ComponentRef Id="CM_CP_tools.winpr.dll"/>
+        </FeatureRef>
+    </Fragment>
+</Wix>

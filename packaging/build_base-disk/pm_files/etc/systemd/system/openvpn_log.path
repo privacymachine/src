@@ -1,0 +1,7 @@
+# Triggers output of the OpenVPN log file
+[Unit]
+Description=VPN log file output trigger
+Requires=openvpn_pm.service
+
+[Path]
+PathChanged=/var/log/openvpn.log

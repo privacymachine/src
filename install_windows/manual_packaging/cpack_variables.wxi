@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Include xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <?define CPACK_WIX_PRODUCT_GUID="70fa2aff-f244-42b9-b86e-421ec6d367c5"?>
+    <?define CPACK_WIX_UPGRADE_GUID="80a64338-af01-463a-b7e5-3775f6bc10b8"?>
+    <?define CPACK_PACKAGE_VENDOR="PrivacyMachine-Team"?>
+    <?define CPACK_PACKAGE_NAME="PrivacyMachine"?>
+    <?define CPACK_PACKAGE_VERSION="0.9.0"?>
+    <?define CPACK_WIX_LICENSE_RTF="C:/cygwin64/home/worker/jenkins_root/workspace/PrivacyMachine_PM-Win7/build/_CPack_Packages/win64/WIX/License.rtf"?>
+    <?define CPACK_WIX_PRODUCT_ICON="C:/cygwin64/home/worker/jenkins_root/workspace/PrivacyMachine_PM-Win7/install_windows/PrivacyMachine_Logo_AllIcons.ico"?>
+    <?define CPACK_WIX_UI_BANNER="C:/cygwin64/home/worker/jenkins_root/workspace/PrivacyMachine_PM-Win7/install_windows/installer_banner.bmp"?>
+    <?define CPACK_WIX_UI_DIALOG="C:/cygwin64/home/worker/jenkins_root/workspace/PrivacyMachine_PM-Win7/install_windows/installer_welcome_and_completion.bmp"?>
+    <?define CPACK_WIX_PROGRAM_MENU_FOLDER="PrivacyMachine"?>
+    <?define CPACK_WIX_UI_REF="WixUI_FeatureTree"?>
+</Include>

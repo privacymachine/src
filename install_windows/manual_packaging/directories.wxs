@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Fragment>
+        <Directory Id="TARGETDIR" Name="SourceDir">
+            <!-- Step 1: Define the directory structure -->
+            <Directory Id="ProgramMenuFolder">
+                <Directory Id="ApplicationProgramsFolder" Name="PrivacyMachine"/>
+            </Directory>
+            <Directory Id="ProgramFiles64Folder">
+                <Directory Id="INSTALL_ROOT" Name="PrivacyMachine">
+                    <Directory Id="CM_DP_pm_stuff.conf" Name="conf">
+                        <Directory Id="CM_DP_pm_stuff.conf.vpn" Name="vpn">
+                            <Directory Id="CM_DP_pm_stuff.conf.vpn.CryptoFree" Name="CryptoFree"/>
+                            <Directory Id="CM_DP_pm_stuff.conf.vpn.VpnGate" Name="VpnGate"/>
+                        </Directory>
+                    </Directory>
+                    <Directory Id="CM_DP_qtlibs.platforms" Name="platforms"/>
+                </Directory>
+            </Directory>
+        </Directory>
+    </Fragment>
+</Wix>

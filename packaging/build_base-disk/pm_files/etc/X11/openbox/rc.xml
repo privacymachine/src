@@ -654,6 +654,12 @@
 </menu>
 
 <applications>
+  <!-- Maximise VPN log output windows. Actually switching to fullscreen, as maximizing
+  does not work when changing screen size. -->
+  <application name="*xterm*" title="*VPN*Log*">
+    <fullscreen>yes</fullscreen>
+  </application>
+
 <!--
   # this is an example with comments through out. use these to make your
   # own rules, but without the comments of course.

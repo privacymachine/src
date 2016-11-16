@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss
+	version="2.0"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle"
+	xmlns:fervor="https://github.com/pypt/fervor"
+	xmlns:dc="http://purl.org/dc/elements/1.1/">
+
+
+
+	<channel>
+		<title>PM UpdaterTest Changelog</title>
+		<link>file://localhost/media/pmTests/TestPatching/appcast_base-disk.xml</link>
+		<description>PM UpdaterTest App Cast.</description>
+		<language>en</language>
+		<atom:link href="file://localhost/media/pmTests/TestPatching/appcast_base-disk.xml" rel="self" type="application/rss+xml" />
+        <item>
+            <title>base-disk_1.zip</title>
+			<pubDate>Wed 7 Sep 2016 14:01:34 CEST</pubDate>
+			<link>file://localhost/media/pmTests/TestPatching/releaseNotes_base-disk.html</link>
+			<enclosurepath
+				url="file://localhost/media/pmTests/TestPatching/downloads/"
+				fervor:version="1.0.1.0"
+				fervor:platform="Q_OS_WIN32"
+				type="application/octet-stream" />
+			<enclosurepath
+				url="file://localhost/media/pmTests/TestPatching/downloads/"
+				fervor:version="1.0.1.0"
+				fervor:platform="Q_OS_LINUX"
+				type="application/octet-stream" />
+            <checksum
+                filename="base-disk_1.zip"
+                sha256="2ade460b8693ccc0712fdbe370cd8215a9e56e805309a3d90bdbba865218063e" />
+            <checksum
+                filename="base-disk_delta_0-1.zip"
+                sha256="a1531a8e9275a5b5f477409793c4570263ab165f19efe56fa7adf70c5ed35742" />
+        </item>
+        <item>
+            <title>base-disk_0.zip</title>
+			<pubDate>Tue 6 Sep 2016 13:02:34 CEST</pubDate>
+			<link>file://localhost/media/pmTests/TestPatching/releaseNotes_base-disk.html</link>
+			<enclosurepath
+				url="file://localhost/media/pmTests/TestPatching/downloads/"
+				fervor:version="1.0.0.0"
+				fervor:platform="Q_OS_WIN32"
+				type="application/octet-stream" />
+			<enclosurepath
+				url="file://localhost/media/pmTests/TestPatching/downloads/"
+				fervor:version="1.0.0.0"
+				fervor:platform="Q_OS_LINUX"
+				type="application/octet-stream" />
+            <checksum
+                filename="base-disk_0.zip"
+                sha256="583d46bbe543aeeead47e21a2c55b745ca4ca368bb32ca44522b33e3cf0a58d7" />
+        </item>
+	</channel>
+</rss>

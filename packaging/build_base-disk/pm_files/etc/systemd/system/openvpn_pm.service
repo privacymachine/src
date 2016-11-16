@@ -1,0 +1,15 @@
+[Unit]
+Description=OpenVPN connection for PM
+After=multi-user.target network.target network-online.target openbox.service
+
+[Service]
+# Type=forking
+ExecStart=/usr/sbin/openvpn --log /var/log/openvpn.log --status /run/openvpn/openvpn.status 10 --cd /home/vmConfig/vpn --config openvpn_pm.ovpn --script-security 2 --up /etc/openvpn/update-resolv-conf --down /etc/openvpn/update-resolv-conf --persist-tun
+WorkingDirectory=/etc/openvpn
+
+# Make shure all taffic is routed over tun0
+ExecStartPost=ip route add 0.0.0.0/0 dev tun0
+
+[Install]
+WantedBy=multi-user.target
+

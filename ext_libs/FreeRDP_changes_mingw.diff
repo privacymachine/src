@@ -1,0 +1,276 @@
+diff --git a/client/Windows/wf_cliprdr.c b/client/Windows/wf_cliprdr.c
+index dc1868f..a2e973f 100644
+--- a/client/Windows/wf_cliprdr.c
++++ b/client/Windows/wf_cliprdr.c
+@@ -29,6 +29,7 @@
+ #include <winpr/crt.h>
+ #include <winpr/tchar.h>
+ #include <winpr/stream.h>
++#include <winpr/wnd.h>
+ 
+ #include <freerdp/log.h>
+ #include <freerdp/client/cliprdr.h>
+diff --git a/cmake/FindOpenSSL.cmake b/cmake/FindOpenSSL.cmake
+index e7ad8bf..7e1e172 100644
+--- a/cmake/FindOpenSSL.cmake
++++ b/cmake/FindOpenSSL.cmake
+@@ -64,7 +64,7 @@ FIND_PATH(OPENSSL_INCLUDE_DIR
+ )
+ 
+ IF(WIN32)
+-  if(${MSVC_RUNTIME} STREQUAL "static")
++  if("${MSVC_RUNTIME}" STREQUAL "static")
+     set(MSVC_RUNTIME_SUFFIX "MT")
+   else()
+     set(MSVC_RUNTIME_SUFFIX "MD")
+diff --git a/include/freerdp/channels/rdpdr.h b/include/freerdp/channels/rdpdr.h
+index 2e7d051..8b691a0 100644
+--- a/include/freerdp/channels/rdpdr.h
++++ b/include/freerdp/channels/rdpdr.h
+@@ -120,6 +120,7 @@ enum IRP_MN
+ /* DR_CREATE_RSP.Information */
+ /* DR_DRIVE_CREATE_RSP.DeviceCreateResponse */
+ 
++#define FILE_SUPERSEDED	0x00000000
+ #define FILE_OPENED		0x00000001
+ #define FILE_OVERWRITTEN	0x00000003
+ 
+@@ -298,6 +299,7 @@ enum FILE_FS_DEVICE_FLAG
+ 	FILE_DEVICE_SECURE_OPEN = 0x00000100
+ };
+ 
++#ifndef __MINGW32__
+ enum FILE_FS_INFORMATION_CLASS
+ {
+ 	FileFsVolumeInformation = 1,
+@@ -311,6 +313,7 @@ enum FILE_FS_INFORMATION_CLASS
+ 	FileFsDriverPathInformation,
+ 	FileFsMaximumInformation
+ };
++#endif
+ 
+ typedef struct _DEVICE DEVICE;
+ typedef struct _IRP IRP;
+diff --git a/include/freerdp/rail.h b/include/freerdp/rail.h
+index c848382..c8fb419 100644
+--- a/include/freerdp/rail.h
++++ b/include/freerdp/rail.h
+@@ -153,7 +153,7 @@ enum SPI_MASK
+ #define IME_STATE_CLOSED				0x00000000
+ #define IME_STATE_OPEN					0x00000001
+ 
+-#ifndef _IME_CMODES_
++#if !defined(_IME_CMODES_) && !defined(__MINGW32__)
+ #define IME_CMODE_NATIVE				0x00000001
+ #define IME_CMODE_KATAKANA				0x00000002
+ #define IME_CMODE_FULLSHAPE				0x00000008
+diff --git a/include/freerdp/server/rdpdr.h b/include/freerdp/server/rdpdr.h
+index 27c41e4..bbe2316 100644
+--- a/include/freerdp/server/rdpdr.h
++++ b/include/freerdp/server/rdpdr.h
+@@ -35,6 +35,7 @@
+ typedef struct _rdpdr_server_context RdpdrServerContext;
+ typedef struct _rdpdr_server_private RdpdrServerPrivate;
+ 
++#ifndef __MINGW64_VERSION_MAJOR
+ struct _FILE_DIRECTORY_INFORMATION
+ {
+ 	UINT32 NextEntryOffset;
+@@ -49,6 +50,7 @@ struct _FILE_DIRECTORY_INFORMATION
+ 	char FileName[512];
+ };
+ typedef struct _FILE_DIRECTORY_INFORMATION FILE_DIRECTORY_INFORMATION;
++#endif
+ 
+ typedef UINT (*psRdpdrStart)(RdpdrServerContext* context);
+ typedef UINT (*psRdpdrStop)(RdpdrServerContext* context);
+diff --git a/winpr/include/winpr/nt.h b/winpr/include/winpr/nt.h
+index d0761eb..f22a61b 100644
+--- a/winpr/include/winpr/nt.h
++++ b/winpr/include/winpr/nt.h
+@@ -1292,6 +1292,7 @@
+ 
+ #endif
+ 
++#ifndef __MINGW32__
+ typedef enum _FILE_INFORMATION_CLASS
+ {
+ 	FileDirectoryInformation = 1,
+@@ -1335,6 +1336,7 @@ typedef enum _FILE_INFORMATION_CLASS
+ 	FileValidDataLengthInformation,
+ 	FileShortNameInformation
+ } FILE_INFORMATION_CLASS;
++#endif
+ 
+ #ifndef _WIN32
+ 
+diff --git a/winpr/include/winpr/spec.h b/winpr/include/winpr/spec.h
+index d86d91c..ee12da9 100644
+--- a/winpr/include/winpr/spec.h
++++ b/winpr/include/winpr/spec.h
+@@ -959,7 +959,9 @@ char (*__countof_helper(_CountofType (&_Array)[_SizeOfArray]))[_SizeOfArray];
+ #if defined(_WIN32) || defined(__CYGWIN__)
+   #ifdef __GNUC__
+     #define DECLSPEC_EXPORT __attribute__((dllexport))
+-    #define DECLSPEC_IMPORT __attribute__((dllimport))
++    #ifndef DECLSPEC_IMPORT
++        #define DECLSPEC_IMPORT __attribute__((dllimport))
++    #endif
+   #else
+     #define DECLSPEC_EXPORT __declspec(dllexport)
+     #define DECLSPEC_IMPORT __declspec(dllimport)
+diff --git a/winpr/include/winpr/synch.h b/winpr/include/winpr/synch.h
+index d5abb80..9e8cd69 100644
+--- a/winpr/include/winpr/synch.h
++++ b/winpr/include/winpr/synch.h
+@@ -286,12 +286,14 @@ WINPR_API BOOL InitializeCriticalSectionEx(LPCRITICAL_SECTION lpCriticalSection,
+ 
+ /* One-Time Initialization */
+ 
++#ifndef __MINGW32__
+ typedef struct _RTL_RUN_ONCE
+ {
+ 	PVOID Ptr;
+ } RTL_RUN_ONCE, *PRTL_RUN_ONCE;
+ 
+ #define RTL_RUN_ONCE_INIT	{ 0 }
++#endif
+ #define INIT_ONCE_STATIC_INIT	RTL_RUN_ONCE_INIT
+ 
+ typedef RTL_RUN_ONCE INIT_ONCE;
+@@ -308,7 +310,7 @@ WINPR_API VOID InitOnceInitialize(PINIT_ONCE InitOnce);
+ 
+ /* Synchronization Barrier */
+ 
+-#if (!defined(_WIN32)) || (defined(_WIN32) && (_WIN32_WINNT < 0x0602))
++#if (!defined(_WIN32)) || (defined(_WIN32) && (_WIN32_WINNT < 0x0601))
+ 
+ typedef struct _RTL_BARRIER
+ {
+diff --git a/winpr/libwinpr/sspi/NTLM/ntlm.c b/winpr/libwinpr/sspi/NTLM/ntlm.c
+index 9b732a8..b29397a 100644
+--- a/winpr/libwinpr/sspi/NTLM/ntlm.c
++++ b/winpr/libwinpr/sspi/NTLM/ntlm.c
+@@ -27,6 +27,7 @@
+ #include <winpr/tchar.h>
+ #include <winpr/sysinfo.h>
+ #include <winpr/registry.h>
++#include <winpr/schannel.h>
+ #include <freerdp/build-config.h>
+ 
+ #include "ntlm.h"
+diff --git a/winpr/libwinpr/sspi/NTLM/ntlm.h b/winpr/libwinpr/sspi/NTLM/ntlm.h
+index bdccecd..2a16fae 100644
+--- a/winpr/libwinpr/sspi/NTLM/ntlm.h
++++ b/winpr/libwinpr/sspi/NTLM/ntlm.h
+@@ -76,21 +76,39 @@ enum _NTLM_STATE
+ };
+ typedef enum _NTLM_STATE NTLM_STATE;
+ 
++#ifndef __MINGW32__
++    enum _NTLM_AV_ID
++    {
++        MsvAvEOL,
++        MsvAvNbComputerName,
++        MsvAvNbDomainName,
++        MsvAvDnsComputerName,
++        MsvAvDnsDomainName,
++        MsvAvDnsTreeName,
++        MsvAvFlags,
++        MsvAvTimestamp,
++        MsvAvSingleHost,
++        MsvAvTargetName,
++        MsvChannelBindings
++    };
++    typedef enum _NTLM_AV_ID NTLM_AV_ID;
++#else
+ enum _NTLM_AV_ID
+ {
+-	MsvAvEOL,
+-	MsvAvNbComputerName,
+-	MsvAvNbDomainName,
+-	MsvAvDnsComputerName,
+-	MsvAvDnsDomainName,
+-	MsvAvDnsTreeName,
+-	MsvAvFlags,
+-	MsvAvTimestamp,
+-	MsvAvSingleHost,
+-	MsvAvTargetName,
+-	MsvChannelBindings
++    __HACK__MsvAvEOL,
++    __HACK__MsvAvNbComputerName,
++    __HACK__MsvAvNbDomainName,
++    __HACK__MsvAvDnsComputerName,
++    __HACK__MsvAvDnsDomainName,
++    __HACK__MsvAvDnsTreeName,
++    __HACK__MsvAvFlags,
++    MsvAvTimestamp,
++    MsvAvSingleHost,
++    MsvAvTargetName,
++    MsvChannelBindings
+ };
+ typedef enum _NTLM_AV_ID NTLM_AV_ID;
++#endif
+ 
+ struct _NTLM_AV_PAIR
+ {
+diff --git a/winpr/libwinpr/sspi/Negotiate/negotiate.c b/winpr/libwinpr/sspi/Negotiate/negotiate.c
+index 4af1cbc..300bd72 100644
+--- a/winpr/libwinpr/sspi/Negotiate/negotiate.c
++++ b/winpr/libwinpr/sspi/Negotiate/negotiate.c
+@@ -23,6 +23,7 @@
+ 
+ #include <winpr/crt.h>
+ #include <winpr/sspi.h>
++#include <winpr/schannel.h>
+ 
+ #include "negotiate.h"
+ 
+diff --git a/winpr/libwinpr/sspi/sspi.c b/winpr/libwinpr/sspi/sspi.c
+index 628a074..da3fa51 100644
+--- a/winpr/libwinpr/sspi/sspi.c
++++ b/winpr/libwinpr/sspi/sspi.c
+@@ -29,6 +29,7 @@
+ #include <winpr/wlog.h>
+ #include <winpr/library.h>
+ #include <winpr/environment.h>
++#include <winpr/schannel.h>
+ 
+ #include "sspi.h"
+ 
+diff --git a/winpr/libwinpr/wtsapi/wtsapi.c b/winpr/libwinpr/wtsapi/wtsapi.c
+index 59f8e86..97994a8 100644
+--- a/winpr/libwinpr/wtsapi/wtsapi.c
++++ b/winpr/libwinpr/wtsapi/wtsapi.c
+@@ -135,7 +135,8 @@ int WtsApi32_InitializeWtsApi(void)
+ 	if (!g_WtsApi32Module)
+ 		return -1;
+ 
+-#ifdef _WIN32
++#if defined(_WIN32) && !defined(__MINGW32__)
++
+ 	WTSAPI32_LOAD_PROC(StopRemoteControlSession, WTS_STOP_REMOTE_CONTROL_SESSION_FN);
+ 	WTSAPI32_LOAD_PROC(StartRemoteControlSessionW, WTS_START_REMOTE_CONTROL_SESSION_FN_W);
+ 	WTSAPI32_LOAD_PROC(StartRemoteControlSessionA, WTS_START_REMOTE_CONTROL_SESSION_FN_A);
+diff --git a/winpr/libwinpr/wtsapi/wtsapi_win32.c b/winpr/libwinpr/wtsapi/wtsapi_win32.c
+index 998ccfb..3cb89da 100644
+--- a/winpr/libwinpr/wtsapi/wtsapi_win32.c
++++ b/winpr/libwinpr/wtsapi/wtsapi_win32.c
+@@ -361,7 +361,7 @@ BOOL WINAPI Win32_WTSVirtualChannelRead_Static(WTSAPI_CHANNEL* pChannel, DWORD d
+ 
+ 			CopyMemory(lpBuffer, pChannel->chunk, numBytesToRead);
+ 			*lpNumberOfBytesTransferred += numBytesToRead;
+-			((BYTE*) lpBuffer) += numBytesToRead;
++            //((BYTE*) lpBuffer) += numBytesToRead;
+ 			nNumberOfBytesToRead -= numBytesToRead;
+ 			pChannel->readOffset += numBytesToRead;
+ 
+@@ -472,7 +472,7 @@ BOOL WINAPI Win32_WTSVirtualChannelRead_Dynamic(WTSAPI_CHANNEL* pChannel, DWORD
+ 
+ 				CopyMemory(lpBuffer, pChannel->header, numBytesRead);
+ 				*lpNumberOfBytesTransferred += numBytesRead;
+-				((BYTE*) lpBuffer) += numBytesRead;
++                //((BYTE*) lpBuffer) += numBytesRead;
+ 				nNumberOfBytesToRead -= numBytesRead;
+ 			}
+ 
