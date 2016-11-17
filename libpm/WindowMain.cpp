@@ -185,9 +185,9 @@ bool WindowMain::init(QString parPmInstallPath, QString parVboxDefaultMachineFol
     QString appcastUrl = pmManager_->getUpdateConfig().appcastPM;
     FvUpdater::sharedUpdater()->SetFeedURL( appcastUrl );
     #ifdef PM_WINDOWS
-      QString releaseUrl = "https://www.privacymachine.eu/ReleaseNotes_0.10.0.0_WIN64_EN.html";
+      QString releaseUrl = "https://update.privacymachine.eu/ReleaseNotes_0.10.0.0_WIN64_EN.html";
     #else
-      QString releaseUrl = "https://www.privacymachine.eu/ReleaseNotes_0.10.0.0_LINUX_EN.html";
+      QString releaseUrl = "https://update.privacymachine.eu/ReleaseNotes_0.10.0.0_LINUX_EN.html";
     #endif
     updateAvailable = showReleaseNotes( releaseUrl, 2000 );
 
