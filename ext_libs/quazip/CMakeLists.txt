@@ -1,6 +1,10 @@
 project (QuaZip)
 cmake_minimum_required(VERSION 2.6)
 
+# Add CMake submodules to the path
+set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake_modules ${CMAKE_MODULE_PATH})
+include(PmCommon)
+
 option(BUILD_WITH_QT4 "Build QuaZip with Qt4 no matter if Qt5 was found" OFF)
 
 if( NOT BUILD_WITH_QT4 )

@@ -1,5 +1,5 @@
 ﻿/*==============================================================================
-        Copyright (c) 2013-2016 by the Developers of PrivacyMachine.eu
+        Copyright (c) 2013-2017 by the Developers of PrivacyMachine.eu
                          contact@privacymachine.eu
      OpenPGP-Fingerprint: 0C93 F15A 0ECA D404 413B 5B34 C6DE E513 0119 B175
 
@@ -26,12 +26,12 @@
 #include <QMessageBox>
 #include <QVector>
 
-#include "fvupdater.h"
+#include "deprecated_fvupdater.h"
 
 #include "WidgetAbout.h"
 #include "WidgetUpdate.h"
 #include "WidgetNewTab.h"
-#include "PMManager.h"
+#include "PmManager.h"
 #include "utils.h"
 #include "VmInfoIpAddress.h"
 
@@ -45,7 +45,7 @@ class WindowMain : public QMainWindow
     Q_OBJECT
     
   public:
-    explicit WindowMain(QWidget *parParent = 0);
+    explicit WindowMain(QWidget *parParent = NULL);
     void show();
     bool init(QString parPmInstallPath, QString parVboxDefaultMachineFolder);
     ~WindowMain();
@@ -54,13 +54,14 @@ class WindowMain : public QMainWindow
   private:
     bool setupTabWidget();
     void statusBarUpdate();
-    void regenerateVMMasks();
-    void cleanVMMasksBlocking();
+    void regenerateVmMasks();
+    void cleanVmMasksBlocking();
 
-    bool showReleaseNotes( QString url, ulong milliseconds );
+    bool showReleaseNotes(QString parUrl, ulong parTimeoutInMilliseconds);
+
+    PmManager *pmManager_;
 
     QWidget* currentWidget_;
-    PMManager *pmManager_;
     QDialogButtonBox *questionBox_;
     Ui::WindowMain *ui_;
     QLabel *updateMessage_;
@@ -75,20 +76,20 @@ class WindowMain : public QMainWindow
 
 
   signals:
-    void signalVmMaskClosed( int vmMaskId );
+    void signalVmMaskClosed( int parVmMaskId );
 
 
   private slots:
-    void slotNewVmMaskStarted(int parIndexVmMask);
+    void slotNewVmMaskStarted(int parVmMaskId);
     void slotRdpViewScreenResize( QWidget* );
-    void slotTabCloseRequested(int parIndex);
-    void slotTabCurrentChanged(int parIndex);
+    void slotTabCloseRequested(int parTabIndex);
+    void slotTabCurrentChanged(int parTabIndex);
     void slotUpdateBtnLater();
     void slotUpdateBtnOK();
     void slotUpdateNotFoundBtnOK();
     void slotUpdateFinished();
     void slotCleanAllVmMasks();
-    void slotRegenerationFinished(CommandResult parResult);
+    void slotRegenerationFinished(ePmCommandResult parResult);
     void slotRegenerationIpSuccess();
     void slotRegenerationProgress(QString parProgress);
     void slotShowAbout();

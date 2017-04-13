@@ -1,5 +1,4 @@
 #!/bin/bash
-# remark: find HEAD-id: git rev-parse HEAD
 
 if [ -d ./FreeRDP ]; then
   echo "The directory 'FreeRDP' does already exist, please delete it manually!"
@@ -11,6 +10,11 @@ if [ -d ./RemoteDisplay ]; then
   exit 1
 fi
 
+if [ -d ./libsodium ]; then
+  echo "The directory 'libsodium' does already exist, please delete it manually!"
+  exit 1
+fi
+
 # Get project FreeRDP from github
 git clone https://github.com/pm-bernhard/FreeRDP.git
 
@@ -18,4 +22,9 @@ git clone https://github.com/pm-bernhard/FreeRDP.git
 git clone https://github.com/pm-bernhard/RemoteDisplay.git
 pushd RemoteDisplay
 git checkout updating
+popd
+
+# LibSodium
+#   under debian based distros the package libsodium-dev is used
+#   under Windows it's needed to be installed separately
 

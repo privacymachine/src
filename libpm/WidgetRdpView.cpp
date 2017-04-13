@@ -1,5 +1,5 @@
 /*==============================================================================
-        Copyright (c) 2013-2016 by the Developers of PrivacyMachine.eu
+        Copyright (c) 2013-2017 by the Developers of PrivacyMachine.eu
                          contact@privacymachine.eu
      OpenPGP-Fingerprint: 0C93 F15A 0ECA D404 413B 5B34 C6DE E513 0119 B175
 
@@ -24,28 +24,27 @@
 
 #include "utils.h"
 
-WidgetRdpView::WidgetRdpView( QString parHost, PMInstance* pmInstance )
+WidgetRdpView::WidgetRdpView( QString parHost, QSharedPointer<VmMaskInstance> parVmMaskInstance )
 {
   host_ = parHost;
-  pmInstance_ = pmInstance;
-  rdpPort_ = pmInstance_->getConfig()->rdpPort;
-  sshPort_ = pmInstance_->getConfig()->sshPort;
-  subtractDisplayWidthMin_ = pmInstance_->getConfig()->subtractDisplayWidth;
-  subtractDisplayHeightMin_ = pmInstance_->getConfig()->subtractDisplayHeight;
+  vmMaskInstance_ = parVmMaskInstance;
+  rdpPort_ = vmMaskInstance_->getConfig()->getRdpPort();
+  sshPort_ = vmMaskInstance_->getConfig()->getSshPort();
+  subtractDisplayWidthMin_ = vmMaskInstance_->getConfig()->getSubtractDisplayWidth();
+  subtractDisplayHeightMin_ = vmMaskInstance_->getConfig()->getSubtractDisplayHeight();
   connectionEstablished_ = false;
   onDisconnecting_ = false;
   retryCount_ = 0;
   inErrorMode_ = false;
   lblErrorMessage_ = new QLabel();
 
-  name_ = pmInstance_->getConfig()->name;
   subtractDisplayWidthCurrent_ = subtractDisplayWidthMin_;
   subtractDisplayHeightCurrent_ = subtractDisplayHeightMin_;
 
   setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
   
   QPalette palette( this->palette() );
-  palette.setColor( QPalette::Background, pmInstance_->getConfig()->color );
+  palette.setColor( QPalette::Background, vmMaskInstance_->getConfig()->getColor() );
   this->setAutoFillBackground( true );
   this->setPalette( palette );
 
@@ -130,7 +129,7 @@ void WidgetRdpView::resizeVmDesktopAndConnectViaRdp()
   // Tell VirtualBox to change the display size
   args.clear();
   args.append("controlvm");
-  args.append(pmInstance_->getConfig()->vmName);
+  args.append(vmMaskInstance_->getConfig()->getVmName());
   args.append("setvideomodehint");
   args.append(QString::number(screenWidth_));
   args.append(QString::number(screenHeight_));

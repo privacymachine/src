@@ -1,29 +1,40 @@
 #include "mainwindow.h"
 #include <QApplication>
-#include <QSettings>
+#include "../libpm/XmlUpdateParser.h"
 
-#include <fvupdater.h>
-
-QSettings settings;
+#include <QDomDocument>
+#include <QFile>
+#include <QProgressDialog>
 
 int main(int argc, char *argv[])
 {
-
   QApplication a(argc, argv);
-  QApplication::setApplicationName("UpdaterTest");
-  // base disk version plus prepended marketing and API version
-  QApplication::setApplicationVersion("1.0.0.2");
-  QApplication::setOrganizationName("PrivacyMachine");
-  QApplication::setOrganizationDomain("privacymachine.eu");
+  /// @todo: bernhard: move to unit test
 
-  FvUpdater::sharedUpdater()->SetFeedURL("file://localhost/media/samplePM/appcast_base-disk.xml");
+  QFile file("../UpdaterTest/test.xml");
+  if (!file.open(QIODevice::ReadOnly))
+      return -1;
 
-  // Check for updates silently -- this will not block the initialization of
-  // your application, just start a HTTP request and return immediately.
-  FvUpdater::sharedUpdater()->CheckForUpdatesNotSilent();
+  XmlUpdateParser parser;
+  if (!parser.parse(file.readAll()))
+    return -1;
+
+  file.close();
+
+  XmlUpdateParser::UpdateInfoBinary* newBinary = parser.getLatestBinaryVersion();
+  if (newBinary != 0)
+    ILOG("new binary available: " + newBinary->Version.toString());
+
+
+
+  a.setApplicationVersion("0.10.0.1");
+
 
   MainWindow w;
   w.show();
+//  QProgressDialog d;
+//  d.setRange(0,0);
+//  d.show();
 
   return a.exec();
 }

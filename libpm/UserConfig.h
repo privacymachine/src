@@ -1,5 +1,5 @@
 ﻿/*==============================================================================
-        Copyright (c) 2013-2016 by the Developers of PrivacyMachine.eu
+        Copyright (c) 2013-2017 by the Developers of PrivacyMachine.eu
                          contact@privacymachine.eu
      OpenPGP-Fingerprint: 0C93 F15A 0ECA D404 413B 5B34 C6DE E513 0119 B175
 
@@ -23,14 +23,16 @@
 #include <QVariant>
 #include <QColor>
 
-class TestUserConfigOpenVPN;
+#include "VmMaskUserConfig.h"
 
+class TestUserConfigOpenVPN;
+class VmMaskUserConfig;
+class VpnConfig;
+
+/*
+/// @todo: removeMe
 struct ConfigVmMask
 {
-  /// Attempts to parse the given comma-separated list of browsers into \c browserList.
-  /// This method also makes sure that all entries within \c browserList exactly match the corresponding binary name.
-  /// So, in subsequent calls, these can be used for starting the individual browsers.
-  bool parseBrowsers( QString browsers );
 
   QString name; // from Name of Section
   QString fullName;
@@ -54,20 +56,12 @@ struct ConfigVmMask
   QString scriptOnStartup;
   QString scriptOnShutdown;
 };
-
-struct ConfigVPN
-{
-    QString name;             // from Name of Section
-    QString directoryName;    // something like 'vpn_name'                    based on ConfigFiles-Option '/path/vpn_name/*.ovpn'
-    QString configPath;       // something like '/path/vpn_name'              based on ConfigFiles-Option '/path/vpn_name/*.ovpn'
-    QStringList configFiles;  // something like '/path/vpn_name/Germany.ovpn' based on ConfigFiles-Option '/path/vpn_name/*.ovpn'
-    QString vpnType;
-};
+*/
 
 struct ConfigUpdate
 {
-    QString appcastPM;
-    QString appcastBaseDisk;
+    QString AppcastPM;
+    QString AppcastBaseDisk; /// @todo: remove because not used anymore
 };
 
 class UserConfig
@@ -78,21 +72,23 @@ class UserConfig
     UserConfig(QString parIniFile, QString parUserConfigDir, QString parInstallDir);
     virtual ~UserConfig();
 
-    QList<ConfigVmMask*>& getConfiguredVmMasks();
-    QList<ConfigVPN*>& getConfiguredVPNs();
+    QList<VmMaskUserConfig*>& getConfiguredVmMasks();
+    QList<VpnConfig*>& getConfiguredVPNs();
     ConfigUpdate getUpdateConfig(){ return updateConfiguration_; }
 
     bool readFromFile();
+    bool setDefaultsAndValidateConfiguration(const QJsonObject& parBaseDiskCapabilities);
 
   private:
     QString convertIniValueToString(QVariant parVar);
     bool parseOpenVpnConfigFiles(QString parConfigFilesSearch, QString& parConfigPath, QString& parDirectoryName, QString& parConfigFilter);
-    bool findOpenVpnConfigFiles(ConfigVPN* parConfigVPN, QString parConfigPath, QString parConfigFilter);
+    bool findOpenVpnConfigFiles(VpnConfig* parConfigVPN, QString parConfigPath, QString parConfigFilter);
+    bool parseBrowsers(QString browsers, QStringList& browserList);
 
     QString iniFile_;
     QString userConfigDir_;
     QString installDir_;
-    QList<ConfigVmMask*> configuredVmMasks_;
-    QList<ConfigVPN*> configuredVPNs_;
+    QList<VmMaskUserConfig*> configuredVmMasks_;
+    QList<VpnConfig*> configuredVPNs_;
     ConfigUpdate updateConfiguration_;
 };

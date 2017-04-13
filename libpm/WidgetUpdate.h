@@ -1,5 +1,5 @@
 ﻿/*==============================================================================
-        Copyright (c) 2013-2016 by the Developers of PrivacyMachine.eu
+        Copyright (c) 2013-2017 by the Developers of PrivacyMachine.eu
                          contact@privacymachine.eu
      OpenPGP-Fingerprint: 0C93 F15A 0ECA D404 413B 5B34 C6DE E513 0119 B175
 
@@ -31,23 +31,23 @@ namespace Ui {
 }
 
 // forward declaration
-class PMManager;
-class PMCommand;
+class PmManager;
+class PmCommand;
 
 class WidgetUpdate : public QWidget
 {
     Q_OBJECT
     
   public:
-    explicit WidgetUpdate(QWidget *parent = 0);
+    explicit WidgetUpdate(QWidget *parent = NULL);
     ~WidgetUpdate();
 
-    bool init(PMManager* manager);
+    bool init(PmManager* manager);
     void start();
     void abort();
 
    signals:
-    void signalUpdateFinished(CommandResult result); // used for communication with frmMainWindow
+    void signalUpdateFinished(ePmCommandResult result); // used for communication with frmMainWindow
 
   protected:
       // override from QWidget
@@ -56,8 +56,8 @@ class WidgetUpdate : public QWidget
   private:
     Ui::WidgetUpdate *ui_;
     WidgetCommandExec* widgetCommandExec_;
-    PMManager* manager_;
+    PmManager* manager_;
 
   private slots:
-    void slotCommandsFinished(CommandResult result); // used for communication with frmCommandExec
+    void slotCommandsFinished(ePmCommandResult result); // used for communication with frmCommandExec
 };

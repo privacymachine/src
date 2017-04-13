@@ -33,6 +33,7 @@ CMakeLists.txt.user
 # ext_libs
 ext_libs/FreeRDP/
 ext_libs/RemoteDisplay/
+ext_libs/libsodium-1.0.11/
 
 # build dir
 build/*
@@ -42,8 +43,8 @@ CMakeCache.txt
 cmake_install.cmake
 
 # base-disk fonts and browser profiles
-packaging/build_base-disk/pm_files/pm/fonts/*
-packaging/build_base-disk/pm_files/home/liveuser/.mozilla
+packaging/BaseDisk/pm_files/pm/fonts/*
+packaging/BaseDisk/pm_files/home/liveuser/.mozilla
 
 
 # executeables in working_dir

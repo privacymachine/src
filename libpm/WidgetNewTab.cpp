@@ -1,5 +1,5 @@
 ﻿/*==============================================================================
-        Copyright (c) 2013-2016 by the Developers of PrivacyMachine.eu
+        Copyright (c) 2013-2017 by the Developers of PrivacyMachine.eu
                          contact@privacymachine.eu
      OpenPGP-Fingerprint: 0C93 F15A 0ECA D404 413B 5B34 C6DE E513 0119 B175
 
@@ -20,8 +20,8 @@
 
 #include "WidgetCommandExec.h"
 #include "UserConfig.h"
-#include "PMInstance.h"
-#include "PMManager.h"
+#include "VmMaskInstance.h"
+#include "PmManager.h"
 #include "WidgetNewTab.h"
 #include "ui_WidgetNewTab.h"
 #include "utils.h"
@@ -37,8 +37,6 @@ WidgetNewTab::WidgetNewTab(QWidget *parParent) :
   commandExec_ = new WidgetCommandExec(this);
   ui_->btnStartVmMask->setEnabled(false);
   ui_->execLayout->addWidget(commandExec_);
-
-
 }
 
 void WidgetNewTab::connectSignalsAndSlots()
@@ -49,43 +47,43 @@ void WidgetNewTab::connectSignalsAndSlots()
   }
 
   connect( ui_->btnStartVmMask, SIGNAL( clicked() ), this, SLOT( slotBtnStart_clicked() ) );
-  connect( commandExec_, SIGNAL( signalFinished(CommandResult) ), this, SLOT( slotFinished(CommandResult) ) );
-
+  connect( commandExec_, SIGNAL( signalFinished(ePmCommandResult) ), this, SLOT( slotFinished(ePmCommandResult) ) );
 }
 
 void WidgetNewTab::disconnectSignalsAndSlots()
 {
-  foreach( QAbstractButton *rbItem, radioButtons_->buttons() )
+  foreach(QAbstractButton *rbItem, radioButtons_->buttons())
   {
     disconnect( rbItem, SIGNAL( clicked() ), 0, 0 );
   }
 
-  disconnect( ui_->btnStartVmMask, SIGNAL( clicked() ), 0, 0 );
-  disconnect( commandExec_, SIGNAL( signalFinished(CommandResult) ), 0, 0 );
+  disconnect(ui_->btnStartVmMask, SIGNAL( clicked() ), 0, 0);
+  disconnect(commandExec_, SIGNAL( signalFinished(ePmCommandResult) ), 0, 0);
 
 }
 
-bool WidgetNewTab::init(PMManager *parPMManager)
+bool WidgetNewTab::init(PmManager *parPmManager)
 {
-  pmManager_ = parPMManager;
+  pmManager_ = parPmManager;
   radioButtons_ = new QButtonGroup();
-  ui_->verticalLayout_2->setAlignment( Qt::AlignTop );
+  ui_->verticalLayout_2->setAlignment(Qt::AlignTop);
   
-  foreach (PMInstance* curPmInstance, pmManager_->getInstances())
+  // Add a radiobutton for each VmMask
+  for (int vmMaskId = 0; vmMaskId < pmManager_->getVmMaskData().count(); vmMaskId++)
   {
-    QRadioButton *rbItem = new QRadioButton( curPmInstance->getConfig()->fullName, this);
-    radioButtons_->addButton(rbItem, curPmInstance->getConfig()->vmMaskId);
+    VmMaskData* vmMask = pmManager_->getVmMaskData()[vmMaskId];
+    QRadioButton *rbItem = new QRadioButton(vmMask->UserConfig->getFullName(), this);
+    radioButtons_->addButton(rbItem, vmMaskId);
     ui_->chooseLayout->addWidget(rbItem);
-
   }
   radioButtons_->setExclusive(true);
-  ui_->btnStartVmMask->setEnabled( false );
+  ui_->btnStartVmMask->setEnabled(false);
 
   connectSignalsAndSlots();
   commandExec_->connectSignalsAndSlots();
 
   // If there is only one configured VM-Mask select it
-  if (radioButtons_->buttons().count() == 1)
+  if ( radioButtons_->buttons().count() == 1 )
   {
     radioButtons_->buttons().first()->click();
   }
@@ -97,95 +95,84 @@ WidgetNewTab::~WidgetNewTab()
 {
   disconnectSignalsAndSlots();
 
-  delete commandExec_;
-  while(radioButtons_->buttons().size())
-    delete radioButtons_->buttons().takeFirst();
-
-  delete ui_;
-}
-
-void WidgetNewTab::reset()
-{
-  QAbstractButton* checkedButton = radioButtons_->checkedButton();
-  if (checkedButton)
+  if (commandExec_)
   {
-    radioButtons_->setExclusive(false);
-    checkedButton->setChecked(false);
-    radioButtons_->setExclusive(true);
+    delete commandExec_;
+    commandExec_ = NULL;
   }
 
-  commandExec_->reset();
-  ui_->btnStartVmMask->setEnabled(false);
+  while(radioButtons_->buttons().size())
+    delete radioButtons_->buttons().takeLast();
+
+  if (ui_)
+  {
+    delete ui_;
+    ui_ = NULL;
+  }
 }
 
 void WidgetNewTab::slotBtnStart_clicked()
 {
   ui_->btnStartVmMask->setEnabled(false);
-  int indexVmMask = currentBtnId_ = radioButtons_->checkedId();
-  if (indexVmMask >= 0)
+  currentSelectedVmMaskId_ = radioButtons_->checkedId();
+  if (currentSelectedVmMaskId_ >= 0)
   {
-    QList<PMCommand*> commandList;
+    QList<PmCommand*> commandList;
 
-    if(!pmManager_->createCommandsStart(pmManager_->getConfiguredVmMasks().at(indexVmMask)->name,
-                                                  commandList))
+    if(!pmManager_->createCommandsToStartVmMask(currentSelectedVmMaskId_,
+                                                commandList))
     {
-      IWARN("error creating commands for VM-Mask " + pmManager_->getConfiguredVmMasks().at(indexVmMask)->name);
+      IWARN("error creating commands for VM-Mask " + pmManager_->getVmMaskData()[currentSelectedVmMaskId_]->UserConfig->getName());
       slotFinished(failed);
       return;
     }
 
     commandExec_->setCommands(commandList);
-
-    //// HACK
-    //emit newVmMaskReady(indexVmMask);
-    //// HACK: For testing FreeRDP, executing the virtualbox-commands is disabled +Ready-Event is fired
-
     commandExec_->start();
-  }
-}
 
-void WidgetNewTab::slotRadioBtn_clicked()
-{
-  if( radioButtons_->checkedId() >= 0 
-      && radioButtons_->checkedId() < radioButtons_->buttons().count() )
-  {
-    ui_->labelDescription->setText( pmManager_->getConfiguredVmMasks()[radioButtons_->checkedId()]->description );
-    // From http://www.qtcentre.org/threads/2593-Auto-resize-QLabel
-    ui_->labelDescription->adjustSize();
-    if( commandExec_->getRunning()  ||  pmManager_->getInstances()[radioButtons_->checkedId()]->getConfig()->vmMaskCreated )
-    {      
-      ui_->btnStartVmMask->setEnabled(false);
-    }
-    else
+    // What happens next?
+    // the commandExec_ sends a signal signalFinished(ePmCommandResult)) to the slot slotFinished() indicating
+    // a success or failure in ePmCommandResult
+
+    // disable all radio buttons in the meantime
+    foreach (QAbstractButton* btn, radioButtons_->buttons())
     {
-      ui_->btnStartVmMask->setEnabled(true);
+      btn->setEnabled(false);
     }
   }
-  else
-  {
-    ui_->labelDescription->clear();
-    ui_->labelDescription->adjustSize();
-    ui_->btnStartVmMask->setEnabled(false);
-  }
-
 }
 
-void WidgetNewTab::slotFinished(CommandResult exitCode)
+void WidgetNewTab::slotFinished(ePmCommandResult parExitCode)
 {
-  int vmMaskId;
-  switch(exitCode)
+  // enable all radio buttons as default
+  foreach (QAbstractButton* btn, radioButtons_->buttons())
+  {
+    btn->setEnabled(true);
+  }
+
+  switch(parExitCode)
   {
     case success:
-      vmMaskId = currentBtnId_;
-      radioButtons_->button(vmMaskId)->setChecked( false );
-      radioButtons_->button(vmMaskId)->setEnabled( false );
+      radioButtons_->button(currentSelectedVmMaskId_)->setChecked( false );
+      radioButtons_->button(currentSelectedVmMaskId_)->setEnabled( false );
 
       ui_->labelDescription->clear();
       ui_->labelDescription->adjustSize();
-      if (vmMaskId >= 0)
-        emit newVmMaskReady(vmMaskId);
+      emit signalNewVmMaskReady(currentSelectedVmMaskId_);
 
-      reset();
+      /// @todo: bernhard: ???
+      /*
+      QAbstractButton* checkedButton = radioButtons_->checkedButton();
+      if (checkedButton)
+      {
+        radioButtons_->setExclusive(false);
+        checkedButton->setChecked(false);
+        radioButtons_->setExclusive(true);
+      }
+      */
+
+      commandExec_->reset();
+      ui_->btnStartVmMask->setEnabled(false);
       break;
 
     case failed:
@@ -203,12 +190,41 @@ void WidgetNewTab::slotFinished(CommandResult exitCode)
   }
 }
 
-
-void WidgetNewTab::slotVmMaskClosed( int vmMaskId )
+void WidgetNewTab::slotVmMaskClosed(int parVmMaskId)
 {
-  QAbstractButton *vmButton = radioButtons_->button( vmMaskId );
-  if( vmButton != NULL )
+  if ( parVmMaskId >= 0 && parVmMaskId < radioButtons_->buttons().count() )
   {
-    vmButton->setEnabled( true );
+    radioButtons_->button(parVmMaskId)->setEnabled(true);
   }
 }
+
+void WidgetNewTab::slotRadioBtn_clicked()
+{
+  // The VmMask-Id equals the RadioButton-Id
+  int vmMaskId = radioButtons_->checkedId();
+
+  if( vmMaskId >= 0 && vmMaskId < pmManager_->getVmMaskData().count() )
+  {
+    VmMaskData* vmMaskData = pmManager_->getVmMaskData()[vmMaskId];
+    ui_->labelDescription->setText(vmMaskData->UserConfig->getDescription());
+    ui_->labelDescription->adjustSize(); // From http://www.qtcentre.org/threads/2593-Auto-resize-QLabel
+
+    // cannot start if the some VmMask is currently created or if the current VmMask is already running
+    if(commandExec_->isStillExecuting() ||
+        (!vmMaskData->Instance.isNull() && vmMaskData->Instance->VmMaskIsActive) )
+    {
+      ui_->btnStartVmMask->setEnabled(false);
+    }
+    else
+    {
+      ui_->btnStartVmMask->setEnabled(true);
+    }
+  }
+  else
+  {
+    ui_->labelDescription->clear();
+    ui_->labelDescription->adjustSize();
+    ui_->btnStartVmMask->setEnabled(false);
+  }
+}
+

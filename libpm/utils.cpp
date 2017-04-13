@@ -1,5 +1,5 @@
 ﻿/*==============================================================================
-        Copyright (c) 2013-2016 by the Developers of PrivacyMachine.eu
+        Copyright (c) 2013-2017 by the Developers of PrivacyMachine.eu
                          contact@privacymachine.eu
      OpenPGP-Fingerprint: 0C93 F15A 0ECA D404 413B 5B34 C6DE E513 0119 B175
 
@@ -17,6 +17,8 @@
 ==============================================================================*/
 
 #include "utils.h"
+#include "PmData.h"
+
 #include <math.h>
 #include <cerrno>
 
@@ -34,25 +36,32 @@
 #endif
 
 // Included here, not in utils.h, to resolve dependency cycle
-#include "PMInstance.h"
+#include "VmMaskInstance.h"
 
-const char *constPrivacyMachineVersion = "0.9-beta";
-const char *constVmIp = "127.0.0.1";
-const char *constRootPw = "123";
+const char *constPrivacyMachineVersion = "0.9-beta2";
+const char *constLocalIp = "127.0.0.1";
+const char *constRootUser = "root";
+const char *constRootPwd = "123";
+const char *constLiveUser = "liveuser";
+const char *constLiveUserPwd = "123";
+const char *constVmMaskPrefix = "VmMask_";
+const char *constPmVmMaskPrefix = "pm_VmMask_";
+const char *constIniVpnPrefix = "VPN_";
+const char *constSnapshotName = "UpAndRunning";
+const char *constPmUserConfigFileName = "PrivacyMachine.ini";
+const char *constPmInternalConfigFileName = "PrivacyMachineInternals.ini";
 
-bool globalSensitiveLoggingEnabed = false;
-
-bool ExecShort(QString cmd, QStringList& args, QString* allOutput, bool checkExitCode, int secondsToRespond, bool doNotLog)
+bool ExecShort(QString parCmd, QStringList& parArgs, QString* parAllOutput, bool parCheckExitCode, int parSecondsToRespond, bool parDoNotLog)
 {
   // quote command with spaces
-  if (cmd.contains(' '))
-    cmd = "\"" + cmd + "\"";
+  if (parCmd.contains(' '))
+    parCmd = "\"" + parCmd + "\"";
 
-  QString combinedCmd = cmd;
-  if (args.length() > 0)
-    combinedCmd = cmd + " " + args.join(" ");
+  QString combinedCmd = parCmd;
+  if (parArgs.length() > 0)
+    combinedCmd = parCmd + " " + parArgs.join(" ");
 
-  return ExecShort(combinedCmd, allOutput, checkExitCode, secondsToRespond, doNotLog);
+  return ExecShort(combinedCmd, parAllOutput, parCheckExitCode, parSecondsToRespond, parDoNotLog);
 }
 
 bool ExecShort(QString cmd, QString* allOutput, bool checkExitCode, int secondsToRespond, bool doNotLog)
@@ -128,13 +137,6 @@ QString removeLastLF( QString parMsg )
 
 }
 
-
-int randInt(int low, int high)
-{
-  // Random number between low and high
-  return qrand() % ((high + 1) - low) + low;
-}
-
 qint64 getFreeDiskSpace(QString dir)
 {
   #if QT_VERSION >= 0x050400
@@ -176,7 +178,7 @@ void determineVirtualBoxInstallation( bool& parVboxInstalled, /* false, if virtu
   QString allOutput;
   QStringList args;
 
-  QString vboxcommand = determineVBoxCommand();
+  QString vboxcommand = PmData::getInstance().getVBoxCommand();
 
   // On Windows we can do an early check if vboxmanage is installed
   if (RunningOnWindows())
@@ -202,7 +204,7 @@ void determineVirtualBoxInstallation( bool& parVboxInstalled, /* false, if virtu
   args.clear();
   args.append("list");
   args.append("systemproperties");
-  if (!ExecShort(vboxcommand, args, &allOutput, true))
+  if (!ExecShort(vboxcommand, args, &allOutput, true, 10)) // vboxmanage needs some time sometimes
   {
     IERR("unable to detect the virtualbox properties");
     return;
@@ -238,7 +240,7 @@ void determineVirtualBoxInstallation( bool& parVboxInstalled, /* false, if virtu
 }
 
 // Fire up a Command over SSH
-PMCommand* GetPMCommandForSshCmd(QString user, QString server, QString port, QString passwd, QString command)
+PmCommand* GetPmCommandForSshCmd(QString user, QString server, QString port, QString passwd, QString command)
 {
   QString cmd;
   QStringList args;
@@ -270,19 +272,39 @@ PMCommand* GetPMCommandForSshCmd(QString user, QString server, QString port, QSt
   args.append(port);
   args.append(user+"@"+server);
   args.append(command);
-  return new PMCommand(cmd, args, true, false);
+  return new PmCommand(cmd, args, true, false, "");
 }
 
-/// "Overload" that assumes "root" as user, and which takes VM-related values from pPmInstance.
-PMCommand* GetPMCommandForSshCmdPMInstance( PMInstance *pPmInstance, QString command )
+/// "Overload" that assumes "root" as user, and which takes VM-related values from pVmMaskInstance.
+PmCommand* GetPmCommandForSshCmdVmMaskInstance(QSharedPointer<VmMaskInstance>& parVmMaskInstance, QString command )
 {
-  return GetPMCommandForSshCmd( "root", constVmIp, QString::number( pPmInstance->getConfig()->sshPort ), constRootPw, command );
+  return GetPmCommandForSshCmd( constRootUser, constLocalIp, QString::number( parVmMaskInstance->getConfig()->getSshPort() ), constRootPwd, command );
+}
 
+/// "Overload" that assumes "root" as user, and the specific port
+PmCommand* GetPmCommandForSshCmdVmMaskInstance(int parSshPort, QString command )
+{
+  return GetPmCommandForSshCmd( constRootUser, constLocalIp, QString::number(parSshPort), constRootPwd, command );
+}
+
+PmCommand* genSshCmd(QString parCommand, int parSshPort)
+{
+  return GetPmCommandForSshCmd( constRootUser, constLocalIp, QString::number(parSshPort), constRootPwd, parCommand);
+}
+
+PmCommand* genSshCmdLiveUser(QString parCommand, int parSshPort)
+{
+  return GetPmCommandForSshCmd( constLiveUser, constLocalIp, QString::number(parSshPort), constLiveUserPwd, parCommand);
+}
+
+PmCommand* genScpCmd(QString parLocalDir, QString parRemoteDir, int parSshPort)
+{
+  return GetPmCommandForScp2VM( constRootUser, constLocalIp, QString::number(parSshPort), constRootPwd, parLocalDir, parRemoteDir);
 }
 
 
 // Copy a folder to VM
-PMCommand* GetPMCommandForScp2VM(QString user, QString server, QString port, QString passwd, QString localDir, QString remoteDir)
+PmCommand* GetPmCommandForScp2VM(QString user, QString server, QString port, QString passwd, QString localDir, QString remoteDir)
 {
   QString cmd;
   QStringList args;
@@ -314,12 +336,12 @@ PMCommand* GetPMCommandForScp2VM(QString user, QString server, QString port, QSt
   args.append(port);
   args.append(localDir);
   args.append(user+"@"+server+":"+remoteDir);
-  PMCommand* curCommand = new PMCommand(cmd, args, true, false);
+  PmCommand* curCommand = new PmCommand(cmd, args, true, false, "");
   return curCommand;
 }
 
 // Copy a folder to Host
-PMCommand* GetPMCommandForScp2Host(QString user, QString server, QString port, QString passwd, QString localDir, QString remoteDir)
+PmCommand* GetPmCommandForScp2Host(QString user, QString server, QString port, QString passwd, QString localDir, QString remoteDir)
 {
   QString cmd;
   QStringList args;
@@ -351,7 +373,7 @@ PMCommand* GetPMCommandForScp2Host(QString user, QString server, QString port, Q
   args.append(port);
   args.append(user+"@"+server+":"+remoteDir);
   args.append(localDir);
-  PMCommand* curCommand = new PMCommand(cmd, args, true, false);
+  PmCommand* curCommand = new PmCommand(cmd, args, true, false, "");
   return curCommand;
 }
 
@@ -379,67 +401,18 @@ QString getLastErrorMsg()
 
 #endif
 
-QString determineVBoxCommand()
+/// \brief get the config dir as QDir
+/// \brief: example for linux: /home/johndoe/.config/privacymachine
+/// \brief: example for windows: %UserProfile%\PrivacyMachine
+/// \return the config dir which depends on the os
+QDir getPmConfigQDir()
 {
-  QString vboxCommand;
-  if (RunningOnWindows())
-  {
-    // We can't use QSettings-Registry-Methods here because we are running under WOW64
-    // so we get it from the environment variable 'VBOX_INSTALL_PATH' or 'VBOX_MSI_INSTALL_PATH'
-    vboxCommand = QProcessEnvironment::systemEnvironment().value("VBOX_INSTALL_PATH", "C:\\VirtualBoxDir_NOTFOUND\\");
-    if (vboxCommand.contains("NOTFOUND"))
-    {
-      vboxCommand = QProcessEnvironment::systemEnvironment().value("VBOX_MSI_INSTALL_PATH", "C:\\VirtualBoxDir_NOTFOUND\\");
-    }
-    vboxCommand += "VBoxManage.exe";
-  }
-  else
-  {
-    // on Linux it is usually on the path
-    vboxCommand = "vboxmanage";
-  }
-
-  return vboxCommand;
-}
-
-QString getInstallDir(QString dir="")
-{
-  static QString installDir = dir;
-  return installDir;
-}
-
-bool getAndCreateUserConfigDir(QString& parUserConfigDir)
-{
-  parUserConfigDir = QDir::homePath();
+  QString pmConfigPath = QDir::homePath();
   #if (PM_WINDOWS)
-    parUserConfigDir += "/PrivacyMachine";
+    userConfigPath += "/PrivacyMachine";
   #else
-    parUserConfigDir += "/.config/privacymachine";
+    pmConfigPath += "/.config/privacymachine";
   #endif
 
-  QDir userConfigDirectory(parUserConfigDir);
-  if (!userConfigDirectory.exists())
-  {
-    qDebug() << "create user config directory: " << parUserConfigDir;
-    if (!userConfigDirectory.mkpath(".")) // creates subpaths also
-    {
-      QString systemError = getLastErrorMsg();
-      qCritical() << "failed to create user configuration directory: " << systemError;
-      return false;
-    }
-  }
-
-  return true;
-}
-
-void pm_srand(void* something)
-{
-  QTime timeForRandomSeed = QTime::currentTime();
-  uint seed = (uint)timeForRandomSeed.msec();
-  #pragma GCC diagnostic push
-  #pragma GCC diagnostic warning "-fpermissive"
-  uint foo = (uint)(void*)something;
-  #pragma GCC diagnostic pop
-  seed ^= foo;
-  qsrand(seed);
+  return QDir(pmConfigPath);
 }

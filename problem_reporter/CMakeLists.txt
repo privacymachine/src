@@ -1,5 +1,5 @@
 ################################################################################
-#        Copyright (c) 2013-2016 by the Developers of PrivacyMachine.eu
+#        Copyright (c) 2013-2017 by the Developers of PrivacyMachine.eu
 #                         contact@privacymachine.eu
 #     OpenPGP-Fingerprint: 0C93 F15A 0ECA D404 413B 5B34 C6DE E513 0119 B175
 #
@@ -23,12 +23,7 @@ project (ProblemReporter)
 
 # Add CMake submodules to the path
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake_modules ${CMAKE_MODULE_PATH})
-
-if(MSVC)
-  set (PM_WINDOWS TRUE)
-  add_definitions(-DPM_WINDOWS)
-endif()
-
+include(PmCommon)
 
 # add the build dir to the include path
 # because moc generates the files there
@@ -90,7 +85,8 @@ add_executable(ProblemReporter
     ${MocReleatedSources}
     ${MocReleatedHeaders_MOC}
     ${MocReleatedForms_MOC}
-    ${MocReleatedResources_RCC})
+    ${MocReleatedResources_RCC}
+    )
 
 
 target_link_libraries(ProblemReporter
@@ -98,8 +94,7 @@ target_link_libraries(ProblemReporter
                       ${Qt5Core_LIBRARIES}
                       ${Qt5Widgets_LIBRARIES}
                       ${Qt5Test_LIBRARIES}
-                      ${QUAZIP_LIBRARIES}
-                      ${MICROSOFT_LIBS}
+                      ${MICROSOFT_LIBS}                      
                       )
 
 set_target_properties(ProblemReporter

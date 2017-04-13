@@ -1,5 +1,5 @@
 ################################################################################
-#        Copyright (c) 2013-2016 by the Developers of PrivacyMachine.eu
+#        Copyright (c) 2013-2017 by the Developers of PrivacyMachine.eu
 #                         contact@privacymachine.eu
 #     OpenPGP-Fingerprint: 0C93 F15A 0ECA D404 413B 5B34 C6DE E513 0119 B175
 #
@@ -17,6 +17,11 @@
 ################################################################################
 cmake_minimum_required(VERSION 2.8.11)
 
+# Default to debug build
+if ("${CMAKE_BUILD_TYPE}" STREQUAL "")
+  set(CMAKE_BUILD_TYPE Debug)
+endif()
+
 set(ProjectName UpdaterTest)
 project(${ProjectName})
 
@@ -32,30 +37,25 @@ find_package(Qt5Gui)
 find_package(Qt5Test REQUIRED)
 find_package(Qt5Widgets REQUIRED)
 find_package(Qt5Multimedia)
-
-if (NOT SKIP_QWEBVIEW)
-  find_package(Qt5WebKit REQUIRED)
-  set (Qt5WebKit_LIBRARIES Qt5::WebKit)
-endif()
+find_package(Qt5Xml)
 
 # needed for quazip
-set (QUAZIP_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../ext_libs/quazip/quazip)
-include_directories(${QUAZIP_INCLUDE_DIR})
-link_directories(${CMAKE_BINARY_DIR})
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/../ext_libs/quazip/quazip")
-link_directories(${CMAKE_BINARY_DIR}/ext_libs/quazip/quazip)
-set (QUAZIP_LIBRARIES ${ZLIB_LIBRARIES} foo quazip5${PM_DEBUG_D_SUFFIX})
+#set (QUAZIP_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../ext_libs/quazip/quazip)
+#include_directories(${QUAZIP_INCLUDE_DIR})
+#link_directories(${CMAKE_BINARY_DIR})
+#include_directories("${CMAKE_CURRENT_SOURCE_DIR}/../ext_libs/quazip/quazip")
+#link_directories(${CMAKE_BINARY_DIR}/ext_libs/quazip/quazip)
+#set (QUAZIP_LIBRARIES ${ZLIB_LIBRARIES} foo quazip5${PM_DEBUG_D_SUFFIX})
 
 include_directories(${Qt5Core_INCLUDE_DIRS})
 include_directories(${Qt5Widgets_INCLUDE_DIRS})
-
 include_directories(${Qt5Core_INCLUDE_DIRS})
 include_directories(${Qt5Gui_INCLUDE_DIRS})
 include_directories(${Qt5Widgets_INCLUDE_DIRS})
 include_directories(${Qt5Multimedia_INCLUDE_DIRS})
-include_directories(${Qt5WebKit_INCLUDE_DIRS})
+include_directories(${Qt5Xml_INCLUDE_DIRS})
 
-set (UPDATER_TEST_USES_QT_LIBRARIES Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Multimedia ${Qt5WebKit_LIBRARIES})
+set (UPDATER_TEST_USES_QT_LIBRARIES Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Multimedia Qt5::Xml)
 
 add_definitions(${QT_DEFINITIONS})
 
@@ -66,25 +66,23 @@ set (NoMocSources
                     )
 
 set (MocReleatedSources
-                    fvupdatewindow.cpp
-                    fvavailableupdate.cpp
-                    fvversioncomparator.cpp
-                    fvignoredversions.cpp
-                    fvupdater.cpp
-                    fvplatform.cpp
-                    fvupdatedownloadprogress.cpp
                     mainwindow.cpp
+  ../libpm/CheckUpdate.cpp
+  ../libpm/XmlUpdateParser.cpp
+  ../libpm/PmVersion.cpp
+  ../libpm/VerifiedDownload.cpp
+  ../libpm/UpdateManager.cpp
+  ../libpm/WidgetInteraktiveUpdate.cpp
                     )
 
 set (MocReleatedHeaders
-                    fvupdatewindow.h
-                    fvavailableupdate.h
-                    fvversioncomparator.h
-                    fvignoredversions.h
-                    fvupdater.h
-                    fvplatform.h
-                    fvupdatedownloadprogress.h
                     mainwindow.h
+  ../libpm/VerifiedDownload.h
+  ../libpm/CheckUpdate.h
+  ../libpm/XmlUpdateParser.h
+  ../libpm/PmVersion.h
+  ../libpm/UpdateManager.h
+  ../libpm/WidgetInteraktiveUpdate.h
                     )
 
 if(PM_WINDOWS)
@@ -98,8 +96,7 @@ endif()
 
 set(MocReleatedForms
                 mainwindow.ui
-                fvupdatewindow.ui
-                fvupdatedownloadprogress.ui
+                ../libpm/WidgetInteraktiveUpdate.ui
                 )
 
 QT5_WRAP_CPP(MocReleatedHeaders_MOC ${MocReleatedHeaders})

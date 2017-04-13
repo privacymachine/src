@@ -1,5 +1,5 @@
 ﻿/*==============================================================================
-        Copyright (c) 2013-2016 by the Developers of PrivacyMachine.eu
+        Copyright (c) 2013-2017 by the Developers of PrivacyMachine.eu
                          contact@privacymachine.eu
      OpenPGP-Fingerprint: 0C93 F15A 0ECA D404 413B 5B34 C6DE E513 0119 B175
 
@@ -18,6 +18,8 @@
 
 #pragma once
 
+#include "PmLog.h"
+
 #include <QTime>
 #include <QDebug>
 #include <QVariant>
@@ -25,7 +27,9 @@
 #include <QThread>
 #include <QCoreApplication>
 
-#include "PMCommand.h"
+#include <sodium.h>
+
+#include "PmCommand.h"
 
 #ifndef PM_WINDOWS
   #include <unistd.h>
@@ -34,19 +38,29 @@
   #include <Winsock2.h>
 #endif
 
-extern bool globalSensitiveLoggingEnabed; // declared in utils.cpp
+// forward declarations
+class VmMaskInstance;
 
 #define ILOG(message) {  qDebug() << qPrintable(message); }
-#define ILOG_SENSITIVE(message) {if (globalSensitiveLoggingEnabed) { qDebug() << qPrintable(message); } }
+#define ILOG_SENSITIVE(message) {if (PmLog::getInstance().isSensitiveLoggingEnabled()) { qDebug() << qPrintable(message); } }
 #define IWARN(message) { qWarning() << qPrintable(message); }
 #define IERR(message) { qCritical() << qPrintable(message); }
 
 bool ExecShort(QString cmd, QString* outOutput, bool checkExitCode, int secondsToRespond = 3, bool doNotLog = false);
-bool ExecShort(QString cmd, QStringList& args, QString* allOutput, bool checkExitCode, int secondsToRespond = 3, bool doNotLog = false);
+bool ExecShort(QString parCmd, QStringList& parArgs, QString* parAllOutput, bool parCheckExitCode, int parSecondsToRespond = 3, bool parDoNotLog = false);
 
 extern const char *constPrivacyMachineVersion;
-extern const char *constVmIp;
-extern const char *constRootPw;
+extern const char *constLocalIp;
+extern const char *constRootUser;
+extern const char *constRootPwd;
+extern const char *constLiveUser;
+extern const char *constLiveUserPwd;
+extern const char *constVmMaskPrefix;
+extern const char *constPmVmMaskPrefix;
+extern const char *constIniVpnPrefix;
+extern const char *constSnapshotName;
+extern const char *constPmUserConfigFileName;
+extern const char *constPmInternalConfigFileName;
 
 // to display an endless loop i.e.: "for (;;)" -> "for(ever)"
 #define ever ;;
@@ -84,8 +98,6 @@ class SleeperThread : public QThread
     }
 };
 
-int randInt(int low, int high);
-void pm_srand(void* something);
 qint64 getFreeDiskSpace(QString dir);
 
 void determineVirtualBoxInstallation( bool& vboxInstalled,
@@ -95,16 +107,17 @@ void determineVirtualBoxInstallation( bool& vboxInstalled,
                                       bool& vboxExtensionPackInstalled /* true, if the extension pack is installed */
                                      );
 
-QString determineVBoxCommand();
+PmCommand* genSshCmd(QString parCommand, int parSshPort); // create ssh command (as root user)
+PmCommand* genScpCmd(QString parLocalDir, QString parRemoteDir, int parSshPort); // create scp command (as root user)
 
-PMCommand* GetPMCommandForSshCmd(QString user, QString server, QString port, QString passwd, QString command);
-class PMInstance;
-PMCommand* GetPMCommandForSshCmdPMInstance( PMInstance *pPmInstance, QString command );
-PMCommand* GetPMCommandForScp2VM(QString user, QString server, QString port, QString passwd, QString localDir, QString remoteDir);
-PMCommand* GetPMCommandForScp2Host(QString user, QString server, QString port, QString passwd, QString localDir, QString remoteDir);
+PmCommand* GetPmCommandForSshCmd(QString user, QString server, QString port, QString passwd, QString command);
+PmCommand* GetPmCommandForSshCmdVmMaskInstance(QSharedPointer<VmMaskInstance>& parVmMaskInstance, QString command);
+PmCommand* GetPmCommandForSshCmdVmMaskInstance(int parSshPort, QString command );
+PmCommand* GetPmCommandForScp2VM(QString user, QString server, QString port, QString passwd, QString localDir, QString remoteDir);
+PmCommand* GetPmCommandForScp2Host(QString user, QString server, QString port, QString passwd, QString localDir, QString remoteDir);
 
 // From http://www.reedbeta.com/blog/2013/07/10/cpp-compile-time-array-size/
 template <typename T, int N> char( &dim_helper( T(&)[N] ) )[N];
-QString getInstallDir(QString dir);
 #define dim(x) (sizeof(dim_helper(x)))
-bool getAndCreateUserConfigDir(QString& parUserConfigDir);
+
+QDir getPmConfigQDir();

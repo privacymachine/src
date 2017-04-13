@@ -1,5 +1,5 @@
 ﻿/*==============================================================================
-        Copyright (c) 2013-2016 by the Developers of PrivacyMachine.eu
+        Copyright (c) 2013-2017 by the Developers of PrivacyMachine.eu
                          contact@privacymachine.eu
      OpenPGP-Fingerprint: 0C93 F15A 0ECA D404 413B 5B34 C6DE E513 0119 B175
 
@@ -16,7 +16,7 @@
                         limitations under the Licence.
 ==============================================================================*/
 
-#include "PMManager.h"
+#include "PmManager.h"
 #include "WidgetUpdate.h"
 #include "ui_WidgetUpdate.h"
 
@@ -38,14 +38,14 @@ WidgetUpdate::~WidgetUpdate()
   delete ui_;
 }
 
-bool WidgetUpdate::init(PMManager* manager)
+bool WidgetUpdate::init(PmManager* manager)
 {
   manager_ = manager;
 
   connect(widgetCommandExec_,
-          SIGNAL(signalFinished(CommandResult)),
+          SIGNAL(signalFinished(ePmCommandResult)),
           this,
-          SLOT(slotCommandsFinished(CommandResult)));
+          SLOT(slotCommandsFinished(ePmCommandResult)));
 
   // frmMainWindows should receive Update-Status Messages
   connect(widgetCommandExec_,
@@ -56,8 +56,8 @@ bool WidgetUpdate::init(PMManager* manager)
   widgetCommandExec_->connectSignalsAndSlots();
 
   // create all commands
-  QList<PMCommand*> allCommands;
-  manager->createCommandsUpdateAllVmMasks(allCommands);
+  QList<PmCommand*> allCommands;
+  manager->createCommandsToCreateAllVmMasks(allCommands);
 
   if (!widgetCommandExec_->setCommands(allCommands)) // widgetCommandExec_ also deletes the memory of the commands
     return false;
@@ -70,9 +70,7 @@ void WidgetUpdate::start()
   widgetCommandExec_->start();
 }
 
-/*---------------------------------------------*/
-/*            PRIVATE SLOTS:                   */
-void WidgetUpdate::slotCommandsFinished(CommandResult result)
+void WidgetUpdate::slotCommandsFinished(ePmCommandResult result)
 {
   // emit similar signal to frmMainWindow
   emit signalUpdateFinished(result);

@@ -1,5 +1,5 @@
 /*==============================================================================
-        Copyright (c) 2013-2016 by the Developers of PrivacyMachine.eu
+        Copyright (c) 2013-2017 by the Developers of PrivacyMachine.eu
                          contact@privacymachine.eu
      OpenPGP-Fingerprint: 0C93 F15A 0ECA D404 413B 5B34 C6DE E513 0119 B175
 
@@ -22,7 +22,7 @@
 #include <QTimer>
 #include <QLabel>
 
-#include "PMInstance.h"
+#include "VmMaskInstance.h"
 
 #ifndef SKIP_FREERDP_CODE
   #include <remotedisplaywidget.h>
@@ -34,13 +34,13 @@ class WidgetRdpView : public QWidget
     Q_OBJECT
 
   public:
-    // override protected:
+    /// override protected:
     void resizeEvent (QResizeEvent * event);
 
-    WidgetRdpView( QString parHost, PMInstance* pmInstance );
+    WidgetRdpView( QString parHost, QSharedPointer<VmMaskInstance> parVmMaskInstance );
     virtual ~WidgetRdpView();
 
-    PMInstance* GetPmInstance(){ return pmInstance_; }
+    int getVmMaskId() { return vmMaskInstance_->getVmMaskId(); }
     
     int screenHeight_;
     int screenWidth_;
@@ -61,11 +61,11 @@ class WidgetRdpView : public QWidget
     bool connectionEstablished_;
     bool onDisconnecting_;
     
-    // The minimum amount to subtract - will be padded to suit FreeRDP
+    /// The minimum amount to subtract - will be padded to suit FreeRDP
     unsigned short subtractDisplayWidthMin_;
     unsigned short subtractDisplayHeightMin_;
     
-    // The actual amount to subtract, which is the minimum amount + padding so that it suits FreeRDP
+    /// The actual amount to subtract, which is the minimum amount + padding so that it suits FreeRDP
     unsigned short subtractDisplayWidthCurrent_;
     unsigned short subtractDisplayHeightCurrent_;
     #ifndef SKIP_FREERDP_CODE
@@ -75,21 +75,20 @@ class WidgetRdpView : public QWidget
     #endif
     QGridLayout* loGrid_;
     QTimer timerResizeHappend_;
-    QString name_;
-    QLabel* lblErrorMessage_; // needed in case of error
-    bool inErrorMode_; // true on error
+    QLabel* lblErrorMessage_; /// needed in case of error
+    bool inErrorMode_; /// true on error
 
     /// This is the machine to which we connect. Every WidgetRdpView has at most one machine it is
     /// connected to.
-    PMInstance* pmInstance_;
+    QSharedPointer<VmMaskInstance> vmMaskInstance_;
 
-    // Number of connection retries (we need that to detect endless reconnect-loops
+    /// Number of connection retries (we need that to detect endless reconnect-loops
     int retryCount_;
 
   private slots:
 
     void slotTimerResizeHappendFired();
 
-    // from RemoteDisplayWidget
+    /// used by RemoteDisplayWidget
     void slotDisconnected();
 };

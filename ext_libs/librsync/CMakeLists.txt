@@ -185,7 +185,6 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/config.h.cmake ${CMAKE_CURRENT_BI
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/librsync-config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/src/librsync-config.h)
 
-
 # We need to be able to #include "file" from a few places,
 # * The original source dir
 # * The generated source dir

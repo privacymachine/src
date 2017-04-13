@@ -1,5 +1,5 @@
 ﻿/*==============================================================================
-        Copyright (c) 2013-2016 by the Developers of PrivacyMachine.eu
+        Copyright (c) 2013-2017 by the Developers of PrivacyMachine.eu
                          contact@privacymachine.eu
      OpenPGP-Fingerprint: 0C93 F15A 0ECA D404 413B 5B34 C6DE E513 0119 B175
 
@@ -30,20 +30,22 @@ class SystemConfig
     SystemConfig(QString iniFile);
     virtual ~SystemConfig();
 
-    bool init();
+    void readFromFileOrSetDefaults();
     bool write();
-
-    QString getVBoxCommand() { return vboxCommand_; }
 
     // getter / setter
 
-    // Path to the base-disk with slash (i.e. /opt/privacymachine/base-disk/)
+    // Path to the BaseDisk with slash (i.e. /opt/privacymachine/BaseDisk/)
     QString getBaseDiskPath() { return baseDiskPath_; }
     void setBaseDiskPath(QString baseDiskPath) { baseDiskPath_ = baseDiskPath; }
 
-    // Current base-disk name (i.e. 'base-disk_0' for the files base-disk_0.vmdk, base-disk_0_flat.vmdk, base-disk_0_capabilities.json)
+    // Current BaseDisk name (i.e. 'BaseDisk_0' for the files BaseDisk_0.vmdk, BaseDisk_0_flat.vmdk, BaseDisk_0_capabilities.json)
     QString getBaseDiskName() { return baseDiskName_; }
     void setBaseDiskName(QString baseDiskName) { baseDiskName_ = baseDiskName; }
+
+    // Current BaseDisk name (i.e. 'BaseDisk_0' for the files BaseDisk_0.vmdk, BaseDisk_0_flat.vmdk, BaseDisk_0_capabilities.json)
+    QString getBaseDiskVersion() { return baseDiskVersion_; }
+    void setBaseDiskVersion(QString baseDiskVersion) { baseDiskVersion_ = baseDiskVersion; }
 
     // Time in Seconds on cold boot untill screens shows some X-releated Display
     int getMachineBootUpTime() { return machineBootUpTime_; }
@@ -69,14 +71,12 @@ class SystemConfig
     int getCopyScriptsPerSshTime() { return copyScriptsPerSshTime_; }
     void setCopyScriptsPerSshTime(int time) { copyScriptsPerSshTime_ = time; }
 
-    QStringList getConfiguredVMMaskNames() { return configuredVMMaskNames_; }
-    void setConfiguredVMMaskNames(QStringList vmMasks)  {configuredVMMaskNames_ = vmMasks; }
+    QStringList getConfiguredVmMaskNames() { return configuredVmMaskNames_; }
+    void setConfiguredVmMaskNames(QStringList vmMasks)  {configuredVmMaskNames_ = vmMasks; }
 
   private:
-    bool readFromFile();
 
     QString iniFile_;
-    QString vboxCommand_;
     int machineBootUpTime_;
     int machineServiceStartupTime_;
     int machineRestoreTime_;
@@ -86,6 +86,7 @@ class SystemConfig
     QDateTime lastUpdateTime_;
     QSettings* pSettings_;
     QString baseDiskPath_;
+    QString baseDiskVersion_;
     QString baseDiskName_;
-    QStringList configuredVMMaskNames_;
+    QStringList configuredVmMaskNames_;
 };

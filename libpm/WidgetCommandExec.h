@@ -1,5 +1,5 @@
 ﻿/*==============================================================================
-        Copyright (c) 2013-2016 by the Developers of PrivacyMachine.eu
+        Copyright (c) 2013-2017 by the Developers of PrivacyMachine.eu
                          contact@privacymachine.eu
      OpenPGP-Fingerprint: 0C93 F15A 0ECA D404 413B 5B34 C6DE E513 0119 B175
 
@@ -25,8 +25,8 @@
 #include <QTimer>
 #include <QWidget>
 
-#include "PMCommand.h"
-#include "PMCommandExec.h"
+#include "PmCommand.h"
+#include "PmCommandExec.h"
 #include "ui_WidgetCommandExec.h"
 #include "utils.h"
 
@@ -35,27 +35,27 @@ namespace Ui {
   class WidgetCommandExec;
 }
 
-class PMCommand;
+class PmCommand;
 
-/// UI wrapper for PMCommandExec.
+/// UI wrapper for PmCommandExec.
 class WidgetCommandExec : public QWidget
 {
   Q_OBJECT
     
   public:
-    explicit WidgetCommandExec(QWidget *parParent = 0);
+    explicit WidgetCommandExec(QWidget *parParent = NULL);
     ~WidgetCommandExec();
     void abort();
     void connectSignalsAndSlots();
-    bool getRunning();
+    bool isStillExecuting();
     void reset();
-    bool setCommands( QList<PMCommand*>& parAllCommands );
+    bool setCommands( QList<PmCommand*>& parAllCommands );
     void start();
 
 
   signals:
     void signalUpdateProgress(QString title);
-    void signalFinished( CommandResult result );
+    void signalFinished( ePmCommandResult result );
 
 
   private:
@@ -63,13 +63,13 @@ class WidgetCommandExec : public QWidget
 
     Ui::WidgetCommandExec *ui_;
     /// Handles command and process execution for us.
-    QSharedPointer< PMCommandExec > exec_;
+    QSharedPointer< PmCommandExec > exec_;
 
 
   private slots:
     void slotBtnAbort_clicked();
     void slotBtnDetails_clicked();
-    void slotFinished( CommandResult result );
+    void slotFinished( ePmCommandResult result );
     void slotStartingNextCommandFailed();
     void slotStartingNextCommand();
     void slotUpdateProgress();

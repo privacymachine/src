@@ -1,5 +1,5 @@
 ﻿/*==============================================================================
-        Copyright (c) 2013-2016 by the Developers of PrivacyMachine.eu
+        Copyright (c) 2013-2017 by the Developers of PrivacyMachine.eu
                          contact@privacymachine.eu
      OpenPGP-Fingerprint: 0C93 F15A 0ECA D404 413B 5B34 C6DE E513 0119 B175
 
@@ -40,21 +40,11 @@ SystemConfig::~SystemConfig()
   if (pSettings_)
   {
     delete pSettings_;
-    pSettings_ = 0;
+    pSettings_ = NULL;
   }
 }
 
-bool SystemConfig::init()
-{
-  if (!readFromFile())
-    return false;
-
-  vboxCommand_ = determineVBoxCommand();
-
-  return true;
-}
-
-bool SystemConfig::readFromFile()
+void SystemConfig::readFromFileOrSetDefaults()
 {
   pSettings_ = new QSettings(iniFile_, QSettings::IniFormat);
   pSettings_->setIniCodec("UTF-8");
@@ -62,6 +52,7 @@ bool SystemConfig::readFromFile()
   pSettings_->beginGroup("BaseDisk");
   baseDiskPath_ = pSettings_->value("BaseDiskPath").toString();
   baseDiskName_ = pSettings_->value("BaseDiskName").toString();
+  baseDiskVersion_ = pSettings_->value("BaseDiskVersion").toString();
   pSettings_->endGroup();
 
   pSettings_->beginGroup("Update");
@@ -73,10 +64,8 @@ bool SystemConfig::readFromFile()
   copyScriptsPerSshTime_ = pSettings_->value("CopyScriptsPerSshTime", QVariant(5)).toInt();
   lastUpdateTime_ = pSettings_->value("LastUpdateTime", QDateTime::fromMSecsSinceEpoch(0)).toDateTime();
   // maybe move to seperate group
-  configuredVMMaskNames_ = pSettings_->value("ConfiguredBaseDisks").toStringList();
+  configuredVmMaskNames_ = pSettings_->value("ConfiguredBaseDisks").toStringList();
   pSettings_->endGroup();
-
-  return true;
 }
 
 bool SystemConfig::write()
@@ -84,6 +73,7 @@ bool SystemConfig::write()
   pSettings_->beginGroup("BaseDisk");
   pSettings_->setValue("BaseDiskPath", baseDiskPath_);
   pSettings_->setValue("BaseDiskName", baseDiskName_);
+  pSettings_->setValue("BaseDiskVersion", baseDiskVersion_);
   pSettings_->endGroup();
 
   pSettings_->beginGroup("Update");
@@ -94,7 +84,7 @@ bool SystemConfig::write()
   pSettings_->setValue("WaitTimeAfterPowerOff", waitTimeAfterPowerOff_);
   pSettings_->setValue("LastUpdateTime", lastUpdateTime_);
   // maybe move to seperate group
-  pSettings_->setValue("ConfiguredBaseDisks", configuredVMMaskNames_);
+  pSettings_->setValue("ConfiguredBaseDisks", configuredVmMaskNames_);
   pSettings_->endGroup();
 
   pSettings_->sync();

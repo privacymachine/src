@@ -1,5 +1,5 @@
 /*==============================================================================
-        Copyright (c) 2013-2016 by the Developers of PrivacyMachine.eu
+        Copyright (c) 2013-2017 by the Developers of PrivacyMachine.eu
                          contact@privacymachine.eu
      OpenPGP-Fingerprint: 0C93 F15A 0ECA D404 413B 5B34 C6DE E513 0119 B175
 
@@ -150,7 +150,7 @@ int main(int argc, char *argv[])
     // init the translation of PrivacyMachine messages
     QTranslator pmTranslator;
     QString currentLanguage = "lang_" + QLocale::system().name();
-    // TODO: read from PrivacyMachine.ini
+    /// @todo: read from PrivacyMachine.ini
     // Enable for Testing the german translation
     currentLanguage = "lang_de_DE";
     pmTranslator.load(currentLanguage);

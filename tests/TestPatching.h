@@ -1,10 +1,28 @@
+/*==============================================================================
+        Copyright (c) 2013-2017 by the Developers of PrivacyMachine.eu
+                         contact@privacymachine.eu
+     OpenPGP-Fingerprint: 0C93 F15A 0ECA D404 413B 5B34 C6DE E513 0119 B175
+
+                     Licensed under the EUPL, Version 1.1
+     European Commission - subsequent versions of the EUPL (the "Licence");
+        You may not use this work except in compliance with the Licence.
+                  You may obtain a copy of the Licence at:
+                        http://ec.europa.eu/idabc/eupl
+
+ Unless required by applicable law or agreed to in writing, software distributed
+              under the Licence is distributed on an "AS IS" basis,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+      See the Licence for the specific language governing permissions and
+                        limitations under the Licence.
+==============================================================================*/
+
 #pragma once
 
 #include <QObject>
 #include <QtTest>
 #include <QtNetwork>
 
-#include "fvupdater.h"
+#include "deprecated_fvupdater.h"
 
 #include "utils.h"
 
@@ -24,7 +42,7 @@ class TestPatching : public QObject
 {
     Q_OBJECT
   public:
-//    explicit TestPatching(QObject *parent = 0) 
+//    explicit TestPatching(QObject *parent = NULL)
 //    { }
 
   // Amongst the private slots, test functions are named test<test case>(). This helps in distinguishing them from the

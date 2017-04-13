@@ -12,7 +12,7 @@ class WidgetAbout : public QWidget
     Q_OBJECT
 
   public:
-    explicit WidgetAbout(QWidget *parent = 0);
+    explicit WidgetAbout(QWidget *parent = NULL);
     ~WidgetAbout();
     void addWidget(QWidget *w);
 

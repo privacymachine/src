@@ -1,5 +1,5 @@
 ﻿/*==============================================================================
-        Copyright (c) 2013-2016 by the Developers of PrivacyMachine.eu
+        Copyright (c) 2013-2017 by the Developers of PrivacyMachine.eu
                          contact@privacymachine.eu
      OpenPGP-Fingerprint: 0C93 F15A 0ECA D404 413B 5B34 C6DE E513 0119 B175
 
@@ -30,16 +30,16 @@ namespace Ui {
 }
 
 class WidgetCommandExec;
-class PMManager;
-class PMInstance;
+class PmManager;
+class VmMaskInstance;
 
 class WidgetNewTab : public QWidget
 {
     Q_OBJECT
     
   public:
-    explicit WidgetNewTab(QWidget *parParent = 0);
-    bool init(PMManager *parPMManager);
+    explicit WidgetNewTab(QWidget *parParent = NULL);
+    bool init(PmManager *parPmManager);
     ~WidgetNewTab();
     
   private:
@@ -47,24 +47,23 @@ class WidgetNewTab : public QWidget
     void connectSignalsAndSlots();
     void disconnectSignalsAndSlots();
     bool startVmMask();
-    void reset();
 
     Ui::WidgetNewTab *ui_;
     QWidget *m_parent_;
     WidgetCommandExec *commandExec_;
-    PMManager *pmManager_;
+    PmManager *pmManager_;
     QButtonGroup* radioButtons_;
-    int currentBtnId_;
+    int currentSelectedVmMaskId_;
 
   signals:
-    void newVmMaskReady(int indexVmMask);
+    void signalNewVmMaskReady(int parVmMaskId);
 
   private slots:
     void slotBtnStart_clicked();
     void slotRadioBtn_clicked();
-    void slotFinished(CommandResult exitCode);
+    void slotFinished(ePmCommandResult parExitCode);
 
   public slots:
-    void slotVmMaskClosed( int vmMaskId );
+    void slotVmMaskClosed( int parVmMaskId );
 };
 

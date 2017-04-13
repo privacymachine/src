@@ -1,5 +1,5 @@
 ﻿/*==============================================================================
-        Copyright (c) 2013-2016 by the Developers of PrivacyMachine.eu
+        Copyright (c) 2013-2017 by the Developers of PrivacyMachine.eu
                          contact@privacymachine.eu
      OpenPGP-Fingerprint: 0C93 F15A 0ECA D404 413B 5B34 C6DE E513 0119 B175
 
@@ -27,28 +27,35 @@
 #include <QTimer>
 #include <vector>
 
-#include "PMCommandExec.h"
-#include "PMInstance.h"
+#include "PmCommandExec.h"
+#include "VmMaskInstance.h"
 #include "utils.h"
 
 using std::vector;
 using std::string;
 
-class PMInstance;
-class PMCommandExec;
+class VmMaskInstance;
+class PmCommandExec;
 
 /// Provides the IP address for a specific VM
 /// This is the first class that asynchronously gets information out of a VM (beware security leaks!). 
-/// It does so using a polling timer (triggered by startPollingExternalIp()), which in turn triggers PMCommands. When
-/// finished, these PMCommands cause state updates. Once all state updates have been performed, we signal it to the
+/// It does so using a polling timer (triggered by startPollingExternalIp()), which in turn triggers PmCommands. When
+/// finished, these PmCommands cause state updates. Once all state updates have been performed, we signal it to the
 /// outside world, using signalUpdateIpSuccess() in this case.
 class VmInfoIpAddress: public QObject
 {
   Q_OBJECT
 
   public:
-    /// \param configVpn At the moment, the only ConfigVPN::vpnType supported is OpenVPN
-    VmInfoIpAddress( PMInstance *pPmInstance );
+
+    /// \brief Constructor of VmInfoIpAddress
+    /// \param parVmMaskIpAddressProviders in: List of IP-Adress-Providers
+    /// \param parVmMaskFullName           in: full name opf VmMask
+    /// \param parVmMaskBrowser            in: current browser in use
+    VmInfoIpAddress(QStringList parVmMaskIpAddressProviders,
+                    QString parVmMaskFullName,
+                    QString parVmMaskBrowser,
+                    int parSshPort);
 
     virtual ~VmInfoIpAddress();
 
@@ -72,14 +79,16 @@ class VmInfoIpAddress: public QObject
     /// successfully.
     void signalUpdateIpSuccess();
 
-
   private:
     void randomizeIpAddressProviders();
 
-    PMCommand *createPmCommandNextIpAddressProvider();
+    PmCommand *createPmCommandNextIpAddressProvider();
 
     /// Contains the VM's IP Address, if it could be obtained successfully. \c"", otherwise.
     QString ipAddress_;
+
+    /// Needed to connect to the Vm (@todo: refactor)
+    int sshPort_;
 
     /// \c true if ipAddress_ is supposed to contain an up-to-date value. \c false otherwise.
     bool ipAddressUpdated_;
@@ -88,15 +97,18 @@ class VmInfoIpAddress: public QObject
 
     QList<unsigned> ipAddressProviderPermutation_;
 
-    /// The VM for which we attempt to obtain the IP Address.
-    PMInstance *pPmInstance_;
+    /// List of IP-Adress-Providers (copy from current VmMaskInstance)
+    QStringList vmMaskIpAddressProviders_;
+
+    QString vmMaskFullName_;
+
+    QString vmMaskBrowser_;
 
     /// exec_ takes care of running and evaluating all command-line commands for us.
-    QSharedPointer< PMCommandExec > exec_;
-
+    QSharedPointer<PmCommandExec> exec_;
 
   private slots:
-    void slotExecFinished( CommandResult result );
+    void slotExecFinished( ePmCommandResult result );
 
 };
 

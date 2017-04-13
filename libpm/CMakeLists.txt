@@ -1,5 +1,5 @@
 ################################################################################
-#        Copyright (c) 2013-2016 by the Developers of PrivacyMachine.eu
+#        Copyright (c) 2013-2017 by the Developers of PrivacyMachine.eu
 #                         contact@privacymachine.eu
 #     OpenPGP-Fingerprint: 0C93 F15A 0ECA D404 413B 5B34 C6DE E513 0119 B175
 #
@@ -15,6 +15,7 @@
 #      See the Licence for the specific language governing permissions and
 #                        limitations under the Licence.
 ################################################################################
+
 cmake_minimum_required(VERSION 2.8.11)
 include(CPackComponent)
 
@@ -23,12 +24,7 @@ set (PM_STATIC_LIB pm)
 
 # Add CMake submodules to the path
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake_modules ${CMAKE_MODULE_PATH})
-
-if(MSVC)
-  set (PM_WINDOWS TRUE)
-  add_definitions(-DPM_WINDOWS)
-endif()
-
+include(PmCommon)
 
 # add the build dir to the include path
 # because moc generates the files there
@@ -37,23 +33,32 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 # automatic handle qrc files
 set(CMAKE_AUTORCC ON)
 
-find_package(Qt5Core)
-find_package(Qt5Gui)
-find_package(Qt5Widgets)
-find_package(Qt5Multimedia)
-find_package(Qt5LinguistTools)
-find_package(Qt5Test)
+find_package(Qt5Core REQUIRED)
+find_package(Qt5Gui REQUIRED)
+find_package(Qt5Widgets REQUIRED)
+find_package(Qt5Multimedia REQUIRED)
+find_package(Qt5LinguistTools REQUIRED)
+find_package(Qt5Test REQUIRED)
+find_package(Qt5Xml REQUIRED)
+
+
+# needed for libsodium
+find_package(LibSodium REQUIRED)
+#include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../ext_libs/libsodium-1.0.11/src/libsodium/include)
+#link_directories(${CMAKE_CURRENT_SOURCE_DIR}/../ext_libs/libsodium-1.0.11/src/libsodium/.libs)
 
 # needed for quazip
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../ext_libs/quazip/quazip)
-link_directories(${CMAKE_BINARY_DIR}/../working_dir)
-link_directories(${CMAKE_BINARY_DIR}/../working_dir/lib)
-set (QUAZIP_LIBRARIES quazip5${PM_DEBUG_D_SUFFIX})
+find_package(QuaZip REQUIRED)
+include_directories(${QUAZIP_INCLUDE_DIRS})
+# old:
+#include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../ext_libs/quazip/quazip)
+#link_directories(${CMAKE_BINARY_DIR}/../working_dir)
+#link_directories(${CMAKE_BINARY_DIR}/../working_dir/lib)
+#set (QUAZIP_LIBRARIES quazip5${PM_DEBUG_D_SUFFIX})
 
 # needed for librsync
-set (RSYNC_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../ext_libs/librsync/src)
-include_directories(${RSYNC_INCLUDE_DIR})
-include_directories(../build/ext_libs/librsync/src)
+find_package(LibRsync REQUIRED)
+include_directories(${LIBRSYNC_INCLUDE_DIRS})
 
 if(MSVC)
   GET_FILENAME_COMPONENT(Installed64BitVersionFromRegistry
@@ -72,41 +77,56 @@ include_directories(${Qt5Core_INCLUDE_DIRS})
 include_directories(${Qt5Gui_INCLUDE_DIRS})
 include_directories(${Qt5Widgets_INCLUDE_DIRS})
 include_directories(${Qt5Multimedia_INCLUDE_DIRS})
+include_directories(${Qt5Xml_INCLUDE_DIRS})
 
 set (PM_USES_QT_LIBRARIES Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Multimedia)
 
 add_definitions(${QT_DEFINITIONS})
 
-# Needed by fvupdater.cpp
+# Needed by deprecated_fvupdater.cpp
 add_definitions(-DFV_GUI)
 
 set (NoMocSources
                     CpuFeatures.h
                     getMemorySize.cpp
-                    getMemorySize.h                    
-                    utils.h
-                    utils.cpp
+                    getMemorySize.h
+                    PmCommand.cpp
+                    PmCommand.h
+                    PmData.cpp
+                    PmData.h
+                    VmMaskCurrentConfig.cpp
+                    VmMaskCurrentConfig.h
+                    VmMaskData.cpp
+                    VmMaskData.h
+                    VmMaskUserConfig.cpp
+                    VmMaskUserConfig.h
+                    VmMaskInstance.cpp
+                    VmMaskInstance.h
+                    VmMaskStaticConfig.cpp
+                    VmMaskStaticConfig.h
+                    PmLog.cpp
+                    PmLog.h
+                    PmManager.cpp
+                    PmManager.cpp
+                    PmManager.h
+                    PmManager.h
                     resource.h
-                    PMCommand.h
-                    PMCommand.cpp
-                    PMInstance.h
-                    PMInstance.cpp
-                    PMInstanceConfiguration.h
-                    PMInstanceConfiguration.cpp
-                    PMManager.h
-                    PMManager.cpp
-                    UserConfig.h
-                    UserConfig.cpp
-                    SystemConfig.h
-                    SystemConfig.cpp
-                    PMManager.h
-                    PMManager.cpp
-                    UserConfig.h
-                    UserConfig.cpp
-                    VmInitVpn.h
-                    VmInitVpn.cpp
-                    RunGuard.h
                     RunGuard.cpp
+                    RunGuard.h
+                    SystemConfig.cpp
+                    SystemConfig.h
+                    UserConfig.cpp
+                    UserConfig.cpp
+                    UserConfig.h
+                    UserConfig.h
+                    utils.cpp
+                    utils.h
+                    PmVpnHelper.cpp
+                    PmVpnHelper.h
+                    PmVersion.cpp
+                    PmVersion.h
+                    XmlUpdateParser.cpp
+                    XmlUpdateParser.h
                     )
 
 if(MSVC)
@@ -116,51 +136,54 @@ else()
 endif()
 
 set (MocReleatedSources
-                    WindowMain.cpp
-                    WidgetNewTab.cpp
-                    WidgetUpdate.cpp
-                    WidgetAbout.cpp
-                    PMCommandExec.cpp
-                    WidgetCommandExec.cpp
-                    WidgetRdpView.cpp
-                    VmInfoIpAddress.cpp
-                    fvupdatewindow.cpp
-                    fvavailableupdate.cpp
-                    fvversioncomparator.cpp
-                    fvignoredversions.cpp
-                    fvupdater.cpp
-                    fvplatform.cpp
-                    fvupdatedownloadprogress.cpp
+                    # Fervor is deprecated in will be removed soon
+                    deprecated_fvavailableupdate.cpp
+                    deprecated_fvignoredversions.cpp
+                    deprecated_fvplatform.cpp
+                    deprecated_fvupdatedownloadprogress.cpp
+                    deprecated_fvupdater.cpp
+                    deprecated_fvupdatewindow.cpp
+                    deprecated_fvversioncomparator.cpp
                     images.qrc
+                    PmCommandExec.cpp
+                    VmInfoIpAddress.cpp
+                    WidgetAbout.cpp
+                    WidgetCommandExec.cpp
+                    WidgetNewTab.cpp
+                    WidgetRdpView.cpp
+                    WidgetUpdate.cpp
+                    WindowMain.cpp
                     )
 
 set (MocReleatedHeaders
-                    WindowMain.h
-                    WidgetNewTab.h
-                    WidgetUpdate.h
-                    WidgetAbout.h
-                    PMCommandExec.h
-                    WidgetCommandExec.h
-                    WidgetRdpView.h
+                    # Fervor is deprecated in will be removed soon
+                    deprecated_fvavailableupdate.h
+                    deprecated_fvignoredversions.h
+                    deprecated_fvplatform.h
+                    deprecated_fvupdatedownloadprogress.h
+                    deprecated_fvupdater.h
+                    deprecated_fvupdatewindow.h
+                    #deprecated_fvversioncomparator.h
+                    PmCommandExec.h
                     VmInfoIpAddress.h
-                    fvupdatewindow.h
-                    fvavailableupdate.h
-                    fvversioncomparator.h
-                    fvignoredversions.h
-                    fvupdater.h
-                    fvplatform.h
-                    fvupdatedownloadprogress.h
+                    WidgetAbout.h
+                    WidgetCommandExec.h
+                    WidgetNewTab.h
+                    WidgetRdpView.h
+                    WidgetUpdate.h
+                    WindowMain.h
                     )
 
 set(MocReleatedForms
-                WindowMain.ui
-                WidgetNewTab.ui
-                WidgetUpdate.ui
-                WidgetAbout.ui
-                WidgetCommandExec.ui
-                fvupdatewindow.ui
-                fvupdatedownloadprogress.ui
-                )
+                    # Fervor is deprecated in will be removed soon
+                    deprecated_fvupdatedownloadprogress.ui
+                    deprecated_fvupdatewindow.ui
+                    WidgetAbout.ui
+                    WidgetCommandExec.ui
+                    WidgetNewTab.ui
+                    WidgetUpdate.ui
+                    WindowMain.ui
+                    )
 
 #set(MocReleatedResources images.qrc)
 qt5_add_resources(RESOURCES images.qrc)
@@ -169,18 +192,18 @@ qt5_wrap_cpp(MocReleatedHeaders_MOC ${MocReleatedHeaders})
 qt5_wrap_ui(MocReleatedForms_MOC ${MocReleatedForms})
 
 add_library(${PM_STATIC_LIB} STATIC
-            ${NoMocSources}
-            ${MocReleatedSources}
-            ${MocReleatedHeaders_MOC}
-            ${MocReleatedForms_MOC}
-            #resources.rc
-            )
+                    ${NoMocSources}
+                    ${MocReleatedSources}
+                    ${MocReleatedHeaders_MOC}
+                    ${MocReleatedForms_MOC}
+                    #resources.rc
+                    )
             
 add_executable(PrivacyMachine
-               ${RESOURCES}
-               resources.rc
-               main.cpp                  
-               )
+                    main.cpp
+                    ${RESOURCES}
+                    resources.rc
+                    )
 
                
 if(MSVC)
@@ -258,9 +281,9 @@ endif()
 
 if (NOT SKIP_FREERDP_CODE)
   if(MSVC)
-    set (AdditionalFreeRDPLibraries ${LIBFREERDPCLIENT_LIBRARIES} RemoteDisplay Mpr.lib)
+    set (AdditionalFreeRDPLibraries ${LIBFREERDPCLIENT_LIBRARIES} Mpr.lib)
   else()
-    set (AdditionalFreeRDPLibraries ${LIBFREERDPCLIENT_LIBRARIES} RemoteDisplay)
+    set (AdditionalFreeRDPLibraries ${LIBFREERDPCLIENT_LIBRARIES})
   endif()
   include_directories(${RemoteDisplay_SOURCE_DIR})
 else()
@@ -275,16 +298,21 @@ target_link_libraries(${PM_STATIC_LIB}
   ${Qt5Core_LIBRARIES}
   ${Qt5Widgets_LIBRARIES}
   ${Qt5Test_LIBRARIES}
+  Qt5::Multimedia
   ${AdditionalFreeRDPLibraries}
+  ${REMOTEDISPLAY_LIBRARIES}
   ${QUAZIP_LIBRARIES}
   ${MICROSOFT_LIBS}
-  Qt5::Multimedia
-  librsync
+  ${LIBRSYNC_LIB}
+  sodium
+  stdc++
   )
 
 target_link_libraries(PrivacyMachine
   ${PM_STATIC_LIB}
   )
+#MESSAGE("XXXXXX ${LIBRSYNC_LIB}")
+#${REMOTEDISPLAY_LIB}
 
 set_target_properties(PrivacyMachine ${PM_STATIC_LIB}
                       PROPERTIES
@@ -292,3 +320,5 @@ set_target_properties(PrivacyMachine ${PM_STATIC_LIB}
                       BUILD_WITH_INSTALL_RPATH FALSE
                       )
 
+# Include our extra modules
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../cmake/)

@@ -1,5 +1,5 @@
 ﻿/*==============================================================================
-        Copyright (c) 2013-2016 by the Developers of PrivacyMachine.eu
+        Copyright (c) 2013-2017 by the Developers of PrivacyMachine.eu
                          contact@privacymachine.eu
      OpenPGP-Fingerprint: 0C93 F15A 0ECA D404 413B 5B34 C6DE E513 0119 B175
 
@@ -26,7 +26,7 @@ WidgetCommandExec::WidgetCommandExec(QWidget *parParent) :
   ui_(new Ui::WidgetCommandExec)
 {
   // Smart pointer might be a slight overkill here, but should increase robustnes nevertheless.
-  exec_ = QSharedPointer< PMCommandExec >( new PMCommandExec() );
+  exec_ = QSharedPointer< PmCommandExec >( new PmCommandExec() );
   ui_->setupUi(this);
   ui_->btnAbort->setEnabled(false);
   ui_->txtDetailMessages->setVisible(false);
@@ -72,9 +72,9 @@ void WidgetCommandExec::connectSignalsAndSlots()
 
     connect(
       &(*exec_),
-      SIGNAL( signalFinished( CommandResult ) ),
+      SIGNAL( signalFinished( ePmCommandResult ) ),
       this,
-      SLOT( slotFinished( CommandResult ) ) );
+      SLOT( slotFinished( ePmCommandResult ) ) );
 
     connect(
       &(*exec_),
@@ -136,7 +136,7 @@ void WidgetCommandExec::disconnectSignalAndSlots()
 
     disconnect(
       &(*exec_),
-      SIGNAL( signalFinished( CommandResult ) ),
+      SIGNAL( signalFinished( ePmCommandResult ) ),
       0,
       0 );
 
@@ -175,14 +175,13 @@ void WidgetCommandExec::disconnectSignalAndSlots()
 
 }
 
-bool WidgetCommandExec::getRunning()
+bool WidgetCommandExec::isStillExecuting()
 {
-  return exec_ && exec_->getRunning();
-  
+  return exec_ && exec_->isRunning();
 }
 
 
-bool WidgetCommandExec::setCommands(QList<PMCommand *>& parAllCommands)
+bool WidgetCommandExec::setCommands(QList<PmCommand *>& parAllCommands)
 {
   if( !exec_ )
   {
@@ -312,11 +311,10 @@ void WidgetCommandExec::slotBtnDetails_clicked()
 }
 
 
-void WidgetCommandExec::slotFinished( CommandResult result )
+void WidgetCommandExec::slotFinished( ePmCommandResult parResult )
 {
   ui_->btnAbort->setEnabled(false);
-  emit signalFinished( result );
-
+  emit signalFinished( parResult );
 }
 
 

@@ -1,10 +1,13 @@
-cmake_minimum_required (VERSION 2.8)
+cmake_minimum_required (VERSION 2.8.11)
 
 project (PrivacyMachine-Project)
 
+# Add CMake submodules to the path
+set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake_modules ${CMAKE_MODULE_PATH})
+
 enable_testing()
 
-# Default to release build
+# Default to debug build
 if ("${CMAKE_BUILD_TYPE}" STREQUAL "")
   set(CMAKE_BUILD_TYPE Debug)
 endif()
@@ -17,7 +20,7 @@ endif()
 set(BUILD_SHARED_LIBS ON)
 
 # AL: Needed for compiling Fervor without QWebView
-# TODO: remove me
+# @todo: remove me
 set(SKIP_QWEBVIEW "ON") # Valid values: ON/OFF
 # We need to support differet QtWebView-Version if we need HTML-Dialogs:
 #   https://blog.qt.io/blog/2016/06/16/qt-5-7-released/
@@ -27,14 +30,29 @@ if (SKIP_QWEBVIEW)
   add_definitions(-DSKIP_QWEBVIEW)
 endif()
 
-# search all Qt-Modules needed for Translation and Installers
-find_package(Qt5Core)
-find_package(Qt5Gui)
-find_package(Qt5Widgets)
-find_package(Qt5Multimedia)
-find_package(Qt5LinguistTools)
-find_package(Qt5Test)
+# It is needed that the Project 'ExtLib' is build first
+# search an library here explicit to provide nicer error messages to the user
+find_library(SomeExtLib_LIB
+  NAMES RemoteDisplay libRemoteDisplay
+  HINTS   ${CMAKE_CURRENT_SOURCE_DIR}/working_dir/lib
+)
+if ("${SomeExtLib_LIB}" STREQUAL "SomeExtLib_LIB-NOTFOUND")
+  MESSAGE(FATAL_ERROR "ERROR: Please build the required Project 'ext_libs' first (via ./buildExtLibs.sh or opening the file ext_libs/CMakeLists.txt in Qt-Creator")
+endif()
 
+
+# search all Qt-Modules needed for Translation and Installers
+find_package(Qt5Core REQUIRED)
+find_package(Qt5Gui REQUIRED)
+find_package(Qt5Widgets REQUIRED)
+find_package(Qt5Multimedia REQUIRED)
+find_package(Qt5LinguistTools REQUIRED)
+find_package(Qt5Test REQUIRED)
+find_package(Qt5Xml REQUIRED)
+find_package(RemoteDisplay REQUIRED)
+include_directories(${REMOTEDISPLAY_INCLUDE_DIR})
+
+include_directories(build_ext_libs/librsync/src)
 
 if(MSVC)
   add_definitions(-D_WIN32_WINNT=0x0601)
@@ -49,7 +67,7 @@ if(MSVC)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
   set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} /MP")
 
-  # Exceoption Handling (https://msdn.microsoft.com/en-us/library/1deeycx5.aspx)
+  # Exception Handling (https://msdn.microsoft.com/en-us/library/1deeycx5.aspx)
   set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc")
   
   if(NOT DEFINED BUILD_SHARED_LIBS)
@@ -74,13 +92,13 @@ else()
 endif()
 
 # Build all executables and libraries to specific directories: very usefull for installation and RPATH-Handling
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../working_dir)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/working_dir)
 if(MSVC)
-  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../working_dir)
-  set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../working_dir/build_libs) #*.lib needed for linking
+  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/working_dir)
+  set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/working_dir/build_libs) #*.lib needed for linking
 else()
-  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../working_dir/lib)
-  set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../working_dir/lib)
+  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/working_dir/lib)
+  set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/working_dir/lib)
 endif()
 # see https://cmake.org/Wiki/CMake_RPATH_handling
 SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
@@ -116,7 +134,7 @@ find_package(Qt5LinguistTools)
 find_package(Qt5Test)
 
 # Build all external libraries (FreeRDP,...)
-add_subdirectory(ext_libs)
+#add_subdirectory(ext_libs)
 
 # Disabled by default: Copy the firefox profile to the VM at each VM-Mask start
 set(USE_OUTSIDE_FIREFOX_PROFILE "OFF") # Valid values: ON/OFF
@@ -162,13 +180,13 @@ set (TRANSLATIONS_FILES
 OPTION(REFRESH_TRANSLATIONS "Refresh translations on compile" OFF)
 
 # HOWTO Updating new Translations
-# o) To get new text to translateable items in the  pm/translations/lang_de.ts file comment in the line below
+# o) To get new translateable items to the file libpm/translations/lang_de.ts change the following line to "set (REFRESH_TRANSLATIONS ON)"
 # o) Compile the Project ONE TIME and imediately comment it out again, because a 'clean' command will delete the updated lang_de.ts file:
 #      cd build
 #      make translations_target
 # o) Start 'linguist' and open the file libpm/translations/lang_de.ts
 # o) Do all translations and save the file
-# o) On the next build the translations are located in the file build/pm/lang_de.qm
+# o) On the next build the translations are located in the file build/libpm/lang_de.qm
 set (REFRESH_TRANSLATIONS OFF)
 
 if (REFRESH_TRANSLATIONS)
@@ -332,9 +350,9 @@ if ("${CMAKE_BUILD_TYPE}" MATCHES "Release")
                   DESTINATION conf/
                   COMPONENT pm_stuff)
 
-    # WIX can only pack files under 2GB
-    #install(DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/base-disk/
-    #              DESTINATION base-disk
+    # WIX can only pack files below 2GB
+    #install(DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/BaseDisk/
+    #              DESTINATION BaseDisk
     #              COMPONENT pm_stuff)
 
   else()
@@ -383,4 +401,3 @@ if ("${CMAKE_BUILD_TYPE}" MATCHES "Release")
 
   include(CPack)
 endif()
-

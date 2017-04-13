@@ -1,5 +1,5 @@
 ﻿/*==============================================================================
-        Copyright (c) 2013-2016 by the Developers of PrivacyMachine.eu
+        Copyright (c) 2013-2017 by the Developers of PrivacyMachine.eu
                          contact@privacymachine.eu
      OpenPGP-Fingerprint: 0C93 F15A 0ECA D404 413B 5B34 C6DE E513 0119 B175
 
@@ -16,6 +16,15 @@
                         limitations under the Licence.
 ==============================================================================*/
 
+#include "utils.h"
+#include "getMemorySize.h"
+#include "WindowMain.h"
+#include "SystemConfig.h"
+#include "CpuFeatures.h"
+#include "PmData.h"
+#include "PmLog.h"
+#include "RunGuard.h"
+
 #include <QApplication>
 #include <QString>
 #include <QDir>
@@ -30,29 +39,26 @@
 #include <QCommandLineParser>
 #include <QStyleFactory>
 
-#include "utils.h"
-#include "getMemorySize.h"
-#include "WindowMain.h"
-#include "SystemConfig.h"
-#include "CpuFeatures.h"
-#include "RunGuard.h"
-
-
 #include <string>
 #include <algorithm>
 #include <iostream>
 using namespace std;
 
-
-
-QString staticGlobalLogFileName;
-void logMessages(QtMsgType type, const QMessageLogContext& context, const QString& msg);
-bool rotateLogfiles();
+// local function declarations
+void handleMessages(QtMsgType type, const QMessageLogContext& context, const QString& msg);
+void initTranslation(QApplication& parApp);
 bool checkSystemInstallation(QString& parVboxDefaultMachineFolder);
 
 
 int main(int argc, char *argv[])
 {
+  // libsodium needs to be initialized before first use, because this can be security relevant, we make it at the beginning
+  if (sodium_init() == -1)
+  {
+    cerr << "error initialize libsodium" << endl;
+    return -1;
+  }
+
   int retCode = -1;
   bool guiNeverShown = true;
   QString vboxDefaultMachineFolder;
@@ -63,54 +69,54 @@ int main(int argc, char *argv[])
       FreeConsole();
   #endif
 
-  #ifndef PM_WINDOWS
-    // On Linux, this is needed for console output and for reading INI-Files
-    // TODO:check that!! QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
-  #endif
-
-  // Initialize random seed (based on current time)
-  pm_srand(0);
-
   QApplication app(argc, argv);
   app.setOrganizationName("PrivacyMachine");
   app.setApplicationName("PrivacyMachine");
   app.setApplicationVersion(constPrivacyMachineVersion);
   app.setOrganizationDomain("https://www.privacymachine.eu");
-  // Get the path to the current running executable
-  // (only works before we change the current path inside this application)
-  QString pmInstallDirPath = app.applicationDirPath();
 
-  // set InstallDirPath to be static inside the function getInstallDir
-  // IMPORTANT: be shure this is the first call of getInstallDir
-  getInstallDir(pmInstallDirPath);
+  // Get the path to the current running executable (only works before we change the current path inside this application)
+  QString pmInstallDirPath = app.applicationDirPath();
+  // remember the path
+  PmData::getInstance().setInstallDirPath(pmInstallDirPath);
 
   // Be save to run only one instance
   RunGuard guard( "PrivacyMachine is running   uniqe-key = 90hQlQsd1Gp+sPeD+ANdUGymXxUtdLwgoxsdjDqK7Q1zZ2hYQBnQBw" );
   if ( !guard.tryToRun() )
   {
     qDebug() <<  "An other instance of the PrivacyMachine is already running";
-    QMessageBox abortMsg(QMessageBox::Information, QApplication::applicationName()+" "+QApplication::applicationVersion(),
+    QMessageBox abortMsg(QMessageBox::Information, QApplication::applicationName() + " " + QApplication::applicationVersion(),
                          "The PrivacyMachine is already running!");
     abortMsg.setWindowIcon(QIcon(":/resources/privacymachine.svg"));
     return abortMsg.exec();
   }
 
-  if (!rotateLogfiles())
+  QDir userConfigDir = getPmConfigQDir();
+  if (!userConfigDir.exists())
+  {
+    if (!userConfigDir.mkpath("."))
+    {
+      qCritical() << "Error creating user config dir: " << userConfigDir;
+      return false;
+    }
+  }
+  if (!PmLog::getInstance().initAndRotateLogfiles(userConfigDir.path()))
     return false; // error message already logged to the console
 
 
   // Enable Warning messages triggered by qDebug(), qWarning(), qCritical(), qFatal()
-  qInstallMessageHandler(logMessages);
-
-
-  // We want the same look&feel on all Platforms
-  //app.setStyle(QStyleFactory::create("windows"));
+  qInstallMessageHandler(handleMessages);
 
 
   QString startTime = currentTimeStampAsISO();
   ILOG("Starting up at " + startTime + " Version:" + constPrivacyMachineVersion);
 
+  /// @todo: remove this encoding test under windows
+  ILOG("remove this encoding test under windows: 'böße'");
+  qDebug() << "remove this native encoding test under windows: 'böße'" << endl;
+
 #ifdef WIN32
+    // need to initialize the windows sockets
     WSADATA wsaData;
     int err;
     err = WSAStartup(0x101, &wsaData);
@@ -129,14 +135,9 @@ int main(int argc, char *argv[])
     app.installTranslator(&qtTranslator);
 
     // init the translation of PrivacyMachine messages
-    QTranslator pmTranslator;
-    // TODO: read from PrivacyMachine.ini
-    QString currentLanguage = "lang_" + QLocale::system().name();
-    // TODO: Bernhard: hardcode to english because german tranlation is incomplete
-    currentLanguage = "lang_de_DE";
-    pmTranslator.load(currentLanguage);
-    app.installTranslator(&pmTranslator);
+    initTranslation(app);
 
+    // init name
     QCoreApplication::setApplicationName(QCoreApplication::translate("mainfunc", "PrivacyMachine"));
     QCoreApplication::setApplicationVersion(constPrivacyMachineVersion);
 
@@ -151,7 +152,8 @@ int main(int argc, char *argv[])
     parser.process(app);
 
     // set the global variable to enable logging of sensitive data via ILOG_SENSITIVE
-    globalSensitiveLoggingEnabed = parser.isSet(optionLogSensitiveData);
+    if (parser.isSet(optionLogSensitiveData))
+      PmLog::getInstance().enableSensitiveLogging();
 
     // Check if all is installed what will be needed to run the PrivacyMachine
     if (!checkSystemInstallation(vboxDefaultMachineFolder))
@@ -190,94 +192,11 @@ int main(int argc, char *argv[])
 }
 
 // this function will be used by qDebug(), qWarning(), qCritical(), qFatal()
-void logMessages(QtMsgType type, const QMessageLogContext& context, const QString& msg)
+void handleMessages(QtMsgType parType, const QMessageLogContext& parContext, const QString& parMsg)
 {
-  QString txt;
-  switch (type)
-  {
-    case QtDebugMsg:
-      txt = QString("%1").arg(msg);
-      break;
-    case QtWarningMsg:
-      txt = QString("Warning: %1").arg(msg);
-      break;
-    case QtCriticalMsg:
-      txt = QString("Critical: %1").arg(msg);
-      break;
-    case QtFatalMsg:
-      txt = QString("Fatal: %1").arg(msg);
-  }
-
-  // Also write to the Console
-  fprintf(stderr, "%s\n", msg.toLatin1().data());
-
-  QFile outFile(staticGlobalLogFileName);
-  if (outFile.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text))
-  {
-    QTextStream ts(&outFile);
-    ts << txt << endl;
-  }
-
-  if (type == QtFatalMsg) abort();
+  PmLog::getInstance().logMessages(parType, parContext, parMsg);
 }
 
-
-/// Cycles between log files so that previous sessions are not overwritten immediately.
-bool rotateLogfiles()
-{
-  staticGlobalLogFileName = "";
-
-  QString userConfigDir;
-  if (!getAndCreateUserConfigDir(userConfigDir))
-  {
-    qCritical() << "logrotation: creating the user config dir failed";
-    return false;
-  }
-  QString logMainDir = userConfigDir + "/logs";
-
-  // Create the logs directory in the user home folder
-  QDir logDir(logMainDir);
-  if (!logDir.exists())
-  {
-    qDebug() << "create log directory: " << logMainDir;
-    if (!logDir.mkpath(".")) // creates subpaths also
-    {
-      QString systemError = getLastErrorMsg();
-      qCritical() << "failed to create user configuration directory: " << systemError;
-      return false;
-    }
-  }
-
-  staticGlobalLogFileName = logMainDir + "/PrivacyMachineLog.txt";
-
-  // logrotate
-  if (QFile::exists(staticGlobalLogFileName))
-  {
-    for (int i = 5; i >= 1; i--)
-    {
-      if (QFile::exists(staticGlobalLogFileName + "." + QString::number(i)))
-      {
-        // delete .5
-        if (i == 5)
-        {
-          QFile::remove(staticGlobalLogFileName + "." + QString::number(i));
-        }
-        else
-        {
-          // rename .4 -> .5  ...
-          for (int j = i; j >=1; j--)
-            QFile::rename(staticGlobalLogFileName + "." + QString::number(j), staticGlobalLogFileName + "." + QString::number(j+1));
-
-          break;
-        }
-      }
-    }
-    // rename to ".1"
-    QFile::rename(staticGlobalLogFileName, staticGlobalLogFileName + ".1");
-  }
-
-  return true;
-}
 
 bool checkSystemInstallation(QString& parVboxDefaultMachineFolder)
 {
@@ -309,7 +228,7 @@ bool checkSystemInstallation(QString& parVboxDefaultMachineFolder)
     if (ret != QMessageBox::Ignore)
       return false;
     else
-     ILOG("User pressed Button 'Continue Anyway' while memory check");
+      ILOG("User pressed Button 'Continue Anyway' while memory check");
   }
 
   bool hasVirtualization = CpuFeatures::Virtualization();
@@ -385,8 +304,8 @@ bool checkSystemInstallation(QString& parVboxDefaultMachineFolder)
   // -> 5.1.9: ok, log warning
   // -> 5.1.1: show warning: too old
   // -> 5.2.1: show warning: unsupported
-  int  StableMajor = 5; int  StableMinor = 0; int  StableBugfix = 28;
-  int CurrentMajor = 5; int CurrentMinor = 1; int CurrentBugfix = 8;
+  int  StableMajor = 5; int  StableMinor = 0; int  StableBugfix = 36;
+  int CurrentMajor = 5; int CurrentMinor = 1; int CurrentBugfix = 18;
 
   // Supported Versions to show User i.e. "5.0.* + 5.1.*"
   QString supportedVersions;
@@ -421,7 +340,7 @@ bool checkSystemInstallation(QString& parVboxDefaultMachineFolder)
       }
       if (match.captured(3).toInt() > StableBugfix)
       {
-        IWARN("Currently installed Bugfix-Version of VirtualBox-Stable is newer than the Verion tested by the PrivacyMachine-Team");
+        IWARN("Currently installed Bugfix-Version of VirtualBox-'Stable' is newer than the Verion tested by the PrivacyMachine-Team");
       }
     }
     else if (match.captured(1).toInt() == CurrentMajor && match.captured(2).toInt() == CurrentMinor )
@@ -433,13 +352,13 @@ bool checkSystemInstallation(QString& parVboxDefaultMachineFolder)
       }
       if (match.captured(3).toInt() > CurrentBugfix)
       {
-        IWARN("Currently installed Bugfix-Version of VirtualBox-Current is newer than the Verion tested by the PrivacyMachine-Team");
+        IWARN("Currently installed Bugfix-Version of VirtualBox-'Current' is newer than the Verion tested by the PrivacyMachine-Team");
       }
     }
     else if (match.captured(1).toInt() == CurrentMajor && match.captured(2).toInt() > CurrentMinor )
     {
       // Minor(API?) version is newer
-      IWARN("Currently installed Version of VirtualBox-Current is newer than the Verion tested by the PrivacyMachine-Team");
+      IWARN("Currently installed Version of VirtualBox-'Current' is newer than the Verion tested by the PrivacyMachine-Team");
       showVersionToNew = true;
     }
     else
@@ -471,7 +390,7 @@ bool checkSystemInstallation(QString& parVboxDefaultMachineFolder)
     if (ret != QMessageBox::Ignore)
       return false;
     else
-     IWARN("User pressed Button 'Continue Anyway' while virtualbox version check");
+      IWARN("User pressed Button 'Continue Anyway' while virtualbox version check");
   }
 
   if (showVersionToNew)
@@ -491,7 +410,7 @@ bool checkSystemInstallation(QString& parVboxDefaultMachineFolder)
     if (ret != QMessageBox::Ignore)
       return false;
     else
-     IWARN("User pressed Button 'Continue Anyway' while virtualbox version check");
+      IWARN("User pressed Button 'Continue Anyway' while virtualbox version check");
   }
 
   if (showVersionToOld)
@@ -514,8 +433,19 @@ bool checkSystemInstallation(QString& parVboxDefaultMachineFolder)
     if (ret != QMessageBox::Ignore)
       return false;
     else
-     IWARN("User pressed Button 'Continue Anyway' while virtualbox version check");
+      IWARN("User pressed Button 'Continue Anyway' while virtualbox version check");
   }
 
   return true;
+}
+
+void initTranslation(QApplication& parApp)
+{
+  QTranslator pmTranslator;
+  /// @todo: read from PrivacyMachine.ini
+  QString currentLanguage = "lang_" + QLocale::system().name();
+  /// @todo: Bernhard: hardcode to english because german tranlation is incomplete
+  currentLanguage = "lang_de_DE";
+  pmTranslator.load(currentLanguage);
+  parApp.installTranslator(&pmTranslator);
 }
