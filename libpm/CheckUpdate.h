@@ -1,11 +1,12 @@
 #ifndef CHECKUPDATE_H
 #define CHECKUPDATE_H
 
+#ifndef UTILS_H
 #define ILOG(message) {  qDebug() << qPrintable(message); }
 #define ILOG_SENSITIVE(message) {if (globalSensitiveLoggingEnabed) { qDebug() << qPrintable(message); } }
 #define IWARN(message) { qWarning() << qPrintable(message); }
 #define IERR(message) { qCritical() << qPrintable(message); }
-
+#endif // UTILS_H
 
 #include <QObject>
 #include <QUrl>
@@ -14,7 +15,7 @@
 #include "XmlUpdateParser.h"
 #include "PmVersion.h"
 
-// struct that holds all infomation for an Update
+/// \brief: struct that holds all infomation for an Update
 struct Update
 {
     enum UpdateType
@@ -29,7 +30,18 @@ struct Update
     PmVersion Version;
     QString Title;
     QString Description;
+
+    /// helper  functions
+
+    /// \brief: compare function based on PmVersion::operator >
+    /// \brief: used by std::sort
+    static bool compare (Update a, Update b)
+    {
+      return a.Version > b.Version;
+    }
 };
+
+
 
 class CheckUpdate : public QObject
 {
@@ -47,7 +59,7 @@ class CheckUpdate : public QObject
 
     explicit CheckUpdate(QObject *parent = 0);
 
-    /// returns true if a valid configuration is avaiable
+    /// returns true if a valid configuration is available
     bool isReady();
 
 
@@ -63,9 +75,10 @@ class CheckUpdate : public QObject
     QUrl getUrl() {return url_;}
     bool isStarted() {return started_;}
     CheckUpdateError getError() {return error_;}
-    QList<Update> getAvaiableBaseDiskUpdates() {return updateListBaseDisk_;}
-    QList<Update> getAvaiableBinaryUpdates() {return updateListBinary_;}
-    QList<Update> getAvaiableConfigUpdates() {return updateListConfig_;}
+    QString getErrorString() {return errorStr_;}
+    QList<Update> getavailableBaseDiskUpdates() {return updateListBaseDisk_;}
+    QList<Update> getavailableBinaryUpdates() {return updateListBinary_;}
+    QList<Update> getavailableConfigUpdates() {return updateListConfig_;}
 
     Update getLatestBinaryUpdate();
     Update getLatestBaseDiskUpdate();
@@ -76,7 +89,7 @@ class CheckUpdate : public QObject
 
   signals:
     void finished();
-    void signalUpdateFound(Update avaiableUpdate);
+    void signalUpdateFound(Update availableUpdate);
 
 
   public slots:
@@ -90,6 +103,7 @@ class CheckUpdate : public QObject
     QUrl url_;
     bool started_;
     CheckUpdateError error_;
+    QString errorStr_;
     QNetworkAccessManager *ptrNAM_;
     QNetworkReply *ptrNetReply_;
     XmlUpdateParser xmlUpdateParser_;

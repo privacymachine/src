@@ -22,18 +22,20 @@ class WidgetInteraktiveUpdate : public QWidget
 
     ///setter
     void setButtonsVisible(bool visible);
-    void setUpdateSelectorVisible(bool visible);
     void setTextEditVisible(bool visible);
     void setProgressBarVisible(bool visible);
     void setSkipButtonVisible(bool visible);
+    void setUpdateTitleVisible(bool visible);
+    void setUpdateEffectsVisible(bool visible);
 
     /// sets the Headline
     void setTitle(const QString title);
 
     void setProgressBarRange(int min, int max);
     void setProgressBarText(QString text);
+    void setUpdateEffectsText(QString text);
 
-    void setupRadioButtons(QList<Update> updates);
+    void showUpdate(QList<Update> parUpdateList);
 
   signals:
     void signalUpdateSkipped();
@@ -41,13 +43,10 @@ class WidgetInteraktiveUpdate : public QWidget
 
   private:
     Ui::WidgetInteraktiveUpdate *ui;
-    QList<Update> updateList_;
-    QButtonGroup *ptrRadioButtonGroup_;
+    Update update_;
 
   private slots:
-    void slotShowAllUpdates();
-    void slotEmitUpdateRequested();
-    void slotRadioButtonClicked();
+    void slotEmitUpdateRequested() {emit signalUpdateRequested(update_);}
     void slotEmitUpdateSkipped() {emit signalUpdateSkipped();}
 };
 

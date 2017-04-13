@@ -1,5 +1,5 @@
 ﻿/*==============================================================================
-        Copyright (c) 2013-2017 by the Developers of PrivacyMachine.eu
+        Copyright (c) 2013-2016 by the Developers of PrivacyMachine.eu
                          contact@privacymachine.eu
      OpenPGP-Fingerprint: 0C93 F15A 0ECA D404 413B 5B34 C6DE E513 0119 B175
 
@@ -177,16 +177,10 @@ bool UserConfig::readFromFile()
     }
     else if (section == "UPDATE")
     {
-      updateConfiguration_.AppcastPM = convertIniValueToString(settingsRead.value(section+"/PMUpdateUrl","no URL"));
-      updateConfiguration_.AppcastBaseDisk = convertIniValueToString(settingsRead.value(section+"/BaseDiskUpdateUrl","no URL"));
-      if(updateConfiguration_.AppcastPM.size() < 10 || !updateConfiguration_.AppcastPM.contains("://") )
+      appcastUrl_ = convertIniValueToString(settingsRead.value(section+"/PMUpdateUrl","no URL"));
+      if( !appcastUrl_.isValid() )
       {
-        IERR("In configuration file section [" + section + "]: PMUpdateUrl="+updateConfiguration_.AppcastPM+": not a valid URL");
-        return false;
-      }
-      if(updateConfiguration_.AppcastBaseDisk.size() < 10 || !updateConfiguration_.AppcastBaseDisk.contains("://") )
-      {
-        IERR("In configuration file section [" + section + "]: BaseDiskUpdateUrl="+updateConfiguration_.AppcastBaseDisk+": not a valid URL");
+        IERR("In configuration file section [" + section + "]: PMUpdateUrl="+appcastUrl_.toString()+": not a valid URL");
         return false;
       }
     }

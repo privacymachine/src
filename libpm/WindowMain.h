@@ -1,5 +1,5 @@
 ﻿/*==============================================================================
-        Copyright (c) 2013-2017 by the Developers of PrivacyMachine.eu
+        Copyright (c) 2013-2016 by the Developers of PrivacyMachine.eu
                          contact@privacymachine.eu
      OpenPGP-Fingerprint: 0C93 F15A 0ECA D404 413B 5B34 C6DE E513 0119 B175
 
@@ -32,6 +32,7 @@
 #include "WidgetUpdate.h"
 #include "WidgetNewTab.h"
 #include "PmManager.h"
+#include "UpdateManager.h"
 #include "utils.h"
 #include "VmInfoIpAddress.h"
 
@@ -60,6 +61,7 @@ class WindowMain : public QMainWindow
     bool showReleaseNotes(QString parUrl, ulong parTimeoutInMilliseconds);
 
     PmManager *pmManager_;
+    UpdateManager *updateManager_;
 
     QWidget* currentWidget_;
     QDialogButtonBox *questionBox_;
@@ -68,7 +70,6 @@ class WindowMain : public QMainWindow
     WidgetUpdate *regenerationWidget_;
     QTabWidget *tabWidget_;
     WidgetAbout *aboutWidget_;
-    QString windowName_;
 
   protected:
     // override from QWidget
@@ -84,15 +85,19 @@ class WindowMain : public QMainWindow
     void slotRdpViewScreenResize( QWidget* );
     void slotTabCloseRequested(int parTabIndex);
     void slotTabCurrentChanged(int parTabIndex);
-    void slotUpdateBtnLater();
-    void slotUpdateBtnOK();
-    void slotUpdateNotFoundBtnOK();
-    void slotUpdateFinished();
+
+
     void slotCleanAllVmMasks();
     void slotRegenerationFinished(ePmCommandResult parResult);
     void slotRegenerationIpSuccess();
     void slotRegenerationProgress(QString parProgress);
     void slotShowAbout();
     void slotEnableMenueEntryForceCleanup();
+
+
+
+    // RENAME:
+    void slotUpdateFinished();
+
 
 };

@@ -43,6 +43,8 @@ void MainWindow::slotDownloaderFinished()
   else
     ui->labelFail->setVisible(true);
 
+  if (true)
+  {
   // test Update Manager
   updateManager_.setAppcastUrl(QUrl::fromLocalFile("../UpdaterTest/test.xml"));
 
@@ -61,6 +63,7 @@ void MainWindow::slotDownloaderFinished()
   ui->insertLayout->addWidget(updateWidget);
   updateWidget->show();
   updateManager_.findUpdates();
+  }
 }
 
 void MainWindow::slotUpdateFound(Update avaiableUpdate)

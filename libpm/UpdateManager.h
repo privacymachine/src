@@ -6,6 +6,7 @@
 #include "PmVersion.h"
 #include "WidgetInteraktiveUpdate.h"
 #include "CheckUpdate.h"
+#include "SystemConfig.h"
 
 class UpdateManager : public QObject
 {
@@ -15,23 +16,56 @@ class UpdateManager : public QObject
     explicit UpdateManager(QObject *parent = 0);
     virtual ~UpdateManager();
 
-    /// create a Widget to Interact with the user
+
+    /// \brief getUpdateWidget
+    /// \brief creates a UpdateWidget to interact with the user
+    /// \param parParent
+    /// \return UpdateWidget*
     WidgetInteraktiveUpdate* getUpdateWidget(QWidget *parParent = NULL);
 
-
-    /// Download and parse Appcast
+    /// \brief findUpdates
+    /// \brief Download and parse appcast
+    /// \return true if download of appcast started successfully
     bool findUpdates();
 
-    /// getter and setter
-    void setAppcastUrl(QUrl appcastUrl) {appcastUrl_=appcastUrl;}
-    void setBaseDiskUpdateRequired(bool required) {baseDiskUpdateRequired_=required;}
-    void setCurrentBaseDiskVersion(PmVersion currentBaseDiskVersion) {currentBaseDiskVersion_ = currentBaseDiskVersion;}
-    void setCurrentBinaryVersion(PmVersion currentBinaryVersion) {currentBinaryVersion_ = currentBinaryVersion;}
-    void setCurrentConfigVersion(PmVersion currentConfigVersion) {currentConfigVersion_ = currentConfigVersion;}
 
+    /// \brief isReady
+    /// \return true if appcastUrl is valid and ScstemConfiguration is set
+    bool isReady();
+
+
+    /// \brief vmMaskRegenerationNecessary
+    /// \return true if we need to destroy the VmMasks to complete update
+    bool vmMaskRegenerationNecessary(){ return vmMaskRegenerationNecessary_; }
+
+    /// setter
+
+    /// \brief setAppcastUrl
+    /// \param appcastUrl
+    void setAppcastUrl(QUrl appcastUrl) {appcastUrl_=appcastUrl;}
+
+    /// \brief setInteractiveUpdate
+    /// \brief activate to use the interactive frontend WidgetInteractiveUpdate
+    /// \param interactive
+    void setInteractiveUpdate(bool interactive) {interactive_=interactive;}
+
+    /// \brief setSystemConfig
+    /// \brief used to determine currend versions and update them
+    /// \param ptrSystemConfig
+    void setSystemConfig(SystemConfig* ptrSystemConfig) {ptrSystemConfig_ = ptrSystemConfig;}
+
+    /// \brief setBaseDiskUpdateRequired
+    /// \brief if set forces the user to download a new BaseDisk
+    /// \param baseDiskUpdateRequired
+    void setBaseDiskUpdateRequired(bool baseDiskUpdateRequired) {baseDiskUpdateRequired_=baseDiskUpdateRequired;}
 
   signals:
+    /// \brief signalUpdatesFound
+    /// \brief emmited if updates available
     void signalUpdatesFound();
+
+    /// \brief signalFinished
+    /// \brief emmited if update process finished
     void signalFinished();
 
   public slots:
@@ -42,10 +76,13 @@ class UpdateManager : public QObject
 
   private slots:
 
+    // after the InteraktiveUpdateWidget is destroyed set the pointer to NULL
+    void slotInteraktiveUpdateWidgetDestroyed(){ ptrInteraktiveUpdateWidget_=NULL; }
+
     // show the check for Updates Information
     void slotCheckUpdateFinished();
 
-    // show the Update selector (RadioButtons)
+    // show the Updates
     void slotShowBinaryUpdate();
     void slotShowConfigUpdate();
     void slotShowBaseDiskUpdate();
@@ -60,7 +97,15 @@ class UpdateManager : public QObject
     PmVersion currentBinaryVersion_;
     PmVersion currentConfigVersion_;
     bool baseDiskUpdateRequired_;
+    bool vmMaskRegenerationNecessary_;
     bool interactive_;
+    SystemConfig* ptrSystemConfig_;
 };
+
+
+/// helper functions
+
+
+
 
 #endif // UPDATEMANAGER_H

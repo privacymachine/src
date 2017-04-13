@@ -1,5 +1,5 @@
 ﻿/*==============================================================================
-        Copyright (c) 2013-2017 by the Developers of PrivacyMachine.eu
+        Copyright (c) 2013-2016 by the Developers of PrivacyMachine.eu
                          contact@privacymachine.eu
      OpenPGP-Fingerprint: 0C93 F15A 0ECA D404 413B 5B34 C6DE E513 0119 B175
 
@@ -38,7 +38,8 @@
 // Included here, not in utils.h, to resolve dependency cycle
 #include "VmMaskInstance.h"
 
-const char *constPrivacyMachineVersion = "0.9-beta2";
+const char *constPrivacyMachineVersion = "0.10.0.0";
+const char *constPrivacyMachineName = "PrivacyMachine beta-2";
 const char *constLocalIp = "127.0.0.1";
 const char *constRootUser = "root";
 const char *constRootPwd = "123";

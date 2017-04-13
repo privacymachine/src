@@ -1,5 +1,5 @@
 ﻿/*==============================================================================
-        Copyright (c) 2013-2017 by the Developers of PrivacyMachine.eu
+        Copyright (c) 2013-2016 by the Developers of PrivacyMachine.eu
                          contact@privacymachine.eu
      OpenPGP-Fingerprint: 0C93 F15A 0ECA D404 413B 5B34 C6DE E513 0119 B175
 
@@ -27,7 +27,6 @@ bool XmlUpdateParser::parse(QByteArray parRawData)
 {
   QDomDocument dom;
   QString errorMsg;
-  bool ok;
   int errorLine;
   int errorColumn;
   if (!dom.setContent(parRawData, &errorMsg, &errorLine, &errorColumn))
@@ -69,14 +68,18 @@ bool XmlUpdateParser::parse(QByteArray parRawData)
       QDomNode nodeDate = childOfChannel.firstChildElement("pubDate");
       if (!nodeDate.isNull())
       {
-        QString secondsSince1970;
-        if (nodeDate.attributes().contains("secondsSince1970"))
-          secondsSince1970 = nodeDate.attributes().namedItem("secondsSince1970").nodeValue();
-
-        ok = true;
-        qint64 seconds = secondsSince1970.toLongLong(&ok);
-        if (ok)
-          date.setTime_t(seconds);
+        QString dateStr = nodeDate.toElement().text();
+        QString format = "ddd, dd MMM yyyy HH:mm:ss";
+        if( dateStr.size() > 5)
+        {
+          date = QDateTime::fromString(dateStr.left(dateStr.size()-4),format);
+        }
+        else
+        {
+          IERR("Could not parse date: "+ dateStr+"  INVALID FORMAT");
+        }
+        if( !date.isValid() )
+          IERR("Could not parse date: "+ dateStr.left(dateStr.size()-4)+"  INVALID DATE");
       }
       QDomNode nodeDesc = childOfChannel.firstChildElement("description");
       if (!nodeDesc.isNull())
@@ -91,7 +94,7 @@ bool XmlUpdateParser::parse(QByteArray parRawData)
       if (!nodeVersion.isNull())
         versionStr = nodeVersion.toElement().text();
 
-      if (updateType == "binary")
+      if (updateType == "Binary")
       {
         UpdateInfoBinary newBinary;
         newBinary.Title = title;
@@ -130,6 +133,47 @@ bool XmlUpdateParser::parse(QByteArray parRawData)
 
         // store the data
         binaries_.append(newBinary);
+      }
+
+      if(updateType == "Config")
+      {
+        UpdateInfoConfig newConfig;
+        newConfig.Title = title;
+        newConfig.Date = date;
+        newConfig.Description = description;
+        newConfig.Date = date;
+        newConfig.Version.parse(versionStr); // ignore errors?
+
+        QDomNode nodeCheckSums = childOfChannel.firstChildElement("PmSHA3-256CheckSums");
+        if (!nodeCheckSums.isNull())
+        {
+          QDomNode nodeCheckSum = nodeCheckSums.firstChild();
+          while(!nodeCheckSum.isNull() && nodeCheckSum.nodeName() == "CheckSum")
+          {
+            QString os;
+            if (nodeCheckSum.attributes().contains("os"))
+              os = nodeCheckSum.attributes().namedItem("os").nodeValue();
+
+            QString url;
+            if (nodeCheckSum.attributes().contains("url"))
+              url = nodeCheckSum.attributes().namedItem("url").nodeValue();
+
+            QString checkSum = nodeCheckSum.toElement().text();
+
+            // append the CheckSum
+            CheckSumListConfig newCheckSum;
+            newCheckSum.Os = os;
+            newCheckSum.Url = url;
+            newCheckSum.CheckSum = checkSum;
+            newConfig.CheckSums.append(newCheckSum);
+
+            // find next <CheckSum>
+            nodeCheckSum = nodeCheckSum.nextSibling();
+          }
+        }
+
+        // store the data
+        configs_.append(newConfig);
       }
 
       if(updateType == "BaseDisk")

@@ -1,5 +1,5 @@
 ﻿/*==============================================================================
-        Copyright (c) 2013-2017 by the Developers of PrivacyMachine.eu
+        Copyright (c) 2013-2016 by the Developers of PrivacyMachine.eu
                          contact@privacymachine.eu
      OpenPGP-Fingerprint: 0C93 F15A 0ECA D404 413B 5B34 C6DE E513 0119 B175
 
@@ -16,7 +16,8 @@
                         limitations under the Licence.
 ==============================================================================*/
 
-#pragma once
+#ifndef UTILS_H
+#define UTILS_H
 
 #include "PmLog.h"
 
@@ -49,6 +50,7 @@ class VmMaskInstance;
 bool ExecShort(QString cmd, QString* outOutput, bool checkExitCode, int secondsToRespond = 3, bool doNotLog = false);
 bool ExecShort(QString parCmd, QStringList& parArgs, QString* parAllOutput, bool parCheckExitCode, int parSecondsToRespond = 3, bool parDoNotLog = false);
 
+extern const char *constPrivacyMachineName;
 extern const char *constPrivacyMachineVersion;
 extern const char *constLocalIp;
 extern const char *constRootUser;
@@ -61,6 +63,7 @@ extern const char *constIniVpnPrefix;
 extern const char *constSnapshotName;
 extern const char *constPmUserConfigFileName;
 extern const char *constPmInternalConfigFileName;
+
 
 // to display an endless loop i.e.: "for (;;)" -> "for(ever)"
 #define ever ;;
@@ -121,3 +124,6 @@ template <typename T, int N> char( &dim_helper( T(&)[N] ) )[N];
 #define dim(x) (sizeof(dim_helper(x)))
 
 QDir getPmConfigQDir();
+
+
+#endif // UTILS_H

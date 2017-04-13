@@ -1,5 +1,5 @@
 ﻿/*==============================================================================
-        Copyright (c) 2013-2017 by the Developers of PrivacyMachine.eu
+        Copyright (c) 2013-2016 by the Developers of PrivacyMachine.eu
                          contact@privacymachine.eu
      OpenPGP-Fingerprint: 0C93 F15A 0ECA D404 413B 5B34 C6DE E513 0119 B175
 
@@ -71,7 +71,7 @@ int main(int argc, char *argv[])
 
   QApplication app(argc, argv);
   app.setOrganizationName("PrivacyMachine");
-  app.setApplicationName("PrivacyMachine");
+  app.setApplicationName(constPrivacyMachineName);
   app.setApplicationVersion(constPrivacyMachineVersion);
   app.setOrganizationDomain("https://www.privacymachine.eu");
 
@@ -85,7 +85,7 @@ int main(int argc, char *argv[])
   if ( !guard.tryToRun() )
   {
     qDebug() <<  "An other instance of the PrivacyMachine is already running";
-    QMessageBox abortMsg(QMessageBox::Information, QApplication::applicationName() + " " + QApplication::applicationVersion(),
+    QMessageBox abortMsg(QMessageBox::Information, QApplication::applicationName(),
                          "The PrivacyMachine is already running!");
     abortMsg.setWindowIcon(QIcon(":/resources/privacymachine.svg"));
     return abortMsg.exec();
@@ -138,7 +138,7 @@ int main(int argc, char *argv[])
     initTranslation(app);
 
     // init name
-    QCoreApplication::setApplicationName(QCoreApplication::translate("mainfunc", "PrivacyMachine"));
+    QCoreApplication::setApplicationName(QCoreApplication::translate("mainfunc", constPrivacyMachineName));
     QCoreApplication::setApplicationVersion(constPrivacyMachineVersion);
 
     QCommandLineParser parser;
@@ -218,7 +218,7 @@ bool checkSystemInstallation(QString& parVboxDefaultMachineFolder)
   {
     QMessageBox msgBox;
     msgBox.setIcon(QMessageBox::Warning);
-    msgBox.setWindowTitle(QApplication::applicationName()+" "+QApplication::applicationVersion());
+    msgBox.setWindowTitle(QApplication::applicationName());
     QString message = QCoreApplication::translate("check available resources", "This computer has to low memory(%1 MegaByte) for the PrivacyMachine to work properly (highly recommended: %2 MegaByte).");
     message = message.arg(QString::number(freeMemoryInMb), QString::number(availableRamNeededInMB));
     msgBox.setStandardButtons(QMessageBox::Abort | QMessageBox::Ignore);
@@ -237,7 +237,7 @@ bool checkSystemInstallation(QString& parVboxDefaultMachineFolder)
     IERR("Hardware Virtualisation Support is not available");
     QMessageBox msgBox;
     msgBox.setIcon(QMessageBox::Critical);
-    msgBox.setWindowTitle(QApplication::applicationName()+" "+QApplication::applicationVersion());
+    msgBox.setWindowTitle(QApplication::applicationName());
     msgBox.setTextFormat(Qt::RichText);   // this is what makes the links clickable
     QString message = QCoreApplication::translate("check available resources", "The Hardware Virtualization Support for the CPU is not enabled (or does not exist on very old computers). Please reboot to enter your BIOS and enable an option called like Virtualization, VT-x, AMD-V or AMD-SVM");
     message += "<br>";
@@ -260,7 +260,7 @@ bool checkSystemInstallation(QString& parVboxDefaultMachineFolder)
     IERR("VirtualBox is not installed");
     QMessageBox msgBox;
     msgBox.setIcon(QMessageBox::Critical);
-    msgBox.setWindowTitle(QApplication::applicationName()+" "+QApplication::applicationVersion());
+    msgBox.setWindowTitle(QApplication::applicationName());
     msgBox.setTextFormat(Qt::RichText);   // this is what makes the links clickable
     QString message = QCoreApplication::translate("check of software dependencies", "VirtualBox from Oracle is not installed, please download it directly from:");
     message += "<br>";
@@ -277,7 +277,7 @@ bool checkSystemInstallation(QString& parVboxDefaultMachineFolder)
     IERR("ExtensionPack of VirtualBox is not installed");
     QMessageBox msgBox;
     msgBox.setIcon(QMessageBox::Critical);
-    msgBox.setWindowTitle(QApplication::applicationName()+" "+QApplication::applicationVersion());
+    msgBox.setWindowTitle(QApplication::applicationName());
     msgBox.setTextFormat(Qt::RichText);   // this is what makes the links clickable
     QString messagePart1 = QCoreApplication::translate("check of software dependencies", "The 'Extension Pack' for VirtualBox is not installed, please download it directly from:");
     messagePart1 += "<br>";
@@ -377,7 +377,7 @@ bool checkSystemInstallation(QString& parVboxDefaultMachineFolder)
   {
     QMessageBox msgBox;
     msgBox.setIcon(QMessageBox::Warning);
-    msgBox.setWindowTitle(QApplication::applicationName()+" "+QApplication::applicationVersion());
+    msgBox.setWindowTitle(QApplication::applicationName());
     QString messageLine1 = QCoreApplication::translate("check of software dependencies", "The currently installed VirtualBox version '%1' is unsupported.");
     messageLine1 = messageLine1.arg(vboxVersionStripped);
     QString messageLine2 = QCoreApplication::translate("check of software dependencies", "Currently supported versions are: %1");
@@ -397,7 +397,7 @@ bool checkSystemInstallation(QString& parVboxDefaultMachineFolder)
   {
     QMessageBox msgBox;
     msgBox.setIcon(QMessageBox::Warning);
-    msgBox.setWindowTitle(QApplication::applicationName()+" "+QApplication::applicationVersion());
+    msgBox.setWindowTitle(QApplication::applicationName());
     QString messageLine1 = QCoreApplication::translate("check of software dependencies", "The currently installed VirtualBox version '%1' is newer than the Verion tested by the PrivacyMachine-Team.");
     messageLine1 = messageLine1.arg(vboxVersionStripped);
     QString messageLine2 = QCoreApplication::translate("check of software dependencies", "Currently tested versions are: %1");
@@ -417,7 +417,7 @@ bool checkSystemInstallation(QString& parVboxDefaultMachineFolder)
   {
     QMessageBox msgBox;
     msgBox.setIcon(QMessageBox::Warning);
-    msgBox.setWindowTitle(QApplication::applicationName()+" "+QApplication::applicationVersion());
+    msgBox.setWindowTitle(QApplication::applicationName());
     QString messageLine1 = QCoreApplication::translate("check of software dependencies", "The currently installed VirtualBox version '%1' is too old. Please update VirtualBox to the current version and start the PrivacyMachine again.");
     messageLine1 = messageLine1.arg(vboxVersionStripped);
     QString messageLine2;

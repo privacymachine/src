@@ -11,31 +11,31 @@
     <language>en</language>
     <atom:link href="https://update.privacymachine.eu/appcast_beta_base-disk.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>2016-10-09 New PrivacyMachine-Binary Update</title>
-      <pubDate secondsSince1970="1489755327">Fri, 17 Mar 2017 13:55:27 CET</pubDate>
+      <title><![CDATA[<h2>PrivacyMachine 0.10.14.1</h2>]]></title>
+      <pubDate>Fri, 17 Mar 2017 13:55:27 CET</pubDate>
       <description><![CDATA[
-        <h2>2016-10-10</h2>
-        <h3>PrivacyMachine 0.9.14.0</h3>
-        <p>new Featue: support VPN-X
-        Fix Bug <a href="/PrivacyMachine/pm/issues/2313" rel="nofollow">#2313</a>: Größe Ändern von Fenster führt zu Artefakten</p>
+        <h2>2016-10-20</h2>
+        <h3>PrivacyMachine 0.10.14.1</h3>
+        <p>Fix Bug <a href="/PrivacyMachine/pm/issues/2314" rel="nofollow">#2313</a>: VPN-X connectivity</p>
       ]]>
       </description>
-      <PmUpdateType>binary</PmUpdateType>
-      <PmVersion>0.10.14.0</PmVersion>
+      <PmUpdateType>Binary</PmUpdateType>
+      <PmVersion>0.10.14.1</PmVersion>
       <PmSHA3-256CheckSums>
-        <CheckSum os="Win64" url="http://unstable.privacymachine.eu/0/10/binary/PrivacyMachine_win64_0_10_14_0.zip">0x989283787</CheckSum>
-        <CheckSum os="Jessie64" url="http://unstable.privacymachine.eu/0/10/binary/PrivacyMachine_jessie_0_10_14_0.zip">0x989283787</CheckSum>
+        <CheckSum os="Win64" url="http://unstable.privacymachine.eu/0/10/binary/PrivacyMachine_win64_0_10_14_1.zip">0x989283787</CheckSum>
+        <CheckSum os="Jessie64" url="http://unstable.privacymachine.eu/0/10/binary/PrivacyMachine_jessie_0_10_14_1.zip">0x989283787</CheckSum>
       </PmSHA3-256CheckSums>
     </item>
     <item>
-      <title>2016-10-10 New BaseDisk Update</title>
-      <pubDate secondsSince1970="1489841727">Sat, 18 Mar 2017 13:55:27 CET</pubDate>
+	  <title><![CDATA[<h2>BaseDisk 0.10.4.0</h2>]]></title>
+      <pubDate>Sat, 18 Mar 2017 13:55:27 CET</pubDate>
       <description><![CDATA[
-        <h3>BaseDisk pmApi_0_base1_2</h3>
+        <h2>2016-10-20</h2>		  
+        <h3>BaseDisk API:10 BaseDisk:4</h3>
         <p><strong>[Security]</strong> Firefox: neue Version 39.1</p>
       ]]>
       </description>
-      <PmUpdateType>base_disk</PmUpdateType>
+      <PmUpdateType>BaseDisk</PmUpdateType>
       <PmVersion>0.10.4.0</PmVersion>
       <PmSHA3-256CheckSums>
         <CheckSum from="4" api="10" url="http://unstable.privacymachine.eu/0/base_disk/10/base-disk_4.zip">0x989283787</CheckSum>
@@ -45,18 +45,36 @@
       </PmSHA3-256CheckSums>
     </item>
     <item>
-      <title>2016-10-11 New Config Update</title>
-      <pubDate secondsSince1970="1489928127">Son, 19 Mar 2017 13:55:27 CET</pubDate>
+      <title><![CDATA[<h2>Config 0.10.2.0</h2>]]></title>
+      <pubDate>Sun, 19 Mar 2017 13:55:27 CET</pubDate>
       <description><![CDATA[
+		<h2>2016-10-10</h2>
         <h3>Config 2</h3>
         <p><strong>[VPN]</strong> VPN-Gate: Neue Server für Usbekistan<br>
       ]]>
       </description>
-      <PmUpdateType>config</PmUpdateType>
+      <PmUpdateType>Config</PmUpdateType>
       <PmVersion>0.10.2.0</PmVersion>
       <PmSHA3-256CheckSums>
         <CheckSum os="Win64" url="http://unstable.privacymachine.eu/0/10/binary/config_win64_2_0.zip">0x989283787</CheckSum>
         <CheckSum os="Jessie64" url="http://unstable.privacymachine.eu/0/10/binary/config_jessie_2_0.zip">0x989283787</CheckSum>
+      </PmSHA3-256CheckSums>
+    </item>
+    <item>
+      <title><![CDATA[<h2>PrivacyMachine-Binary 0.10.14.0</h2>]]></title>
+      <pubDate>Fri, 17 Mar 2017 13:55:27 CET</pubDate>
+      <description><![CDATA[
+        <h2>2016-10-18</h2>
+        <h3>PrivacyMachine 0.10.14.0</h3>
+        <p>new Featue: support VPN-X
+        Fix Bug <a href="/PrivacyMachine/pm/issues/2313" rel="nofollow">#2313</a>: Größe Ändern von Fenster führt zu Artefakten</p>
+      ]]>
+      </description>
+      <PmUpdateType>Binary</PmUpdateType>
+      <PmVersion>0.10.14.0</PmVersion>
+      <PmSHA3-256CheckSums>
+        <CheckSum os="Win64" url="http://unstable.privacymachine.eu/0/10/binary/PrivacyMachine_win64_0_10_14_0.zip">0x989283787</CheckSum>
+        <CheckSum os="Jessie64" url="http://unstable.privacymachine.eu/0/10/binary/PrivacyMachine_jessie_0_10_14_0.zip">0x989283787</CheckSum>
       </PmSHA3-256CheckSums>
     </item>
   </channel>

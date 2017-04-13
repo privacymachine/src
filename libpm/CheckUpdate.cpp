@@ -11,6 +11,7 @@ CheckUpdate::CheckUpdate(QObject *parent) :
   ptrNetReply_ = NULL;
   ptrNAM_ = new QNetworkAccessManager(this);
   error_= NoError;
+  errorStr_="";
 }
 
 bool CheckUpdate::isReady()
@@ -45,6 +46,7 @@ bool CheckUpdate::start()
   }
   started_ = true;
   error_= NoError;
+  errorStr_="";
   updateListBaseDisk_.clear();
   updateListBinary_.clear();
   updateListConfig_.clear();
@@ -56,8 +58,9 @@ bool CheckUpdate::start()
 
   if( ptrNetReply_->error() != QNetworkReply::NoError)
   {
-    IERR("CheckUpdate: Could not download "+url_.toDisplayString()+
-         " because of QNetworkReply::NetworkError "+QString::number(ptrNetReply_->error()));
+    errorStr_= "CheckUpdate: Could not download " + url_.toDisplayString() +
+               " because of QNetworkReply::NetworkError "+QString::number(ptrNetReply_->error());
+    IERR(errorStr_);
     error_ = NetworkError;
     emit finished();
     return false;
@@ -66,6 +69,7 @@ bool CheckUpdate::start()
           SIGNAL(finished()),
           this,
           SLOT(slotDownloadFinished()));
+  return true;
 }
 
 // after downloading appcast check parse xml and compare versions
@@ -74,8 +78,9 @@ void CheckUpdate::slotDownloadFinished()
   if( ptrNetReply_->error() != QNetworkReply::NoError )
   {
     error_ = NetworkError;
-    IERR("CheckUpdate: Could not download "+url_.toDisplayString()+
-         " because of QNetworkReply::NetworkError "+QString::number(ptrNetReply_->error()));
+    errorStr_ = "CheckUpdate: Could not download " + url_.toDisplayString() +
+                " because of QNetworkReply::NetworkError "+QString::number(ptrNetReply_->error());
+    IERR(errorStr_);
     emit finished();
     return;
   }
@@ -90,10 +95,12 @@ void CheckUpdate::slotDownloadFinished()
   // parse XML
   if(!xmlUpdateParser_.parse(ptrNetReply_->readAll()))
   {
-    IERR("CheckUpdate: Error at parsing appcast XML.");
+    errorStr_ = "CheckUpdate: Error at parsing appcast XML.";
+    IERR(errorStr_);
     error_=ParsingError;
   }
   if (error_ == NoError) findBinaryUpdates();
+  if (error_ == NoError) findConfigUpdates();
   if (error_ == NoError) findBaseDiskUpdates();
   emit finished();
 }
@@ -132,7 +139,8 @@ void CheckUpdate::findBinaryUpdates()
           {
             if(!c.isDigit() && !c.isLetter())
             {
-              IERR("CheckUpdate: Hash '"+binaryUpdate.CheckSum+"' is not base64.");
+              errorStr_ = "CheckUpdate: Hash '"+binaryUpdate.CheckSum+"' is not base64.";
+              IERR(errorStr_);
               error_=ParsingError;
               break;
             }
@@ -141,7 +149,8 @@ void CheckUpdate::findBinaryUpdates()
           binaryUpdate.Url = QUrl(entry.Url);
           if( (binaryUpdate.Url.isLocalFile()) || (!binaryUpdate.Url.isValid()) )
           {
-            IERR("CheckUpdate: Binary Update URL <"+binaryUpdate.Url.toString()+"> is not a valid URL");
+            errorStr_ = "CheckUpdate: Binary Update URL <"+binaryUpdate.Url.toString()+"> is not a valid URL";
+            IERR(errorStr_);
             error_=ParsingError;
             break;
           }
@@ -150,8 +159,6 @@ void CheckUpdate::findBinaryUpdates()
       if (error_ == NoError)
       {
         updateListBinary_.push_back(binaryUpdate);
-        /// @todo: olaf remove soon
-        emit signalUpdateFound(binaryUpdate);
       }
       else break;
     }
@@ -184,7 +191,8 @@ void CheckUpdate::findBaseDiskUpdates()
           {
             if(!c.isDigit() && !c.isLetter())
             {
-              IERR("CheckUpdate: Hash '"+baseDiskUpdate.CheckSum+"' is not base64.");
+              errorStr_ = "CheckUpdate: Hash '"+baseDiskUpdate.CheckSum+"' is not base64.";
+              IERR(errorStr_);
               error_=ParsingError;
               break;
             }
@@ -193,7 +201,8 @@ void CheckUpdate::findBaseDiskUpdates()
           baseDiskUpdate.Url = QUrl(entry.Url);
           if( (baseDiskUpdate.Url.isLocalFile()) || (!baseDiskUpdate.Url.isValid()) )
           {
-            IERR("CheckUpdate: Binary Update URL <"+baseDiskUpdate.Url.toString()+"> is not a valid URL");
+            errorStr_ = "CheckUpdate: Binary Update URL <"+baseDiskUpdate.Url.toString()+"> is not a valid URL";
+            IERR(errorStr_);
             error_=ParsingError;
             break;
           }
@@ -203,8 +212,6 @@ void CheckUpdate::findBaseDiskUpdates()
       if (error_ == NoError)
       {
         updateListBaseDisk_.push_back(baseDiskUpdate);
-        /// @todo: olaf remove soon
-        emit signalUpdateFound(baseDiskUpdate);
       }
       else break;
     }
@@ -213,7 +220,60 @@ void CheckUpdate::findBaseDiskUpdates()
 
 void CheckUpdate::findConfigUpdates()
 {
-  /// @todo: implement me
+  QList<XmlUpdateParser::UpdateInfoConfig> configList = xmlUpdateParser_.getConfigVersionList();
+
+
+  foreach (XmlUpdateParser::UpdateInfoConfig config, configList)
+  {
+    if( PmVersion::greaterInRespectTo(config.Version, currentConfigVersion_, PmVersion::ComponentMajor ) )
+    {
+      Update configUpdate;
+      configUpdate.Type = Update::Config;
+      configUpdate.Version = config.Version;
+      configUpdate.Description = config.Description;
+      configUpdate.Title = config.Title;
+
+      //TODO: @Bernhard im deployment in setings aufnehmen
+      QString OS;
+      #ifndef PM_WINDOWS
+        OS = "jessie64";
+      #else
+        OS = "win64";
+      #endif
+
+      foreach( XmlUpdateParser::CheckSumListConfig entry, config.CheckSums )
+      {
+        if (entry.Os == OS)
+        {
+          configUpdate.CheckSum = entry.CheckSum;
+          foreach (QChar c, configUpdate.CheckSum)
+          {
+            if(!c.isDigit() && !c.isLetter())
+            {
+              errorStr_ = "CheckUpdate: Hash '"+configUpdate.CheckSum+"' is not base64.";
+              IERR(errorStr_);
+              error_=ParsingError;
+              break;
+            }
+          }
+
+          configUpdate.Url = QUrl(entry.Url);
+          if( (configUpdate.Url.isLocalFile()) || (!configUpdate.Url.isValid()) )
+          {
+            errorStr_ = "CheckUpdate: Config Update URL <"+configUpdate.Url.toString()+"> is not a valid URL";
+            IERR(errorStr_);
+            error_=ParsingError;
+            break;
+          }
+        }
+      }
+      if (error_ == NoError)
+      {
+        updateListConfig_.push_back(configUpdate);
+      }
+      else break;
+    }
+  }
 }
 
 Update CheckUpdate::getLatestBinaryUpdate()

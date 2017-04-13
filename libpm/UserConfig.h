@@ -1,5 +1,5 @@
 ﻿/*==============================================================================
-        Copyright (c) 2013-2017 by the Developers of PrivacyMachine.eu
+        Copyright (c) 2013-2016 by the Developers of PrivacyMachine.eu
                          contact@privacymachine.eu
      OpenPGP-Fingerprint: 0C93 F15A 0ECA D404 413B 5B34 C6DE E513 0119 B175
 
@@ -22,6 +22,7 @@
 #include <QStringList>
 #include <QVariant>
 #include <QColor>
+#include <QUrl>
 
 #include "VmMaskUserConfig.h"
 
@@ -58,11 +59,6 @@ struct ConfigVmMask
 };
 */
 
-struct ConfigUpdate
-{
-    QString AppcastPM;
-    QString AppcastBaseDisk; /// @todo: remove because not used anymore
-};
 
 class UserConfig
 {
@@ -74,7 +70,7 @@ class UserConfig
 
     QList<VmMaskUserConfig*>& getConfiguredVmMasks();
     QList<VpnConfig*>& getConfiguredVPNs();
-    ConfigUpdate getUpdateConfig(){ return updateConfiguration_; }
+    QUrl getAppcastUrl(){ return appcastUrl_; }
 
     bool readFromFile();
     bool setDefaultsAndValidateConfiguration(const QJsonObject& parBaseDiskCapabilities);
@@ -90,5 +86,5 @@ class UserConfig
     QString installDir_;
     QList<VmMaskUserConfig*> configuredVmMasks_;
     QList<VpnConfig*> configuredVPNs_;
-    ConfigUpdate updateConfiguration_;
+    QUrl appcastUrl_;
 };

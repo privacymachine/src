@@ -1,5 +1,5 @@
 ﻿/*==============================================================================
-        Copyright (c) 2013-2017 by the Developers of PrivacyMachine.eu
+        Copyright (c) 2013-2016 by the Developers of PrivacyMachine.eu
                          contact@privacymachine.eu
      OpenPGP-Fingerprint: 0C93 F15A 0ECA D404 413B 5B34 C6DE E513 0119 B175
 
@@ -25,10 +25,13 @@
 #include <QObject>
 #include <QList>
 #include <QJsonObject>
+#include "PmVersion.h"
+
 
 // forward declarations
 class UserConfig;
 class SystemConfig;
+class QUrl;
 
 
 ///
@@ -63,16 +66,19 @@ class PmManager
 
     QString baseDiskWithPath();
     QString getBaseDiskDirectoryPath();
+    PmVersion getBaseDiskVersion();
 
     const QList<VmMaskData*>& getVmMaskData() { return vmMaskData_; }
 
-
+    QUrl getAppcastUrl(){ return configUser_->getAppcastUrl(); }
 
     QString getPmInstallDir() { return pmInstallDir_; }
 
     QDir getPmConfigDir() { return pmConfigDir_; }
 
-    ConfigUpdate getUpdateConfig() { return configUser_->getUpdateConfig(); }
+    SystemConfig* getSystemConfig() { return configSystem_; }
+
+
 
     /// Verifies that for all VM Masks there is the corresponding VM set up in virtual box.
     /// \return \c true if VMs exist for all VM Masks, \c false otherwise.
@@ -87,7 +93,7 @@ class PmManager
     /// true if any BaseDisk is available
     bool isBaseDiskAvailable();
 
-    bool isConfigValid() { return configIsValid_; }
+    bool isBaseDiskConfigValid() { return baseDiskConfigIsValid_; }
 
   private:
 
@@ -141,7 +147,7 @@ class PmManager
     bool                                firstStart_;
 
     /// True if we have a valid: UserConfig, SystemConfig and BaseDisk,
-    bool                                configIsValid_;
+    bool                                baseDiskConfigIsValid_;
 
 };
 

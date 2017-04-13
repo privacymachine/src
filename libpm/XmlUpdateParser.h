@@ -1,5 +1,5 @@
 ﻿/*==============================================================================
-        Copyright (c) 2013-2017 by the Developers of PrivacyMachine.eu
+        Copyright (c) 2013-2016 by the Developers of PrivacyMachine.eu
                          contact@privacymachine.eu
      OpenPGP-Fingerprint: 0C93 F15A 0ECA D404 413B 5B34 C6DE E513 0119 B175
 
@@ -53,6 +53,22 @@ class XmlUpdateParser
       QList<CheckSumListBinary> CheckSums;
     };
 
+    struct CheckSumListConfig
+    {
+      QString Os;
+      QString Url; // validity not checked
+      QString CheckSum; // in hex
+    };
+
+    struct UpdateInfoConfig
+    {
+      PmVersion Version;
+      QString Title;
+      QString Description;
+      QDateTime Date;
+      QList<CheckSumListConfig> CheckSums;
+    };
+
     struct CheckSumListBaseDisk
     {
       PmVersion Version;
@@ -84,6 +100,8 @@ class XmlUpdateParser
 
     QList<XmlUpdateParser::UpdateInfoBaseDisk> getBaseDiskVersionList() {return baseDisks_;}
 
+    QList<XmlUpdateParser::UpdateInfoConfig> getConfigVersionList() {return configs_;}
+
     /// \brief get the latest binary update details
     /// \return zero pointer if no new binary is available
     XmlUpdateParser::UpdateInfoBinary* getLatestBinaryVersion();
@@ -105,5 +123,6 @@ class XmlUpdateParser
     QDomDocument xmlDom_;
     QList<UpdateInfoBinary> binaries_;
     QList<UpdateInfoBaseDisk> baseDisks_;
+    QList<UpdateInfoConfig> configs_;
 };
 

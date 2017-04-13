@@ -1,5 +1,5 @@
 ﻿/*==============================================================================
-        Copyright (c) 2013-2017 by the Developers of PrivacyMachine.eu
+        Copyright (c) 2013-2016 by the Developers of PrivacyMachine.eu
                          contact@privacymachine.eu
      OpenPGP-Fingerprint: 0C93 F15A 0ECA D404 413B 5B34 C6DE E513 0119 B175
 
@@ -24,6 +24,7 @@
 #include <QGroupBox>
 #include <QDesktopServices>
 #include <QWidget>
+#include <QApplication>
 
 #ifndef SKIP_FREERDP_CODE
   #include <remotedisplaywidget.h>
@@ -32,6 +33,7 @@
 WindowMain::WindowMain(QWidget *parParent) :
   QMainWindow(parParent),
   pmManager_(NULL),
+  updateManager_(NULL),
   currentWidget_(NULL),
   questionBox_(NULL),
   updateMessage_(NULL),
@@ -42,9 +44,8 @@ WindowMain::WindowMain(QWidget *parParent) :
 {
   ui_->setupUi(this);
 
-  windowName_ = QApplication::applicationName()+" "+QApplication::applicationVersion();
 
-  setWindowTitle(windowName_);
+  setWindowTitle(QApplication::applicationName());
   connect(ui_->actionQuit,
           SIGNAL(triggered()),
           this,
@@ -109,30 +110,51 @@ bool WindowMain::init(QString parPmInstallPath, QString parVboxDefaultMachineFol
   // read and validate the user config, also check for the BaseDisk
   pmManager_->readAndValidateConfiguration();
 
-  if (!pmManager_->isBaseDiskAvailable())
-  {
-    /// @todo olaf: show download
 
+  updateManager_ = new UpdateManager(this);
+
+  PmVersion applicationVersion;
+  if( !applicationVersion.parse(QApplication::applicationVersion()) )
+  {
+    IERR("Invalid PrivacyMachine Version "+QApplication::applicationVersion() );
+    return false;
   }
 
-  /// @todo: fill with content for alpha 1 users:
-  #ifdef PM_WINDOWS
-    QString releaseUrl = "https://update.privacymachine.eu/ReleaseNotes_0.10.0.0_WIN64_EN.html";
-  #else
-    QString releaseUrl = "https://update.privacymachine.eu/ReleaseNotes_0.10.0.0_LINUX_EN.html";
-  #endif
+  if (!pmManager_->isBaseDiskAvailable())
+    updateManager_->setBaseDiskUpdateRequired(true);
 
-  if (pmManager_->isConfigValid() && pmManager_->isBaseDiskAvailable())
+  updateManager_->setSystemConfig( pmManager_->getSystemConfig() );
+  updateManager_->setAppcastUrl( pmManager_->getAppcastUrl() );
+
+  updateManager_->setInteractiveUpdate(true);
+
+  ui_->mainLayout_v->addWidget(updateManager_->getUpdateWidget(this));
+  updateManager_->findUpdates();
+
+  connect( updateManager_, SIGNAL(signalFinished()), this, SLOT(slotUpdateFinished()) );
+}
+
+
+
+
+void WindowMain::slotUpdateFinished()
+{
+  // remove UpdateWidget from mainLayout, delete it
+  ui_->mainLayout_v->removeWidget(updateManager_->getUpdateWidget());
+  updateManager_->getUpdateWidget()->deleteLater();
+
+
+  if (pmManager_->isBaseDiskConfigValid() && pmManager_->isBaseDiskAvailable())
   {
     // we initialize pmManager_ with BaseDisk data
     pmManager_->initAllVmMaskData();
   }
 
   // regeneration of the VM-Masks is needed when we have a new BaseDisk or when the user changes an important part of the configuration
-  if(pmManager_->vmMaskRegenerationNecessary())
+  if(pmManager_->vmMaskRegenerationNecessary() || updateManager_->vmMaskRegenerationNecessary() )
   {
     regenerateVmMasks();
-    return true;
+    return;
   }
 
 
@@ -149,76 +171,13 @@ bool WindowMain::init(QString parPmInstallPath, QString parVboxDefaultMachineFol
     */
 
   /// @todo olaf: please check in the new tab for pmManager_->isConfigValid()
-  return setupTabWidget();
+
+
+
+  setupTabWidget();
 }
 
-void WindowMain::slotUpdateNotFoundBtnOK()
-{
-    ui_->mainLayout_v->removeWidget(updateMessage_);
-    ui_->mainLayout_v->removeWidget(questionBox_);
-    questionBox_->close();
-    updateMessage_->close();
-    delete questionBox_;
-    questionBox_ = NULL;
-    delete updateMessage_;
-    updateMessage_ = NULL;
-    exit(0);
-}
 
-void WindowMain::slotUpdateBtnOK()
-{
-    ui_->mainLayout_v->removeWidget(updateMessage_);
-    ui_->mainLayout_v->removeWidget(questionBox_);
-    questionBox_->close();
-    updateMessage_->close();
-    delete questionBox_;
-    questionBox_ = NULL;
-    delete updateMessage_;
-    updateMessage_ = NULL;
-
-    // We only update the binary on Windows. On Linux, the user has to take action (they got notified in update dialog).
-    #ifdef PM_WINDOWS
-      /// @todo: Alex start update process here like
-      // UPDATER = new updaterWidget;
-      // ui_->mainLayout_v->addWidget(UPDATER);
-      // connect(UPDATER,
-      //         SIGNAL(finished(int)),
-      //         this,
-      //         SLOT(slotUpdateFinished()));
-      // UPDATER->start()
-      connect( FvUpdater::sharedUpdater(), SIGNAL( signalUpdateInstalled() ), this, SLOT( slotUpdateFinished() ) );
-      FvUpdater::sharedUpdater()->slotTriggerUpdate();
-
-    #endif
-}
-
-void WindowMain::slotUpdateFinished()
-{
-  /// @todo: Alex: implement error handling etc
-
-  // if(status==BROKE_VMMASKS)
-  //   regenerateVMMasks();
-  // else
-  //   setupTabWidget()
-}
-
-void WindowMain::slotUpdateBtnLater()
-{
-  ui_->mainLayout_v->removeWidget(updateMessage_);
-  ui_->mainLayout_v->removeWidget(questionBox_);
-  questionBox_->close();
-  updateMessage_->close();
-  delete questionBox_;
-  questionBox_ = NULL;
-  delete updateMessage_;
-  updateMessage_ = NULL;
-
-  /// @todo: from bernhard to olaf: the user said he want to update later, why start it anyway?
-  if(pmManager_->vmMaskRegenerationNecessary() )
-    regenerateVmMasks();
-  else
-    setupTabWidget();
-}
 
 void WindowMain::slotCleanAllVmMasks()
 {
@@ -321,7 +280,7 @@ void WindowMain::slotRegenerationIpSuccess()
 
 void WindowMain::slotRegenerationProgress(QString parProgress)
 {
-  QString title = windowName_;
+  QString title = QApplication::applicationName();
   if (regenerationWidget_ != NULL)
   {
     title += " - Update: ";
@@ -362,7 +321,7 @@ void WindowMain::slotTabCloseRequested(int parTabIndex)
     // Show a 'are you shure you want to close this VM-Mask' MessageBox
     QMessageBox msgBox;
     msgBox.setWindowIcon(QIcon(":/resources/privacymachine.svg"));
-    msgBox.setWindowTitle(QApplication::applicationName()+" "+QApplication::applicationVersion());
+    msgBox.setWindowTitle(QApplication::applicationName());
     msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Abort);
     msgBox.setText("Are you shure you want to close The VM-Mask " + vmMask->Instance->getConfig()->getVmName());
     int ret = msgBox.exec();
@@ -417,7 +376,7 @@ bool WindowMain::setupTabWidget()
   tabWidget_->addTab(newTab,QIcon(":/images/ApplicationIcon32.png"),"+");
 
   ui_->mainLayout_v->addWidget(tabWidget_);
-  centralWidget()->setLayout( ui_->mainLayout_v );
+  //centralWidget()->setLayout( ui_->mainLayout_v );
 
   // While we want to be able to close VM Mask tabs in general, we would not want to close the NewTab
   // => remove 'Close' button for this tab only.
@@ -511,10 +470,8 @@ void WindowMain::slotRegenerationFinished(ePmCommandResult parResult)
       QMessageBox::warning(this, "PrivacyMachine", message);
   }
 
-  setWindowTitle(windowName_ + message);
-
   ui_->mainLayout_v->removeWidget(regenerationWidget_);
-  delete regenerationWidget_;
+  regenerationWidget_->deleteLater();
   regenerationWidget_=NULL;
 
   // Only proceed if all VMs are available - otherwise a user might e.g. abort the first update, leaving at least some
@@ -586,7 +543,7 @@ bool WindowMain::showReleaseNotes(QString parUrl, ulong parTimeoutInMilliseconds
 	  { 
       QMessageBox msgBox;
       msgBox.setIcon(QMessageBox::Information);
-      msgBox.setWindowTitle(QApplication::applicationName()+" "+QApplication::applicationVersion());
+      msgBox.setWindowTitle(QApplication::applicationName());
       msgBox.setTextFormat(Qt::RichText);   // this is what makes the links clickable
       msgBox.setText(reply->readAll());
       msgBox.exec();

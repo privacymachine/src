@@ -1,5 +1,5 @@
 ﻿/*==============================================================================
-        Copyright (c) 2013-2017 by the Developers of PrivacyMachine.eu
+        Copyright (c) 2013-2016 by the Developers of PrivacyMachine.eu
                          contact@privacymachine.eu
      OpenPGP-Fingerprint: 0C93 F15A 0ECA D404 413B 5B34 C6DE E513 0119 B175
 
@@ -21,6 +21,7 @@
 #include <QString>
 #include <QStringList>
 #include <QDateTime>
+#include "PmVersion.h"
 
 class QSettings;
 
@@ -39,13 +40,40 @@ class SystemConfig
     QString getBaseDiskPath() { return baseDiskPath_; }
     void setBaseDiskPath(QString baseDiskPath) { baseDiskPath_ = baseDiskPath; }
 
-    // Current BaseDisk name (i.e. 'BaseDisk_0' for the files BaseDisk_0.vmdk, BaseDisk_0_flat.vmdk, BaseDisk_0_capabilities.json)
+    // Current BaseDisk name (i.e. 'BaseDisk_1' for the files BaseDisk_1.vmdk, BaseDisk_1_flat.vmdk, BaseDisk_1_capabilities.json)
     QString getBaseDiskName() { return baseDiskName_; }
     void setBaseDiskName(QString baseDiskName) { baseDiskName_ = baseDiskName; }
 
-    // Current BaseDisk name (i.e. 'BaseDisk_0' for the files BaseDisk_0.vmdk, BaseDisk_0_flat.vmdk, BaseDisk_0_capabilities.json)
-    QString getBaseDiskVersion() { return baseDiskVersion_; }
-    void setBaseDiskVersion(QString baseDiskVersion) { baseDiskVersion_ = baseDiskVersion; }
+    // Current BaseDisk Version (i.e. 0.10.1.0 for the first BaseDisk of beta2 release)
+    PmVersion getBaseDiskVersion() { return baseDiskVersion_; }
+    void setBaseDiskVersion(PmVersion baseDiskVersion) { baseDiskVersion_ = baseDiskVersion; }
+    void setBaseDiskVersion(QString baseDiskVersion) { baseDiskVersion_ = PmVersion::fromString(baseDiskVersion); }
+
+    // Path to the Binary with slash (i.e. /opt/privacymachine/)
+    QString getBinaryPath() { return binaryPath_; }
+    void setBinaryPath(QString binaryPath) { binaryPath_ = binaryPath; }
+
+    // not neccesarry? Current release name (i.e. 'PrivacyMachine beta2' )
+    QString getBinaryName() { return binaryName_; }
+    void setBinaryName(QString binaryName) { binaryName_ = binaryName; }
+
+    // Current Binary Version (i.e. 0.10.1.0 for the first Binary of beta2 release)
+    PmVersion getBinaryVersion() { return binaryVersion_; }
+    void setBinaryVersion(PmVersion binaryVersion) { binaryVersion_ = binaryVersion; }
+    void setBinaryVersion(QString binaryVersion) { binaryVersion_ = PmVersion::fromString(binaryVersion); }
+
+    // Path to the Config with slash (i.e. /home/max/.config/privacymachine/)
+    QString getConfigPath() { return configPath_; }
+    void setConfigPath(QString configPath) { configPath_ = configPath; }
+
+    // not neccesarry? Current Config name (i.e. 'Config_1' )
+    QString getConfigName() { return configName_; }
+    void setConfigName(QString configName) { configName_ = configName; }
+
+    // Current Config Version (i.e. 0.10.1.0 for the first Config of beta2 release)
+    PmVersion getConfigVersion() { return configVersion_; }
+    void setConfigVersion(PmVersion configVersion) { configVersion_ = configVersion; }
+    void setConfigVersion(QString configVersion) { configVersion_ = PmVersion::fromString(configVersion); }
 
     // Time in Seconds on cold boot untill screens shows some X-releated Display
     int getMachineBootUpTime() { return machineBootUpTime_; }
@@ -65,9 +93,6 @@ class SystemConfig
     int getWaitTimeAfterPowerOff() { return waitTimeAfterPowerOff_; }
     void setWaitTimeAfterPowerOff(int time) { waitTimeAfterPowerOff_ = time; }
 
-    QDateTime getLastUpdateTime() { return lastUpdateTime_; }
-    void setLastUpdateTime(QDateTime time) { lastUpdateTime_ = time; }
-
     int getCopyScriptsPerSshTime() { return copyScriptsPerSshTime_; }
     void setCopyScriptsPerSshTime(int time) { copyScriptsPerSshTime_ = time; }
 
@@ -83,10 +108,17 @@ class SystemConfig
     int waitTimeAfterCreateSnapshot_;
     int waitTimeAfterPowerOff_;
     int copyScriptsPerSshTime_;
-    QDateTime lastUpdateTime_;
     QSettings* pSettings_;
     QString baseDiskPath_;
-    QString baseDiskVersion_;
+    PmVersion baseDiskVersion_;
     QString baseDiskName_;
+    QString configPath_;
+    PmVersion configVersion_;
+    QString configName_;
+    QString binaryPath_;
+    PmVersion binaryVersion_;
+    QString binaryName_;
+
+
     QStringList configuredVmMaskNames_;
 };
