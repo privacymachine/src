@@ -1,2 +1,2 @@
-build/pm/pm_data/* eol=lf
-build/pm/vpn/* eol=lf
+packaging/* eol=lf
+working_dir/conf/vpn/* eol=lf

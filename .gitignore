@@ -36,7 +36,8 @@ ext_libs/RemoteDisplay/
 ext_libs/libsodium-1.0.11/
 
 # build dir
-build/*
+build_ext_libs/*
+build_pm/*
 
 # ignore temporary cmake stuff
 CMakeCache.txt
@@ -56,6 +57,7 @@ working_dir/TestGui
 working_dir/RemoteDisplay-client
 working_dir/TestPatching
 working_dir/TestUserConfigOpenVPN
+working_dir/TestXmlUpdateParser
 working_dir/UserConfigTest
 working_dir/base-disk*
 working_dir/lib/
