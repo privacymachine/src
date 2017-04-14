@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss
+  version="2.0"
+  xmlns:atom="http://www.w3.org/2005/Atom"
+  xmlns:dc="http://purl.org/dc/elements/1.1/">
+
+  <channel>
+    <title>PM Changelog</title>
+    <link>https://update.privacymachine.eu/appcast_beta_base-disk.xml</link>
+    <description>PM base disk app cast</description>
+    <language>en</language>
+    <atom:link href="https://update.privacymachine.eu/appcast_beta_2.xml" rel="self" type="application/rss+xml" />
+    <item>
+	  <title><![CDATA[<h2>BaseDisk 0.10.4.0</h2>]]></title>
+      <pubDate>Fri, 07 Apr 2017 13:55:27 CET</pubDate>
+      <description><![CDATA[
+        <h2>2017-04-07</h2>		  
+        <h3>BaseDisk API:10 BaseDisk:3</h3>
+        <p>Initial BaseDisk for PrivacyMachine beta-2</p>
+      ]]>
+      </description>
+      <PmUpdateType>BaseDisk</PmUpdateType>
+      <PmVersion>0.10.3.0</PmVersion>
+      <PmSHA256CheckSums>
+        <CheckSum from="3" api="10" url="http://unstable.privacymachine.eu/0/base-disk/10/BaseDisk_3.7z">a61ba2a7f827a46531a5732ac7ca8dd20334062c8ad03840e6e9b4ef6d28b85d</CheckSum>
+       </PmSHA256CheckSums>
+    </item>
+  </channel>
+</rss>

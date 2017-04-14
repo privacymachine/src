@@ -15,6 +15,7 @@ UpdateManager::UpdateManager(QObject *parent) :
   baseDiskUpdateRequired_ = false;
   interactive_ = false;
   vmMaskRegenerationNecessary_ = false;
+  ptrVerifiedDownload_ = NULL;
 }
 
 UpdateManager::~UpdateManager()
@@ -26,10 +27,15 @@ void UpdateManager::slotCheckUpdateFinished()
 {
   if( checkUpdate_.getError() != CheckUpdate::NoError)
   {
+    ///@todo: implement non interactive error handling
     QMessageBox msgBox;
     msgBox.setIcon(QMessageBox::Critical);
     msgBox.setWindowTitle(QApplication::applicationName());
-    QString message = QCoreApplication::translate("CheckUpdate Error msgBox","<h3>Error occured at checking for Updates</h3> \n");
+    QString message = QCoreApplication::translate("CheckUpdate Error msgBox",
+                                                  "<h2>Error occured at checking for Updates</h2> <p>&nbsp;</p>");
+
+    message += QCoreApplication::translate("CheckUpdate Error msgBox",
+                                           "<p><b>Please check PMUpdateUrl in PrivacyMachine.ini or start the problem reporter.</b></p>");
     message += checkUpdate_.getErrorString();
     msgBox.setStandardButtons(QMessageBox::Abort | QMessageBox::Ignore);
     ///@todo bernhard: why is this not working?!
@@ -214,16 +220,87 @@ void UpdateManager::slotBinaryUpdateRequested(Update binaryUpdate)
 {
 
 }
+void UpdateManager::slotBinaryUpdateDownloadFinished()
+{
+
+}
+
 
 void UpdateManager::slotBaseDiskUpdateRequested(Update baseDiskUpdate)
+{
+  if(ptrVerifiedDownload_ == NULL)
+  {
+    ptrVerifiedDownload_ = new VerifiedDownload(this);
+  }
+  else if( ptrVerifiedDownload_->isStarted() )
+  {
+    ptrVerifiedDownload_->abort();
+  }
+
+  // !! QCryptographicHash::Sha3_256 does NOT implement sha3_256 !!
+  // https://bugreports.qt.io/browse/QTBUG-59770?jql=text%20~%20%22QCryptographicHash%22
+  // So we use sha256 instead till qt5.9 is avaiable in debian and its distributions
+  //ptrVerifiedDownload_->setHashAlgo(QCryptographicHash::Sha3_256);
+  ptrVerifiedDownload_->setHashAlgo(QCryptographicHash::Sha256);
+
+  ptrVerifiedDownload_->setDownloadTargetDir(ptrSystemConfig_->getBaseDiskPath());
+  ptrVerifiedDownload_->setUrl(baseDiskUpdate.Url);
+  ptrVerifiedDownload_->setSHA(baseDiskUpdate.CheckSum);
+
+  if ( !ptrVerifiedDownload_->isReady() )
+  {
+    QString errorStr="Could not start download because of incomplete initialisation";
+    IERR(errorStr);
+    // TODO: implement non interactive error handling
+    QMessageBox msgBox;
+    msgBox.setIcon(QMessageBox::Critical);
+    msgBox.setWindowTitle(QApplication::applicationName());
+    QString message = "<h3>Error occured at downloading BaseDisk update</h3> \n"+
+                      errorStr + "\n<b>Please quit and start the problem reporter.</b>";
+    msgBox.setStandardButtons(QMessageBox::Abort);
+    // TODO: bernhard: why is this not working?!
+//    msgBox.button(QMessageBox::Abort)->setText("Quit");
+    msgBox.setText(message);
+    msgBox.setWindowIcon(QIcon(":/resources/privacymachine.svg"));
+    msgBox.exec();
+    exit(1);
+  }
+  else
+  {
+    connect( ptrVerifiedDownload_, SIGNAL(finished()), this, SLOT(slotBaseDiskUpdateDownloadFinished()) );
+
+    if(interactive_)
+    {
+      connect( ptrVerifiedDownload_, SIGNAL(downloadProgress(qint64,qint64)),
+               ptrInteraktiveUpdateWidget_, SLOT(slotProgressBarUpdate(qint64,qint64)) );
+      ptrInteraktiveUpdateWidget_->setProgressBarText("Downloading "+ptrVerifiedDownload_->getUrl().toString());
+      ptrInteraktiveUpdateWidget_->setProgressBarRange(0,0);
+      ptrInteraktiveUpdateWidget_->setProgressBarVisible(true);
+
+      ptrInteraktiveUpdateWidget_->setTitle("<h1>Downloading BaseDisk<h1>");
+
+      ptrInteraktiveUpdateWidget_->setUpdateTitleVisible(false);
+      ptrInteraktiveUpdateWidget_->setButtonsVisible(false);
+      ptrInteraktiveUpdateWidget_->setTextEditVisible(false);
+      ptrInteraktiveUpdateWidget_->setUpdateEffectsVisible(false);
+
+    }
+    ptrVerifiedDownload_->start();
+  }
+
+}
+void UpdateManager::slotBaseDiskUpdateDownloadFinished()
 {
 
 }
 
 void UpdateManager::slotConfigUpdateRequested(Update configUpdate)
 {
-  VerifiedDownload downloader(this);
-  downloader.setHashAlgo(QCryptographicHash::Sha3_256);
-//  downloader.setDownloadTargetDir();
+
+//
+}
+void UpdateManager::slotConfigUpdateDownloadFinished()
+{
+
 }
 

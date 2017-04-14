@@ -60,6 +60,12 @@ void WidgetInteraktiveUpdate::setUpdateEffectsText(QString text)
 {
   ui->labelUpdateEffects->setText(text);
 }
+void WidgetInteraktiveUpdate::slotProgressBarUpdate(qint64 current, qint64 max)
+{
+  ui->progressBar->setValue(current);
+  ui->progressBar->setMaximum(max);
+}
+
 
 void WidgetInteraktiveUpdate::showUpdate(QList<Update> parUpdateList)
 {

@@ -5,6 +5,7 @@
 #include <QDomDocument>
 #include <QFile>
 #include <QProgressDialog>
+#include <QCryptographicHash>
 
 #include <QDateTime>
 
@@ -19,7 +20,9 @@ int main(int argc, char *argv[])
   qDebug() << dt.toString(format);
   qDebug() << "\n" <<dateStr.right(3);
 
+  qDebug() << QCryptographicHash::hash(QByteArray(""), QCryptographicHash::Sha3_256).toHex();
 
+  exit(0);
 
   QApplication a(argc, argv);
   /// @todo: bernhard: move to unit test
@@ -50,4 +53,5 @@ int main(int argc, char *argv[])
 //  d.show();
 
   return a.exec();
+
 }

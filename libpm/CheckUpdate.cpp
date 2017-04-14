@@ -184,7 +184,7 @@ void CheckUpdate::findBaseDiskUpdates()
       foreach( XmlUpdateParser::CheckSumListBaseDisk entry, baseDisk.CheckSums )
       {
         if( (entry.ComponentMajorUp == currentBaseDiskVersion_.getComponentMajor()) ||
-            (entry.ComponentMajorUp == entry.Version.getComponentMajor()) )
+            (entry.ComponentMajorUp == baseDisk.Version.getComponentMajor()) )
         {
           baseDiskUpdate.CheckSum = entry.CheckSum;
           foreach (QChar c, baseDiskUpdate.CheckSum)
@@ -201,7 +201,7 @@ void CheckUpdate::findBaseDiskUpdates()
           baseDiskUpdate.Url = QUrl(entry.Url);
           if( (baseDiskUpdate.Url.isLocalFile()) || (!baseDiskUpdate.Url.isValid()) )
           {
-            errorStr_ = "CheckUpdate: Binary Update URL <"+baseDiskUpdate.Url.toString()+"> is not a valid URL";
+            errorStr_ = "CheckUpdate: BaseDisk Update URL <"+baseDiskUpdate.Url.toString()+"> is not a valid URL";
             IERR(errorStr_);
             error_=ParsingError;
             break;

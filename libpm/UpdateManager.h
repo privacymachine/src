@@ -7,6 +7,7 @@
 #include "WidgetInteraktiveUpdate.h"
 #include "CheckUpdate.h"
 #include "SystemConfig.h"
+#include "VerifiedDownload.h"
 
 class UpdateManager : public QObject
 {
@@ -47,6 +48,7 @@ class UpdateManager : public QObject
     /// \brief setInteractiveUpdate
     /// \brief activate to use the interactive frontend WidgetInteractiveUpdate
     /// \param interactive
+    /// \@todo: non interactive update not implemented jet
     void setInteractiveUpdate(bool interactive) {interactive_=interactive;}
 
     /// \brief setSystemConfig
@@ -87,6 +89,11 @@ class UpdateManager : public QObject
     void slotShowConfigUpdate();
     void slotShowBaseDiskUpdate();
 
+    // Updates downloaded
+    void slotBinaryUpdateDownloadFinished();
+    void slotConfigUpdateDownloadFinished();
+    void slotBaseDiskUpdateDownloadFinished();
+
     void slotEmitSignalFinished() {emit signalFinished();}
 
   private:
@@ -100,6 +107,7 @@ class UpdateManager : public QObject
     bool vmMaskRegenerationNecessary_;
     bool interactive_;
     SystemConfig* ptrSystemConfig_;
+    VerifiedDownload* ptrVerifiedDownload_;
 };
 
 

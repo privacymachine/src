@@ -41,6 +41,9 @@ class WidgetInteraktiveUpdate : public QWidget
     void signalUpdateSkipped();
     void signalUpdateRequested(Update);
 
+  public slots:
+    void slotProgressBarUpdate(qint64 current, qint64 max);
+
   private:
     Ui::WidgetInteraktiveUpdate *ui;
     Update update_;

@@ -54,8 +54,8 @@ IDI_ICON1               ICON    DISCARDABLE     "..\\artwork\\PrivacyMachine_Log
 
 // Executable version information.
 VS_VERSION_INFO    VERSIONINFO
-FILEVERSION        0,2,0,0
-PRODUCTVERSION     0,2,0,0
+FILEVERSION        0,10,0,0
+PRODUCTVERSION     0,10,0,0
 FILEFLAGSMASK      VS_FFI_FILEFLAGSMASK
 #ifdef _DEBUG
   FILEFLAGS        VS_FF_DEBUG | VS_FF_PRERELEASE
@@ -75,8 +75,8 @@ BEGIN
       VALUE "InternalName", "PrivacyMachine"
       VALUE "LegalCopyright", "(c) 2016 PrivacyMachine-Team (EUPL v1.1 licensed)"
       VALUE "OriginalFilename", "ProblemReporter.exe"
-      VALUE "ProductName", "PrivacyMachine"
-      VALUE "ProductVersion", "0.9.0.0"
+      VALUE "ProductName", "PrivacyMachine beta-2"
+      VALUE "ProductVersion", "0.10.0.0"
     END
   END
   BLOCK "VarFileInfo"

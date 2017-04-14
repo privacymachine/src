@@ -71,7 +71,6 @@ class XmlUpdateParser
 
     struct CheckSumListBaseDisk
     {
-      PmVersion Version;
       QString Os;
       QString Url; // validity not checked
       QString CheckSum; // in hex

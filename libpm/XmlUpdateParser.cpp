@@ -103,7 +103,11 @@ bool XmlUpdateParser::parse(QByteArray parRawData)
         newBinary.Date = date;
         newBinary.Version.parse(versionStr); // ignore errors?
 
-        QDomNode nodeCheckSums = childOfChannel.firstChildElement("PmSHA3-256CheckSums");
+        // !! QCryptographicHash::Sha3_256 does NOT implement sha3_256 !!
+        // https://bugreports.qt.io/browse/QTBUG-59770?jql=text%20~%20%22QCryptographicHash%22
+        // So we use sha256 instead till qt5.9 is avaiable in debian and its distributions
+        // QDomNode nodeCheckSums = childOfChannel.firstChildElement("PmSHA3-256CheckSums");
+        QDomNode nodeCheckSums = childOfChannel.firstChildElement("PmSHA256CheckSums");
         if (!nodeCheckSums.isNull())
         {
           QDomNode nodeCheckSum = nodeCheckSums.firstChild();
@@ -144,7 +148,11 @@ bool XmlUpdateParser::parse(QByteArray parRawData)
         newConfig.Date = date;
         newConfig.Version.parse(versionStr); // ignore errors?
 
-        QDomNode nodeCheckSums = childOfChannel.firstChildElement("PmSHA3-256CheckSums");
+        // !! QCryptographicHash::Sha3_256 does NOT implement sha3_256 !!
+        // https://bugreports.qt.io/browse/QTBUG-59770?jql=text%20~%20%22QCryptographicHash%22
+        // So we use sha256 instead till qt5.9 is avaiable in debian and its distributions
+        // QDomNode nodeCheckSums = childOfChannel.firstChildElement("PmSHA3-256CheckSums");
+        QDomNode nodeCheckSums = childOfChannel.firstChildElement("PmSHA256CheckSums");
         if (!nodeCheckSums.isNull())
         {
           QDomNode nodeCheckSum = nodeCheckSums.firstChild();
@@ -185,7 +193,11 @@ bool XmlUpdateParser::parse(QByteArray parRawData)
         newBaseDisk.Date = date;
         newBaseDisk.Version.parse(versionStr); // ignore errors?
 
-        QDomNode nodeCheckSums = childOfChannel.firstChildElement("PmSHA3-256CheckSums");
+        // !! QCryptographicHash::Sha3_256 does NOT implement sha3_256 !!
+        // https://bugreports.qt.io/browse/QTBUG-59770?jql=text%20~%20%22QCryptographicHash%22
+        // So we use sha256 instead till qt5.9 is avaiable in debian and its distributions
+        // QDomNode nodeCheckSums = childOfChannel.firstChildElement("PmSHA3-256CheckSums");
+        QDomNode nodeCheckSums = childOfChannel.firstChildElement("PmSHA256CheckSums");
         if (!nodeCheckSums.isNull())
         {
           QDomNode nodeCheckSum = nodeCheckSums.firstChild();

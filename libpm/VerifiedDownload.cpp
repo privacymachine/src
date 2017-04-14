@@ -14,6 +14,8 @@ VerifiedDownload::VerifiedDownload(QObject *parent) :
   ptrNAM_ = new QNetworkAccessManager(this);
   connect(this, SIGNAL(finished()), this, SLOT(slotFinished()));
   filePath_="";
+  error_=NoError;
+  started_=false;
 }
 
 VerifiedDownload::~VerifiedDownload()
@@ -83,6 +85,7 @@ bool VerifiedDownload::start()
     return false;
   }
   started_ = true;
+  error_=NoError;
 
   QNetworkRequest request( url_ );
   request.setAttribute( QNetworkRequest::CacheLoadControlAttribute, QNetworkRequest::AlwaysNetwork );
@@ -115,6 +118,7 @@ void VerifiedDownload::abort()
   {
     ptrNetReply_->abort();
     error_ = Aborted;
+    started_=false;
     emit finished();
   }
 }
@@ -123,8 +127,7 @@ void VerifiedDownload::slotDownloadFinished()
 {
   if (error_ != NoError)
   {
-    if(error_ != Aborted)
-      emit finished();
+    emit finished();
     return;
   }
 
