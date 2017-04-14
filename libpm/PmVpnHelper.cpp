@@ -36,7 +36,7 @@ PmVpnHelper::~PmVpnHelper()
 
 QString PmVpnHelper::getRandomConfigFileName()
 {
-  /// @todo: Bernhard: move to VmMaskInstanceConfiguration::init()
+  // TODO: bernhard: move to VmMaskInstanceConfiguration::init()
   int pos = randombytes_uniform(vpnConfig_.ConfigFiles.count());
   return vpnConfig_.ConfigFiles.at(pos);
 }
@@ -137,12 +137,12 @@ bool PmVpnHelper::addCmdToInitSystemD(QList<PmCommand*>& parCmdList, QString par
   openvpn_pm.service starts the openvpn
   */
 
-  /// @todo: rename systemd files:
-  /// firefox.service     -> pmFirefoxAutoStartAfterOpenVPN.service
-  /// firefox.path        -> pmFirefoxAutoStartAfterOpenVPN.path
-  /// openvpn_log.service -> pmOpenVpnLogViewer.service
-  /// openvpn_log.path    -> pmOpenVpnLogViewer.path
-  /// openvpn_pm.service  -> pmOpenVpnConnection.service
+  // TODO: rename systemd files:
+  // firefox.service     -> pmFirefoxAutoStartAfterOpenVPN.service
+  // firefox.path        -> pmFirefoxAutoStartAfterOpenVPN.path
+  // openvpn_log.service -> pmOpenVpnLogViewer.service
+  // openvpn_log.path    -> pmOpenVpnLogViewer.path
+  // openvpn_pm.service  -> pmOpenVpnConnection.service
 
   desc = "Start OpenVPN connection for VM-Mask '" + vmMaskFullName + "'";
   curCmd = genSshCmd("systemctl start openvpn_pm.service", sshPort);

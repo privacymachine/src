@@ -20,7 +20,7 @@ endif()
 set(BUILD_SHARED_LIBS ON)
 
 # AL: Needed for compiling Fervor without QWebView
-# @todo: remove me
+# TODO: remove me
 set(SKIP_QWEBVIEW "ON") # Valid values: ON/OFF
 # We need to support differet QtWebView-Version if we need HTML-Dialogs:
 #   https://blog.qt.io/blog/2016/06/16/qt-5-7-released/

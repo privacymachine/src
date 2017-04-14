@@ -36,22 +36,23 @@ class VmMaskInstance
   public:
 
     /// \brief Constructor of \class VmMaskInstance
-    /// \param parCurrentConfig  in: holded as reference
-    /// \param parVmMaskId       in: id (identical to tab-index)
+    /// \param parCurrentConfig [in] holded as reference
+    /// \param parVmMaskId [in] id (identical to tab-index)
     explicit VmMaskInstance(VmMaskCurrentConfig* parCurrentConfig, int parVmMaskId);
 
     VmMaskCurrentConfig* getConfig()  { return currentConfig_; }
 
     QSharedPointer< VmInfoIpAddress > getInfoIpAddress()  { return vmInfoIpAddress_; }
 
-    // 'true'  when the VmMask is up and running
-    bool VmMaskIsActive;
-
     // copy of VmMaskUserConfig::vmMaskId_
     int getVmMaskId() { return vmMaskId_; }
 
+    bool getVmMaskIsActive() const;
+    void setVmMaskIsActive(bool value);
+
   private:
     int vmMaskId_;
+    bool vmMaskIsActive_; // 'true'  when the VmMask is up and running
 
     VmMaskCurrentConfig *currentConfig_; // created and deleted outside (in PmManager)
     QSharedPointer< VmInfoIpAddress > vmInfoIpAddress_;

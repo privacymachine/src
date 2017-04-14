@@ -135,7 +135,7 @@ class VmMaskUserConfig
     QStringList fonts_;
     QStringList browsers_;
     QStringList dnsServers_;
-    QStringList browserLanguages_;    /// @todo: set intl.accept_languages in about:config
+    QStringList browserLanguages_;    // TODO: set intl.accept_languages in about:config
     QStringList ipAddressProviders_;
 
     // possible values from the BaseDisk
@@ -144,10 +144,10 @@ class VmMaskUserConfig
     QStringList fontsInBaseDisk_;
     QStringList browsersInBaseDisk_;
 
-    /// @todo: implement or remove:
+    // TODO: implement or remove:
     bool flash_;
     bool java_;
     QString scriptOnShutdown_;
     QString scriptOnStartup_;
-    QString thirdPartyCookies_;  /// @todo: -> about:config + DoNotTrack
+    QString thirdPartyCookies_;  // TODO: -> about:config + DoNotTrack
 };

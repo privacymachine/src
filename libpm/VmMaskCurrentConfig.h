@@ -107,10 +107,10 @@ class VmMaskCurrentConfig
     QColor color_; // Color used for highlighting the VM-Mask, e.g. drawing a coloured frame around the VM-Mask.
     bool java_;
     bool flash_;
-    QStringList browserLanguages_;   /// @todo: Accept-Language in about:config setzen
+    QStringList browserLanguages_;   // TODO: set 'Accept-Language' in about:config
     QStringList ipAddressProviders_;
     QString scriptOnShutdown_;
     QString scriptOnStartup_;
-    QString thirdPartyCookies_;  // Not used? To delete? -> about:config +  DoNotTrack
+    QString thirdPartyCookies_;  // TODO: Not used? delete? -> about:config +  DoNotTrack
     VpnConfig vpnConfig_;
 };

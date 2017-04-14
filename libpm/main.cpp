@@ -111,7 +111,7 @@ int main(int argc, char *argv[])
   QString startTime = currentTimeStampAsISO();
   ILOG("Starting up at " + startTime + " Version:" + constPrivacyMachineVersion);
 
-  /// @todo: remove this encoding test under windows
+  // TODO: bernhard: remove this encoding test under windows
   ILOG("remove this encoding test under windows: 'böße'");
   qDebug() << "remove this native encoding test under windows: 'böße'" << endl;
 
@@ -442,9 +442,9 @@ bool checkSystemInstallation(QString& parVboxDefaultMachineFolder)
 void initTranslation(QApplication& parApp)
 {
   QTranslator pmTranslator;
-  /// @todo: read from PrivacyMachine.ini
+  // TODO: read from PrivacyMachine.ini
   QString currentLanguage = "lang_" + QLocale::system().name();
-  /// @todo: Bernhard: hardcode to english because german tranlation is incomplete
+  // TODO: remove hardcoded english language (i18n and german tranlation is incomplete now)
   currentLanguage = "lang_de_DE";
   pmTranslator.load(currentLanguage);
   parApp.installTranslator(&pmTranslator);

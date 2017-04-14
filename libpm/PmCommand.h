@@ -55,10 +55,10 @@ enum ePmCommandResult
   failed=2
 };
 
-/// @todo AL: Extend with signals for command completion, with return code as argument
+/// TODO AL: Extend with signals for command completion, with return code as argument
 /// This way, command sequences as well as arbitrarily complex graphs can be modeled:
 /// slots handle the return code, and run the next command based on the return code.
-/// @todo AL: Provide default success/fail implementations (run command, abort) for slots
+/// TODO AL: Provide default success/fail implementations (run command, abort) for slots
 
 /// Convenience class for managing a command line call, including tweaks like swapping
 /// StdOut/StdErr, if commands swapped it accidentally.

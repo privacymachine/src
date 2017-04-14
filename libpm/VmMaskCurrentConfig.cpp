@@ -28,7 +28,7 @@ QString VmMaskCurrentConfig::toString()
   return "\"" + getFullName() + "\" - "
       + QObject::tr("Locale") + ": " + locale_ + ", "
       + QObject::tr("Time Zone") + ": " + getTimeZone() + ", "
-      + QObject::tr("Additional Fonts") + ": " + QString::number(getFonts().size()) + "/ 4242"; /// @todo: Bernhard: Get Basedisk-Font-Count
+      + QObject::tr("Additional Fonts") + ": " + QString::number(getFonts().size()) + "/ 4242"; // TODO: bernhard: Get Basedisk-Font-Count
 
 }
 

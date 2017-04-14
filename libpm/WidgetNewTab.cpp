@@ -29,7 +29,8 @@
 
 WidgetNewTab::WidgetNewTab(QWidget *parParent) :
   QWidget(parParent),
-  ui_(new Ui::WidgetNewTab)
+  ui_(new Ui::WidgetNewTab),
+  currentSelectedVmMaskId_(-1)
 {
   ui_->setupUi(this);
   m_parent_ = parParent;
@@ -118,14 +119,18 @@ void WidgetNewTab::slotBtnStart_clicked()
   if (currentSelectedVmMaskId_ >= 0)
   {
     QList<PmCommand*> commandList;
+    VmMaskData* vmMask = pmManager_->getVmMaskData()[currentSelectedVmMaskId_];
 
     if(!pmManager_->createCommandsToStartVmMask(currentSelectedVmMaskId_,
                                                 commandList))
     {
-      IWARN("error creating commands for VM-Mask " + pmManager_->getVmMaskData()[currentSelectedVmMaskId_]->UserConfig->getName());
+      IWARN("error creating commands for VM-Mask " + vmMask->UserConfig->getName());
       slotFinished(failed);
       return;
     }
+
+    // mark as active
+    vmMask->Instance->setVmMaskIsActive(true);
 
     commandExec_->setCommands(commandList);
     commandExec_->start();
@@ -160,29 +165,28 @@ void WidgetNewTab::slotFinished(ePmCommandResult parExitCode)
       ui_->labelDescription->adjustSize();
       emit signalNewVmMaskReady(currentSelectedVmMaskId_);
 
-      /// @todo: bernhard: ???
-      /*
-      QAbstractButton* checkedButton = radioButtons_->checkedButton();
-      if (checkedButton)
-      {
-        radioButtons_->setExclusive(false);
-        checkedButton->setChecked(false);
-        radioButtons_->setExclusive(true);
-      }
-      */
-
       commandExec_->reset();
       ui_->btnStartVmMask->setEnabled(false);
       break;
 
     case failed:
       QMessageBox::warning(this, "Starting VM-Mask", "Starting the VirtualMachine failed. Please check the logfile for Details.");
+
+      // mark as inactive
+      if (currentSelectedVmMaskId_ >= 0)
+        pmManager_->getVmMaskData()[currentSelectedVmMaskId_]->Instance->setVmMaskIsActive(false);
+
       break;
 
     case aborted:
       // In this case, the user would expect the "Start" button to be enabled even when not selecting another radio
       // button.
       ui_->btnStartVmMask->setEnabled(false);
+
+      // mark as inactive
+      if (currentSelectedVmMaskId_ >= 0)
+        pmManager_->getVmMaskData()[currentSelectedVmMaskId_]->Instance->setVmMaskIsActive(false);
+
       break;
 
     default:
@@ -211,7 +215,7 @@ void WidgetNewTab::slotRadioBtn_clicked()
 
     // cannot start if the some VmMask is currently created or if the current VmMask is already running
     if(commandExec_->isStillExecuting() ||
-        (!vmMaskData->Instance.isNull() && vmMaskData->Instance->VmMaskIsActive) )
+        (!vmMaskData->Instance.isNull() && vmMaskData->Instance->getVmMaskIsActive() ))
     {
       ui_->btnStartVmMask->setEnabled(false);
     }

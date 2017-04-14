@@ -119,7 +119,7 @@ bool PmManager::initConfiguration(const QString& parPmInstallPath, const QString
     QString language = language_country.split('_').first();
     if (language != "en")
     {
-      language = "en"; /// @todo:  Bernhard: hardcode to english because german tranlation is incomplete
+      language = "en"; // TODO: @bernhard: hardcode to english because german tranlation is incomplete
     }
     QString templateConfigFile = pmInstallDir_ + "/conf/" + "PrivacyMachine_Example_" + language + ".ini";
 
@@ -168,7 +168,7 @@ bool PmManager::initConfiguration(const QString& parPmInstallPath, const QString
     }
   }
 
-  /// @todo olaf: please remove
+  // TODO olaf: please remove
   configSystem_->setBaseDiskVersion("0.10.1.0");
   configSystem_->setBaseDiskName("BaseDisk_1");
 
@@ -334,7 +334,7 @@ bool PmManager::vmMaskRegenerationNecessary()
     return true;
   }
 
-  /// @todo:  Olaf: when imlemented flash or other Mask breaking configuration check for that here too
+  // TODO: olaf: when imlemented flash or other Mask breaking configuration check for that here too
 
   QSet<QString> oldConfiguredVmMasks = QSet<QString>::fromList(configSystem_->getConfiguredVmMaskNames());
   QSet<QString> currentConfiguredVmMasks;
@@ -500,8 +500,8 @@ bool PmManager::createCommandsToCreateVmMask( VmMaskData* parVmMask,
   parCmdList.append(curCmd);
 
 /**  // Copy folder pm to VM
-//  @todo: At startup: ensure that we are at the location of the executable
-//  @todo: On Windows: the executable flag gets lost, and scripts have the wrong lineendings
+//  TODO: At startup: ensure that we are at the location of the executable
+//  TODO: On Windows: the executable flag gets lost, and scripts have the wrong lineendings
 //  args.clear();
 //  curCmd = GetPmCommandForScp2VM("liveuser",constVmIp,QString::number(parCurInstance->getConfig()->sshPort),constRootPw,"../../packaging/BaseDisk/pm_files/pm","/");
 //  curCmd->setDescription("Copy obfuscation-scripts to VM-Mask '" + parCurInstance->getConfig()->FullName + "'");
@@ -518,7 +518,7 @@ bool PmManager::createCommandsToCreateVmMask( VmMaskData* parVmMask,
 #endif
 
   desc = "Set X-keybord layout to DE in VM-Mask: '" + vmMaskFullName + "'";
-  /// @todo: move keyboard-layout to the configuration
+  // TODO: move keyboard-layout to the configuration
   curCmd = genSshCmd( "/pm/scripts/set_keybord_layout_to_de.sh", sshPort);
   curCmd->setDescription( desc );
   curCmd->setExecutionCosts( 50 );
@@ -797,7 +797,7 @@ bool PmManager::createCommandsToStartVmMask(int parVmMaskId,
   // configure the browser: Obfuscation via Plugin-Randomisation
   addCommandsToConfigureBrowser(vmMask->Instance, parCmdList);
 
-  /// Obfuscate dns-servers @todo: @olaf: find a way for VPN via /etc/resolvconf/resolv.conf.d/tail or other openvpn parameters
+  // Obfuscate dns-servers TODO: olaf: find a way for VPN via /etc/resolvconf/resolv.conf.d/tail or other openvpn parameters
   const VpnConfig& vpnConfig = vmMask->Instance->getConfig()->getVpnConfig();
   if( vpnConfig.VpnType != "OpenVPN" &&
       vpnConfig.VpnType != "VPNGate" )
@@ -852,7 +852,7 @@ void PmManager::addCommandsToConfigureBrowser(QSharedPointer<VmMaskInstance>& pa
     curCmd->setExecutionCosts(100);
     parCmdList.append(curCmd);
   }
-  /// @todo:  else if( pVmMaskInstance->getConfig()->browser ==...)
+  // TODO:  else if( pVmMaskInstance->getConfig()->browser ==...)
 }
 
 void PmManager::addCommandsToStartBrowserService(QSharedPointer<VmMaskInstance>& parVmMaskInstance, QList<PmCommand*>& parCmdList)

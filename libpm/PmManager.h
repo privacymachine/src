@@ -50,10 +50,10 @@ class PmManager
     bool initAllVmMaskData();
     bool createCommandsToCreateAllVmMasks(QList<PmCommand*>& parCommandsList);
 
-    /// \brief Creat a List of Commands which are needed to start a already prepared VmMask (Snapshot)
-    /// \param parVmMaskId        in: Id of the VmMask
-    /// \param parCommandsList   out: contains all generated Commands
-    /// \return                     : false on error
+    /// \brief Create a List of Commands which are needed to start a already prepared VmMask (Snapshot)
+    /// \param parVmMaskId [in] Id of the VmMask
+    /// \param parCommandsList [out] contains all generated Commands
+    /// \return false on error
     bool createCommandsToStartVmMask(int parVmMaskId, QList<PmCommand*>& parCommandsList);
 
     bool createCommandsToCloseVmMask(QString parVmName, QString parVmMaskFullName,QList<PmCommand*>& parCommandsList);

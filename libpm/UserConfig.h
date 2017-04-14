@@ -29,39 +29,10 @@ class TestUserConfigOpenVPN;
 class VmMaskUserConfig;
 class VpnConfig;
 
-/*
-/// @todo: removeMe
-struct ConfigVmMask
-{
-
-  QString name; // from Name of Section
-  QString fullName;
-  /// A description of what use case the VM Mask is intended for.
-  QString description;
-  QColor color;
-  // The name of the virtual machine for this VM Mask
-  QString vmName;
-  QString networkConnection;
-  QString ipAddressProviders;
-  /// Locales as configured by user.
-  QStringList localeList;
-  QString browserLanguages; // separated with ','
-  QString java;
-  QString flash;
-  QString thirdPartyCookies;
-  /// Browsers as configured by user.
-  QStringList browserList;
-  /// DNS-Server as configured by user
-  QString dnsServers;
-  QString scriptOnStartup;
-  QString scriptOnShutdown;
-};
-*/
-
 struct ConfigUpdate
 {
     QString AppcastPM;
-    QString AppcastBaseDisk; /// @todo: remove because not used anymore
+    QString AppcastBaseDisk; // TODO: remove me
 };
 
 class UserConfig

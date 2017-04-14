@@ -26,14 +26,22 @@
 #include <QJsonValue>
 #include <QSet>
 
-VmMaskUserConfig::VmMaskUserConfig()
+VmMaskUserConfig::VmMaskUserConfig():
+  name_("NOT_INITIALIZED"),
+  vmName_("NOT_INITIALIZED"),
+  fullName_("NOT_INITIALIZED"),
+  description_("NOT_INITIALIZED"),
+  vmMaskId_(-1),
+  color_("NOT_INITIALIZED"),
+  networkConnectionType_("NOT_INITIALIZED"),
+  flash_(false),
+  java_(false)
 {
-  /// @todo: init all members
 }
 
 bool VmMaskUserConfig::initWithBaseDiskCapabilities(const QJsonObject& parBaseDiskCapabilities)
 {
-  /// @todo: add error handling
+  // TODO: add error handling
 
   // get available fonts
   QJsonArray fontArray = parBaseDiskCapabilities["fonts"].toArray();
@@ -53,7 +61,7 @@ bool VmMaskUserConfig::initWithBaseDiskCapabilities(const QJsonObject& parBaseDi
   // get available browsers
   browsersInBaseDisk_ = parBaseDiskCapabilities["browser"].toObject().keys();
 
-  /// @todo: Why is this here? Delete?
+  // TODO: Why is this here? Delete?
   /*
   // Choose one Language
   browserLanguage = "en"; // init
@@ -174,7 +182,7 @@ bool VmMaskUserConfig::setConfigurationDefaultsAndCheckForErrors(const QJsonObje
   }
 
   // if the user has not configured a browser Language, we set a default
-  /// @todo: set intl.accept_languages in about:config
+  // TODO: set intl.accept_languages in about:config
   if (browserLanguages_.count() == 0)
   {
     browserLanguages_.append("en-US, en");
@@ -189,8 +197,8 @@ bool VmMaskUserConfig::setConfigurationDefaultsAndCheckForErrors(const QJsonObje
     ipAddressProviders_.append("http://checkip.amazonaws.com");
   }
 
-  /// @todo: Check name for special chars that can cause troubles in filesystems
-  /// @todo: Check color, Java, Flash
+  // TODO: Check name for special chars that can cause troubles in filesystems
+  // TODO: Check color, Java, Flash
 
   return true;
 }

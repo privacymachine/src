@@ -31,4 +31,15 @@ VmMaskInstance::VmMaskInstance(VmMaskCurrentConfig* parCurrentConfig, int parVmM
                                                                          currentConfig_->getSshPort()));
   vmInfoIpAddress_->initialize();
   vmMaskId_ = parVmMaskId;
+  vmMaskIsActive_ = true;
+}
+
+bool VmMaskInstance::getVmMaskIsActive() const
+{
+    return vmMaskIsActive_;
+}
+
+void VmMaskInstance::setVmMaskIsActive(bool value)
+{
+    vmMaskIsActive_ = value;
 }

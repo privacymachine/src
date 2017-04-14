@@ -69,7 +69,6 @@ void WindowMain::slotShowAbout()
   aboutWidget_->setWindowIcon(QIcon(":/resources/privacymachine.svg"));
   QLabel *logoLabel = new QLabel(aboutWidget_);
   aboutWidget_->setWindowTitle("About");
-  /// @todo: add logo and valid description
   QPixmap pixmap = QIcon(":/resources/privacymachine.svg").pixmap(this->windowHandle(),QSize(150,150));
   logoLabel->setPixmap(pixmap);
   logoLabel->setMinimumSize(QSize(180,150));
@@ -111,11 +110,10 @@ bool WindowMain::init(QString parPmInstallPath, QString parVboxDefaultMachineFol
 
   if (!pmManager_->isBaseDiskAvailable())
   {
-    /// @todo olaf: show download
-
+    // TODO: olaf: show download
   }
 
-  /// @todo: fill with content for alpha 1 users:
+  // TODO: fill with content for alpha 1 users:
   #ifdef PM_WINDOWS
     QString releaseUrl = "https://update.privacymachine.eu/ReleaseNotes_0.10.0.0_WIN64_EN.html";
   #else
@@ -136,7 +134,7 @@ bool WindowMain::init(QString parPmInstallPath, QString parVboxDefaultMachineFol
   }
 
 
-  /// @todo: bernhard: continue working here: currently empty window
+  // TODO: bernhard: continue working here: currently empty window
   /*
     if (pmManager_->isConfigValid())
     {
@@ -148,7 +146,7 @@ bool WindowMain::init(QString parPmInstallPath, QString parVboxDefaultMachineFol
     }
     */
 
-  /// @todo olaf: please check in the new tab for pmManager_->isConfigValid()
+  // TODO olaf: please check in the new tab for pmManager_->isConfigValid()
   return setupTabWidget();
 }
 
@@ -178,23 +176,13 @@ void WindowMain::slotUpdateBtnOK()
 
     // We only update the binary on Windows. On Linux, the user has to take action (they got notified in update dialog).
     #ifdef PM_WINDOWS
-      /// @todo: Alex start update process here like
-      // UPDATER = new updaterWidget;
-      // ui_->mainLayout_v->addWidget(UPDATER);
-      // connect(UPDATER,
-      //         SIGNAL(finished(int)),
-      //         this,
-      //         SLOT(slotUpdateFinished()));
-      // UPDATER->start()
-      connect( FvUpdater::sharedUpdater(), SIGNAL( signalUpdateInstalled() ), this, SLOT( slotUpdateFinished() ) );
-      FvUpdater::sharedUpdater()->slotTriggerUpdate();
-
+      // TODO: implement me
     #endif
 }
 
 void WindowMain::slotUpdateFinished()
 {
-  /// @todo: Alex: implement error handling etc
+  // TODO: implement error handling etc
 
   // if(status==BROKE_VMMASKS)
   //   regenerateVMMasks();
@@ -213,7 +201,7 @@ void WindowMain::slotUpdateBtnLater()
   delete updateMessage_;
   updateMessage_ = NULL;
 
-  /// @todo: from bernhard to olaf: the user said he want to update later, why start it anyway?
+  // TODO: question from bernhard to olaf: the user said he want to update later, why start it anyway?
   if(pmManager_->vmMaskRegenerationNecessary() )
     regenerateVmMasks();
   else
@@ -356,20 +344,6 @@ void WindowMain::slotTabCloseRequested(int parTabIndex)
                 0,
                 0 );
 
-
-    /// @todo: move to whole WindowMain
-    /*
-    // Show a 'are you shure you want to close this VM-Mask' MessageBox
-    QMessageBox msgBox;
-    msgBox.setWindowIcon(QIcon(":/resources/privacymachine.svg"));
-    msgBox.setWindowTitle(QApplication::applicationName()+" "+QApplication::applicationVersion());
-    msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Abort);
-    msgBox.setText("Are you shure you want to close The VM-Mask " + vmMask->Instance->getConfig()->getVmName());
-    int ret = msgBox.exec();
-    if (ret == QMessageBox::Abort)
-      return;    
-    */
-
     // Copy VPN logs before the machine shuts down.
     QList<PmCommand*> commandsList;
     PmCommand* pCurrentCommand = NULL;
@@ -390,6 +364,8 @@ void WindowMain::slotTabCloseRequested(int parTabIndex)
     while (commandsList.size())
       delete commandsList.takeFirst();
 
+    // mark as inactive
+    vmMask->Instance->setVmMaskIsActive(false);
 
     // Notify WidgetNewTab that the VmMask has closed
     emit signalVmMaskClosed(vmMask->Instance->getVmMaskId());
@@ -529,6 +505,15 @@ void WindowMain::slotRegenerationFinished(ePmCommandResult parResult)
 
 void WindowMain::closeEvent(QCloseEvent * parEvent)
 {
+  QString messageBoxText = "Are you shure you want to close the PrivacyMachine and all opened VM-Masks?";
+  QMessageBox msgBox;
+  msgBox.setWindowIcon(QIcon(":/resources/privacymachine.svg"));
+  msgBox.setWindowTitle(QApplication::applicationName()+" "+QApplication::applicationVersion());
+  msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Abort);
+  msgBox.setText(messageBoxText);
+  if (msgBox.exec() == QMessageBox::Abort)
+    return;
+
   if (regenerationWidget_ != NULL)
   {
     // Stop the running update

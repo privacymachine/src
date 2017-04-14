@@ -51,7 +51,7 @@ QString VmInfoIpAddress::getIpAddress()
 
 void VmInfoIpAddress::initialize()
 {
-  /// @todo: test the new qt5 syntax which checks errors at compile time!
+  // TODO: bernhard: test the new qt5 syntax which checks errors at compile time!
   /*
   connect( &(*exec_),
            SIGNAL( signalFinished( ePmCommandResult ) ),
@@ -65,7 +65,7 @@ void VmInfoIpAddress::initialize()
   
   // From http://stackoverflow.com/questions/6926433/how-to-shuffle-a-stdvector
   // and http://en.cppreference.com/w/cpp/numeric/random/srand.
-  /// @todo: AL: random_shuffle might not use rand() at all, which would reduce the entropy based on IP address lookups.
+  // TODO: AL: random_shuffle might not use rand() at all, which would reduce the entropy based on IP address lookups.
   std::srand( std::time( 0 ) );
 }
 

@@ -70,6 +70,18 @@ Please note that on first start the 4GB-BaseDisk will be stored in the user conf
   ~/.config/privacyachine under linux  
   %UserProfile%\PrivacyMachine under Windows
 
+#### Developing using QtCreator
+
+There are some potential pitfalls you have to know:
+
+  * The CMake integration in QtCreator is not perfect, so if you change something in the CMakeLists.txt, first close QtCreator, test if the changes work from commandline and then open QtCreator again.
+  * When Opening the inital CMakeLists.txt file please specify as build folder the directory "<git-root>/build_pm" (the "<git-root>/working_dir", in which the binaries are build, is choosen automatically)
+  * For starting/debugging the PrivacyMachine you have to manually configure the "Working directory" to "<git-root>/working_dir".
+
+##### Tips&Tricks
+  * after running 'doxygen' in the root direcory a qt-help file will be generated: "<git-root>/doc_generated/eu.privacymachine.dev-doc.qch"
+  * you can specify this in QtCreator in the menu: Tools->Options:Help->Documentation:"Add..." QtCreater has to be reopened to take use of it.
+  * Enable the plugin "Todo" in Help->About plugins.
 
 ### Build-requirements Linux (tested on ubuntu-16.04 and debian-jessie)
 

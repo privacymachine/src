@@ -150,7 +150,7 @@ int main(int argc, char *argv[])
     // init the translation of PrivacyMachine messages
     QTranslator pmTranslator;
     QString currentLanguage = "lang_" + QLocale::system().name();
-    /// @todo: read from PrivacyMachine.ini
+    // TODO: read from PrivacyMachine.ini
     // Enable for Testing the german translation
     currentLanguage = "lang_de_DE";
     pmTranslator.load(currentLanguage);

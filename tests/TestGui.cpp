@@ -40,7 +40,7 @@ void TestGui::testGui()
   */
 
 
-  /** @todo: fix after the beta-release
+  /** TODO: fix after the beta-release
   WindowMain mainWindow;
   if (mainWindow.init(QDir::currentPath()))
   {
