@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QUrl>
+#include <QProcess>
 #include "PmVersion.h"
 #include "WidgetInteraktiveUpdate.h"
 #include "CheckUpdate.h"
@@ -19,7 +20,7 @@ class UpdateManager : public QObject
 
 
     /// \brief getUpdateWidget
-    /// \brief creates a UpdateWidget to interact with the user
+    /// \brief creates or returns a UpdateWidget to interact with the user
     /// \param parParent
     /// \return UpdateWidget*
     WidgetInteraktiveUpdate* getUpdateWidget(QWidget *parParent = NULL);
@@ -48,7 +49,7 @@ class UpdateManager : public QObject
     /// \brief setInteractiveUpdate
     /// \brief activate to use the interactive frontend WidgetInteractiveUpdate
     /// \param interactive
-    /// \@todo: non interactive update not implemented jet
+    // TODO: non interactive update not implemented jet
     void setInteractiveUpdate(bool interactive) {interactive_=interactive;}
 
     /// \brief setSystemConfig
@@ -67,33 +68,54 @@ class UpdateManager : public QObject
     void signalUpdatesFound();
 
     /// \brief signalFinished
-    /// \brief emmited if update process finished
+    /// \brief emmited if whole update process finished
     void signalFinished();
 
+    /// \brief signalUpdateFinished
+    /// \brief emmited if a update is finished
+    void signalUpdateFinished();
+
   public slots:
-    /// slots to install Updates
-    void slotBinaryUpdateRequested(Update binaryUpdate);
-    void slotBaseDiskUpdateRequested(Update baseDiskUpdate);
-    void slotConfigUpdateRequested(Update configUpdate);
+    /// \brief slotUpdateRequested
+    /// \brief starts the download of an Update with VerifiedDownload
+    /// \param update
+    void slotUpdateRequested(Update update);
+
 
   private slots:
 
-    // after the InteraktiveUpdateWidget is destroyed set the pointer to NULL
+    /// \brief slotInteraktiveUpdateWidgetDestroyed
+    /// \brief after the InteraktiveUpdateWidget is destroyed set the pointer to NULL
     void slotInteraktiveUpdateWidgetDestroyed(){ ptrInteraktiveUpdateWidget_=NULL; }
 
-    // show the check for Updates Information
+
+    /// \brief slotCheckUpdateFinished
+    /// \brief does error handling after findUpdates() and calles slotShow*Update()
     void slotCheckUpdateFinished();
 
-    // show the Updates
+    /// \brief slotShowBinaryUpdate
+    /// \brief displays a Binary update possibility in WidgetInteraciveUpdate
     void slotShowBinaryUpdate();
+
+    /// \brief slotShowConfigUpdate
+    /// \brief displays a Config update possibility in WidgetInteraciveUpdate
     void slotShowConfigUpdate();
+
+    /// \brief slotShowBaseDiskUpdate
+    /// \brief displays a BaseDisk update possibility in WidgetInteraciveUpdate
     void slotShowBaseDiskUpdate();
 
-    // Updates downloaded
-    void slotBinaryUpdateDownloadFinished();
-    void slotConfigUpdateDownloadFinished();
-    void slotBaseDiskUpdateDownloadFinished();
+    /// \brief slotUpdateDownloadFinished
+    /// \brief does the error handling of VerifiedDownload and calls *UpdateInstallRequested
+    void slotUpdateDownloadFinished();
 
+
+    /// \brief slotBaseDiskExtractionFinished
+    /// \brief does the error handling of baseDiskUpdateInstallRequested() and updates SystemConfig
+    void slotBaseDiskExtractionFinished();
+
+
+    /// \brief slotEmitSignalFinished
     void slotEmitSignalFinished() {emit signalFinished();}
 
   private:
@@ -108,6 +130,21 @@ class UpdateManager : public QObject
     bool interactive_;
     SystemConfig* ptrSystemConfig_;
     VerifiedDownload* ptrVerifiedDownload_;
+    Update progressedUpdate_;
+    QProcess *ptrExternalProcess_;
+
+
+    /// \brief binaryUpdateInstallRequested
+    /// \brief not implemented jet
+    void binaryUpdateInstallRequested();
+
+    /// \brief configUpdateInstallRequested
+    /// \brief not implemented jet
+        void configUpdateInstallRequested();
+
+    /// \brief baseDiskUpdateInstallRequested
+    /// \brief remove old BaseDisk and start extraction of the new one
+    void baseDiskUpdateInstallRequested();
 };
 
 

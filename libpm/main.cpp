@@ -217,6 +217,7 @@ bool checkSystemInstallation(QString& parVboxDefaultMachineFolder)
   if (freeMemoryInMb < availableRamNeededInMB)
   {
     QMessageBox msgBox;
+    msgBox.setWindowIcon(QIcon(":/resources/privacymachine.svg"));
     msgBox.setIcon(QMessageBox::Warning);
     msgBox.setWindowTitle(QApplication::applicationName());
     QString message = QCoreApplication::translate("check available resources", "This computer has to low memory(%1 MegaByte) for the PrivacyMachine to work properly (highly recommended: %2 MegaByte).");
@@ -236,6 +237,7 @@ bool checkSystemInstallation(QString& parVboxDefaultMachineFolder)
   {
     IERR("Hardware Virtualisation Support is not available");
     QMessageBox msgBox;
+    msgBox.setWindowIcon(QIcon(":/resources/privacymachine.svg"));
     msgBox.setIcon(QMessageBox::Critical);
     msgBox.setWindowTitle(QApplication::applicationName());
     msgBox.setTextFormat(Qt::RichText);   // this is what makes the links clickable
@@ -259,6 +261,7 @@ bool checkSystemInstallation(QString& parVboxDefaultMachineFolder)
   {
     IERR("VirtualBox is not installed");
     QMessageBox msgBox;
+    msgBox.setWindowIcon(QIcon(":/resources/privacymachine.svg"));
     msgBox.setIcon(QMessageBox::Critical);
     msgBox.setWindowTitle(QApplication::applicationName());
     msgBox.setTextFormat(Qt::RichText);   // this is what makes the links clickable
@@ -276,6 +279,7 @@ bool checkSystemInstallation(QString& parVboxDefaultMachineFolder)
   {
     IERR("ExtensionPack of VirtualBox is not installed");
     QMessageBox msgBox;
+    msgBox.setWindowIcon(QIcon(":/resources/privacymachine.svg"));
     msgBox.setIcon(QMessageBox::Critical);
     msgBox.setWindowTitle(QApplication::applicationName());
     msgBox.setTextFormat(Qt::RichText);   // this is what makes the links clickable
@@ -376,6 +380,7 @@ bool checkSystemInstallation(QString& parVboxDefaultMachineFolder)
   if (showVersionUnsupported)
   {
     QMessageBox msgBox;
+    msgBox.setWindowIcon(QIcon(":/resources/privacymachine.svg"));
     msgBox.setIcon(QMessageBox::Warning);
     msgBox.setWindowTitle(QApplication::applicationName());
     QString messageLine1 = QCoreApplication::translate("check of software dependencies", "The currently installed VirtualBox version '%1' is unsupported.");
@@ -396,6 +401,7 @@ bool checkSystemInstallation(QString& parVboxDefaultMachineFolder)
   if (showVersionToNew)
   {
     QMessageBox msgBox;
+    msgBox.setWindowIcon(QIcon(":/resources/privacymachine.svg"));
     msgBox.setIcon(QMessageBox::Warning);
     msgBox.setWindowTitle(QApplication::applicationName());
     QString messageLine1 = QCoreApplication::translate("check of software dependencies", "The currently installed VirtualBox version '%1' is newer than the Verion tested by the PrivacyMachine-Team.");
@@ -416,6 +422,7 @@ bool checkSystemInstallation(QString& parVboxDefaultMachineFolder)
   if (showVersionToOld)
   {
     QMessageBox msgBox;
+    msgBox.setWindowIcon(QIcon(":/resources/privacymachine.svg"));
     msgBox.setIcon(QMessageBox::Warning);
     msgBox.setWindowTitle(QApplication::applicationName());
     QString messageLine1 = QCoreApplication::translate("check of software dependencies", "The currently installed VirtualBox version '%1' is too old. Please update VirtualBox to the current version and start the PrivacyMachine again.");

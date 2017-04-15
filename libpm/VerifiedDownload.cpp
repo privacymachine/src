@@ -87,6 +87,7 @@ bool VerifiedDownload::start()
   started_ = true;
   error_=NoError;
 
+  ILOG("VerifiedDownload: Start download of "+url_.toString());
   QNetworkRequest request( url_ );
   request.setAttribute( QNetworkRequest::CacheLoadControlAttribute, QNetworkRequest::AlwaysNetwork );
   ptrNetReply_ = ptrNAM_->get(request);
@@ -140,6 +141,7 @@ void VerifiedDownload::slotDownloadFinished()
     return;
   }
 
+  ILOG("VerifiedDownload: Start writing data to "+filePath_);
   QFile file( filePath_ );
   if( !file.open(QIODevice::WriteOnly)
     || file.write(ptrNetReply_->readAll()) == -1 )
@@ -152,7 +154,12 @@ void VerifiedDownload::slotDownloadFinished()
   }
   file.close();
 
+  //
+  emit downloadProgress(progressBarMax_/2+progressBarMax_/4, progressBarMax_);
+
   if(error_ == Aborted) return;
+
+  ILOG("VerifiedDownload: Checking the hash sum of "+file.fileName());
 
   QCryptographicHash hash( hashAlgo_ );
   if( file.open( QIODevice::ReadOnly ) && hash.addData( &file ) )
@@ -176,5 +183,13 @@ void VerifiedDownload::slotDownloadFinished()
     return;
   }
   file.close();
+  emit downloadProgress(progressBarMax_, progressBarMax_);
   emit finished();
+}
+
+void VerifiedDownload::slotReemitDownloadProgress(qint64 down, qint64 total)
+{
+  // set progress max to double to indicate integrity check is not done when download is finished
+  progressBarMax_ = 2*total;
+  emit downloadProgress(down, progressBarMax_);
 }

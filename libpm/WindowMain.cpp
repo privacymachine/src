@@ -143,6 +143,8 @@ void WindowMain::slotUpdateFinished()
   ui_->mainLayout_v->removeWidget(updateManager_->getUpdateWidget());
   updateManager_->getUpdateWidget()->deleteLater();
 
+  // read configuration again to validate it
+  pmManager_->readAndValidateConfiguration();
 
   if (pmManager_->isBaseDiskConfigValid() && pmManager_->isBaseDiskAvailable())
   {

@@ -25,8 +25,9 @@ class WidgetInteraktiveUpdate : public QWidget
     void setTextEditVisible(bool visible);
     void setProgressBarVisible(bool visible);
     void setSkipButtonVisible(bool visible);
-    void setUpdateTitleVisible(bool visible);
+    void setTextEditTitleVisible(bool visible);
     void setUpdateEffectsVisible(bool visible);
+    void setProgressBarAbortButtonVisible(bool visible);
 
     /// sets the Headline
     void setTitle(const QString title);
@@ -40,6 +41,7 @@ class WidgetInteraktiveUpdate : public QWidget
   signals:
     void signalUpdateSkipped();
     void signalUpdateRequested(Update);
+    void signalAbortButtonPressed();
 
   public slots:
     void slotProgressBarUpdate(qint64 current, qint64 max);
@@ -51,6 +53,7 @@ class WidgetInteraktiveUpdate : public QWidget
   private slots:
     void slotEmitUpdateRequested() {emit signalUpdateRequested(update_);}
     void slotEmitUpdateSkipped() {emit signalUpdateSkipped();}
+    void slotEmitAbortButtonPressed() {emit signalAbortButtonPressed();}
 };
 
 #endif // WIDGETINTERAKTIVEUPDATE_H

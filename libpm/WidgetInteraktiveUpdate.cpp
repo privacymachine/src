@@ -12,6 +12,8 @@ WidgetInteraktiveUpdate::WidgetInteraktiveUpdate(QWidget *parent) :
 
   connect(ui->buttonIgnore,SIGNAL(clicked()),
           this,SLOT(slotEmitUpdateSkipped()));
+  connect(ui->buttonAbort,SIGNAL(clicked()),
+          this,SLOT(slotEmitAbortButtonPressed()));
 }
 
 WidgetInteraktiveUpdate::~WidgetInteraktiveUpdate()
@@ -39,13 +41,17 @@ void WidgetInteraktiveUpdate::setSkipButtonVisible(bool visible)
 {
   ui->buttonIgnore->setVisible(visible);
 }
-void WidgetInteraktiveUpdate::setUpdateTitleVisible(bool visible)
+void WidgetInteraktiveUpdate::setTextEditTitleVisible(bool visible)
 {
   ui->widgetUpdateTitle->setVisible(visible);
 }
 void WidgetInteraktiveUpdate::setUpdateEffectsVisible(bool visible)
 {
   ui->widgetUpdateEffects->setVisible(visible);
+}
+void WidgetInteraktiveUpdate::setProgressBarAbortButtonVisible(bool visible)
+{
+  ui->buttonAbort->setVisible(visible);
 }
 
 void WidgetInteraktiveUpdate::setProgressBarRange(int min, int max)

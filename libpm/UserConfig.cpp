@@ -190,6 +190,7 @@ bool UserConfig::readFromFile()
       return false;
     }
   }
+  return true;
 }
 
 bool UserConfig::setDefaultsAndValidateConfiguration(const QJsonObject& parBaseDiskCapabilities)

@@ -95,7 +95,7 @@ PmVersion PmManager::getBaseDiskVersion()
 
 QString PmManager::baseDiskWithPath()
 {
-  return configSystem_->getBaseDiskPath() + configSystem_->getBaseDiskName();
+  return configSystem_->getBaseDiskPath() + "/" + configSystem_->getBaseDiskName();
 }
 
 bool PmManager::initConfiguration(const QString& parPmInstallPath, const QString& parVboxDefaultMachineFolder)
@@ -180,7 +180,9 @@ bool PmManager::readAndValidateConfiguration()
 
   configUser_ = new UserConfig(pmUserConfigFile, pmConfigDir_.path(), pmInstallDir_);
   if ( !configUser_->readFromFile() )
+  {
     return false;
+  }
 
   if (isBaseDiskAvailable())
   {
@@ -188,10 +190,10 @@ bool PmManager::readAndValidateConfiguration()
     // read BaseDisk_Z_capabilities.json
     QString json_val;
     QFile json_file;
-    json_file.setFileName(configSystem_->getBaseDiskPath() + configSystem_->getBaseDiskName() + "_capabilities.json");
+    json_file.setFileName(configSystem_->getBaseDiskPath() + "/" + configSystem_->getBaseDiskName() + "_capabilities.json");
     if ( !json_file.open(QIODevice::ReadOnly | QIODevice::Text) )
     {
-      IERR("Error while opening " + configSystem_->getBaseDiskPath() + configSystem_->getBaseDiskName() + "_capabilities.json");
+      IERR("Error while opening " + configSystem_->getBaseDiskPath() + "/" + configSystem_->getBaseDiskName() + "_capabilities.json");
       return false;
     }
     json_val = json_file.readAll();
@@ -416,7 +418,7 @@ bool PmManager::createCommandsToCreateVmMask( VmMaskData* parVmMask,
   args.append("--type");
   args.append("hdd");
   args.append("--medium");
-  args.append(configSystem_->getBaseDiskPath() + configSystem_->getBaseDiskName() + ".vmdk");
+  args.append(configSystem_->getBaseDiskPath() + "/" + configSystem_->getBaseDiskName() + ".vmdk");
   args.append("--mtype");
   args.append("immutable");
   curCmd = new PmCommand( vboxManageCommand, args, true, false, desc );

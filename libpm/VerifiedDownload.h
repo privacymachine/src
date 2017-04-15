@@ -60,7 +60,7 @@ class VerifiedDownload : public QObject
     void finished();
 
   private slots:
-    void slotReemitDownloadProgress(qint64 down, qint64 total) { emit downloadProgress(down, total);}
+    void slotReemitDownloadProgress(qint64 down, qint64 total);
     void slotDownloadFinished();
     void slotFinished();
 
@@ -74,6 +74,7 @@ class VerifiedDownload : public QObject
     VerifiedDownloadError error_;
     bool started_;
     QCryptographicHash::Algorithm hashAlgo_;
+    qint64 progressBarMax_;
 };
 
 #endif // DOWNLOADER_H

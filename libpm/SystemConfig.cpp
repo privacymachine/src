@@ -55,8 +55,8 @@ void SystemConfig::readFromFileOrSetDefaults()
   pSettings_->setIniCodec("UTF-8");
 
   pSettings_->beginGroup("BaseDisk");
-  baseDiskPath_ = pSettings_->value("BaseDiskPath",QVariant(getPmConfigQDir().absolutePath()+"/BaseDisk/")).toString();
-  baseDiskName_ = pSettings_->value("BaseDiskName").toString();
+  baseDiskPath_ = pSettings_->value("BaseDiskPath",QVariant(getPmConfigQDir().absolutePath()+"/BaseDisk")).toString();
+  baseDiskName_ = pSettings_->value("BaseDiskName",QVariant("noBaseDiskAvailable")).toString();
   baseDiskVersion_ = PmVersion::fromString(pSettings_->value("BaseDiskVersion",QVariant("0.0.0.0")).toString());
   pSettings_->endGroup();
 
