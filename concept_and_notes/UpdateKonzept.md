@@ -134,7 +134,7 @@ Alle genannten Files werden als Zip ausgeliefert:
     |
     - W/ ... Marketing
     | |
-    | - base_disk/
+    | - BaseDisk/
     | | - X/ ... API
     | |   | BaseDisk_Z.zip ... Y, Z = Component Major
     | |   | BaseDisk_delta_Y-Z.zip
