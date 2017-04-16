@@ -16,8 +16,8 @@ class UpdateManager : public QObject
   public:
 
     explicit UpdateManager(QObject *parent = 0);
-    virtual ~UpdateManager();
 
+    virtual ~UpdateManager();
 
     /// \brief getUpdateWidget
     /// \brief creates or returns a UpdateWidget to interact with the user
@@ -49,7 +49,7 @@ class UpdateManager : public QObject
     /// \brief setInteractiveUpdate
     /// \brief activate to use the interactive frontend WidgetInteractiveUpdate
     /// \param interactive
-    // TODO: non interactive update not implemented jet
+    // TODO: non interactive update not implemented jet (maybe remove the possiblity because not needed anyways)
     void setInteractiveUpdate(bool interactive) {interactive_=interactive;}
 
     /// \brief setSystemConfig
@@ -111,7 +111,7 @@ class UpdateManager : public QObject
 
 
     /// \brief slotBaseDiskExtractionFinished
-    /// \brief does the error handling of baseDiskUpdateInstallRequested() and updates SystemConfig
+    /// \brief does the error handling of baseDiskUpdateInstallRequested(), removes old BaseDisk and updates SystemConfig
     void slotBaseDiskExtractionFinished();
 
 
@@ -119,6 +119,20 @@ class UpdateManager : public QObject
     void slotEmitSignalFinished() {emit signalFinished();}
 
   private:
+
+    /// \brief binaryUpdateInstallRequested
+    /// \brief not implemented jet
+    void binaryUpdateInstallRequested();
+
+    /// \brief configUpdateInstallRequested
+    /// \brief not implemented jet
+        void configUpdateInstallRequested();
+
+    /// \brief baseDiskUpdateInstallRequested
+    /// \brief start extraction of new BaseDisk
+    void baseDiskUpdateInstallRequested();
+
+    /// private variables:
     WidgetInteraktiveUpdate* ptrInteraktiveUpdateWidget_;
     CheckUpdate checkUpdate_;
     QUrl appcastUrl_;
@@ -132,19 +146,6 @@ class UpdateManager : public QObject
     VerifiedDownload* ptrVerifiedDownload_;
     Update progressedUpdate_;
     QProcess *ptrExternalProcess_;
-
-
-    /// \brief binaryUpdateInstallRequested
-    /// \brief not implemented jet
-    void binaryUpdateInstallRequested();
-
-    /// \brief configUpdateInstallRequested
-    /// \brief not implemented jet
-        void configUpdateInstallRequested();
-
-    /// \brief baseDiskUpdateInstallRequested
-    /// \brief remove old BaseDisk and start extraction of the new one
-    void baseDiskUpdateInstallRequested();
 };
 
 

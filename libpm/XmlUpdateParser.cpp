@@ -236,39 +236,3 @@ bool XmlUpdateParser::parse(QByteArray parRawData)
 
   return true;
 }
-
-XmlUpdateParser::UpdateInfoBinary* XmlUpdateParser::getLatestBinaryVersion()
-{
-  if(binaries_.count() == 0)
-    return NULL;
-
-  PmVersion latestVersion;
-  UpdateInfoBinary* latestItem = 0;
-  for (int i=0; i < binaries_.count(); i++)
-  {
-    if (binaries_[i].Version > latestVersion)
-    {
-      latestVersion = binaries_[i].Version;
-      latestItem = &binaries_[i];
-    }
-  }
-  return latestItem;
-}
-
-XmlUpdateParser::UpdateInfoBaseDisk* XmlUpdateParser::getLatestBaseDiskVersion()
-{
-  if(baseDisks_.count() == 0)
-    return NULL;
-
-  PmVersion latestVersion;
-  UpdateInfoBaseDisk* latestItem = 0;
-  for (int i=0; i < baseDisks_.count(); i++)
-  {
-    if (baseDisks_[i].Version > latestVersion)
-    {
-      latestVersion = baseDisks_[i].Version;
-      latestItem = &baseDisks_[i];
-    }
-  }
-  return latestItem;
-}

@@ -109,7 +109,7 @@ void CheckUpdate::findBinaryUpdates()
 {
 
   /// @todo: question @bernhard: is "auto binaryList = xmlUpdateParser_.getBinaryVersionList()" ok?
-  QList<XmlUpdateParser::UpdateInfoBinary> binaryList = xmlUpdateParser_.getBinaryVersionList();
+  QList<XmlUpdateParser::UpdateInfoBinary> binaryList = xmlUpdateParser_.getBinaryUpdateList();
 
 
   foreach (XmlUpdateParser::UpdateInfoBinary binary, binaryList)
@@ -168,7 +168,7 @@ void CheckUpdate::findBinaryUpdates()
 
 void CheckUpdate::findBaseDiskUpdates()
 {
-  QList<XmlUpdateParser::UpdateInfoBaseDisk> baseDiskList = xmlUpdateParser_.getBaseDiskVersionList();
+  QList<XmlUpdateParser::UpdateInfoBaseDisk> baseDiskList = xmlUpdateParser_.getBaseDiskUpdateList();
 
   foreach (XmlUpdateParser::UpdateInfoBaseDisk baseDisk, baseDiskList)
   {
@@ -220,7 +220,7 @@ void CheckUpdate::findBaseDiskUpdates()
 
 void CheckUpdate::findConfigUpdates()
 {
-  QList<XmlUpdateParser::UpdateInfoConfig> configList = xmlUpdateParser_.getConfigVersionList();
+  QList<XmlUpdateParser::UpdateInfoConfig> configList = xmlUpdateParser_.getConfigUpdateList();
 
 
   foreach (XmlUpdateParser::UpdateInfoConfig config, configList)
@@ -276,56 +276,3 @@ void CheckUpdate::findConfigUpdates()
   }
 }
 
-Update CheckUpdate::getLatestBinaryUpdate()
-{
-  Update latestUpdate;
-  if(updateListBinary_.size() < 1)
-  {
-    latestUpdate.Type=Update::NoUpdate;
-    return latestUpdate;
-  }
-  else
-  {
-    foreach (Update update, updateListBinary_)
-    {
-      if (update.Version > latestUpdate.Version) latestUpdate=update;
-    }
-  }
-  return latestUpdate;
-}
-
-Update CheckUpdate::getLatestBaseDiskUpdate()
-{
-  Update latestUpdate;
-  if(updateListBaseDisk_.size() < 1)
-  {
-    latestUpdate.Type=Update::NoUpdate;
-    return latestUpdate;
-  }
-  else
-  {
-    foreach (Update update, updateListBaseDisk_)
-    {
-      if (update.Version > latestUpdate.Version) latestUpdate=update;
-    }
-  }
-  return latestUpdate;
-}
-
-Update CheckUpdate::getLatestConfigUpdate()
-{
-  Update latestUpdate;
-  if(updateListConfig_.size() < 1)
-  {
-    latestUpdate.Type=Update::NoUpdate;
-    return latestUpdate;
-  }
-  else
-  {
-    foreach (Update update, updateListConfig_)
-    {
-      if (update.Version > latestUpdate.Version) latestUpdate=update;
-    }
-  }
-  return latestUpdate;
-}

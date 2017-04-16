@@ -154,7 +154,7 @@ bool PmManager::initConfiguration(const QString& parPmInstallPath, const QString
   if(firstStart_)
   {
     // Create the path for BaseDisk
-    QString baseDiskPath = QDir::toNativeSeparators(pmConfigDir_.path() + "/BaseDisk/");
+    QString baseDiskPath = QDir::toNativeSeparators(pmConfigDir_.path() + "/BaseDisk");
     configSystem_->setBaseDiskPath(baseDiskPath);
 
     QDir baseDiskDir(configSystem_->getBaseDiskPath());

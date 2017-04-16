@@ -14,7 +14,8 @@ class VerifiedDownload : public QObject
 {
     Q_OBJECT
   public:
-    /// ErrorCodes
+
+    /// \brief The VerifiedDownloadError enum holdes the different error states of \class VerifiedDownload
     enum VerifiedDownloadError{
       NoError = 0,
       Aborted,
@@ -25,47 +26,100 @@ class VerifiedDownload : public QObject
     };
 
     explicit VerifiedDownload(QObject *parent = 0);
+
     ~VerifiedDownload();
 
-    /// returns true if a valid configuration is avaiable
+    /// \brief isReady
+    /// \return true if a valid configuration is avaiable
     bool isReady();
 
+    /// setter:
 
-    // setter:
+    /// \brief setUrl
+    /// \param url
     void setUrl(QUrl url) {url_=url;}
     void setUrl(QString url) {url_=QUrl(url);}
-    void setSHA(QString sha) {shaSum_ = sha;}
-    void setSHA(QByteArray sha) {shaSum_ = QString(sha);}
+
+    /// \brief setCheckSum
+    /// \param checkSum
+    void setCheckSum(QString checkSum) {checkSum_ = checkSum;}
+    void setCheckSum(QByteArray checkSum) {checkSum_ = QString(checkSum);}
+
+    /// \brief setDownloadTargetDir
+    /// \param downloadTargetDir
     void setDownloadTargetDir(QDir downloadTargetDir) {targetDir_ = downloadTargetDir;}
     void setDownloadTargetDir(QString downloadTargetDir) {targetDir_ = QDir(downloadTargetDir);}
-    void setHashAlgo(QCryptographicHash::Algorithm hashAlgo) {hashAlgo_ = hashAlgo;}
 
-    // getter:
+    /// \brief setHashAlgorithm
+    /// \param hashAlgorithm
+    void setHashAlgorithm(QCryptographicHash::Algorithm hashAlgorithm) {hashAlgorithm_ = hashAlgorithm;}
+
+    /// getter:
+
+    /// \brief getError
+    /// \return VerifiedDownload::VerifiedDownloadError
     VerifiedDownloadError getError() {return error_;}
+
+    /// \brief getUrl
+    /// \return QUrl
     QUrl getUrl() {return url_;}
+
+    /// \brief getTargetDir
+    /// \return QDir
     QDir getTargetDir() {return targetDir_;}
+
+    /// \brief getFilePath
+    /// \return QString
     QString getFilePath() {isReady(); return filePath_;}
-    QString getSHA() {return shaSum_;}
-    /// true while download and verify in progress
+
+    /// \brief getCheckSum
+    /// \return QString
+    QString getCheckSum() {return checkSum_;}
+
+    /// \brief isStarted
+    /// \return true while download and verify in progress
     bool isStarted() {return started_;}
 
+
   public slots:
-    /// abort download
+
+    /// \brief abort
+    /// \brief aborts download
     void abort();
-    /// starts download and verifing, emits signal finished
+
+    /// \brief start
+    /// \brief starts download and verifing, emits signal finished
+    /// \return true if download was successfully started
     bool start();
 
   signals:
+    /// \brief downloadProgress
+    /// \brief signal that emits the current download and verifying status
+    /// \param parSize current amount of work done
+    /// \param parTotalSize total amount of work to do
     void downloadProgress(qint64 parSize, qint64 parTotalSize);
+
+    /// \brief finished
+    /// \brief signal that is emited when VerifiedDownload is finished
     void finished();
 
   private slots:
+    /// \brief slotReemitDownloadProgress
+    /// \brief rememits the download process but doubles the total value to indicate downloading is only the first step
+    /// \param down current amount of downloaded data
+    /// \param total amount of data to download
     void slotReemitDownloadProgress(qint64 down, qint64 total);
+
+    /// \brief slotDownloadFinished
+    /// \brief does error handling of download and does the write down as well as the verifying process
     void slotDownloadFinished();
+
+    /// \brief slotFinished
+    /// \brief does cleanup of ptrNetReply
     void slotFinished();
 
   private:
-    QString shaSum_;
+    QString checkSum_;
     QUrl url_;
     QString filePath_;
     QDir targetDir_;
@@ -73,7 +127,7 @@ class VerifiedDownload : public QObject
     QNetworkReply *ptrNetReply_;
     VerifiedDownloadError error_;
     bool started_;
-    QCryptographicHash::Algorithm hashAlgo_;
+    QCryptographicHash::Algorithm hashAlgorithm_;
     qint64 progressBarMax_;
 };
 

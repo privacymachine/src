@@ -25,18 +25,23 @@
 #include "PmVersion.h"
 
 
+
+/// \brief The XmlUpdateParser class
 /// \brief XML Parser of the RSS-Feed which contains user readable info plus
 /// \brief additional XML-Tags which are interpreted by the PrivacyMachine
 class XmlUpdateParser
 {
   public:
 
+    /// \brief The UpdateType enum
     enum UpdateType{
       BaseDisk = 0,
       Binaries,
       Config,
     };
 
+    /// \brief The CheckSumListBinary struct
+    /// \brief used as QList enty of UpdateInfoBinary to store the OS depending update information
     struct CheckSumListBinary
     {
       QString Os;
@@ -44,6 +49,8 @@ class XmlUpdateParser
       QString CheckSum; // in hex
     };
 
+    /// \brief The UpdateInfoBinary struct
+    /// \brief Stores the information of a possible Binary update
     struct UpdateInfoBinary
     {
       PmVersion Version;
@@ -53,6 +60,8 @@ class XmlUpdateParser
       QList<CheckSumListBinary> CheckSums;
     };
 
+    /// \brief The CheckSumListConfig struct
+    /// \brief used as QList enty of UpdateInfoConfig to store the OS depending update information
     struct CheckSumListConfig
     {
       QString Os;
@@ -60,6 +69,8 @@ class XmlUpdateParser
       QString CheckSum; // in hex
     };
 
+    /// \brief The UpdateInfoConfig struct
+    /// \brief Stores the information of a possible Config update
     struct UpdateInfoConfig
     {
       PmVersion Version;
@@ -69,14 +80,20 @@ class XmlUpdateParser
       QList<CheckSumListConfig> CheckSums;
     };
 
+    /// \brief The CheckSumListBaseDisk struct
+    /// \brief used as QList enty of UpdateInfoBaseDisk to store the different possibilities to update to an new BaseDisk
     struct CheckSumListBaseDisk
     {
       QString Os;
       QString Url; // validity not checked
       QString CheckSum; // in hex
+      // when its a incremental update the BaseDisk ComponentMajor this delta referes to
+      // when the same as UpdateInfoBaseDisk.Version.ComponentMajor then this enty referes the complete BaseDisk
       int ComponentMajorUp;
     };
 
+    /// \brief The UpdateInfoBaseDisk struct
+    /// \brief Stores the information of a possible BaseDisk update
     struct UpdateInfoBaseDisk
     {
       PmVersion Version;
@@ -90,33 +107,23 @@ class XmlUpdateParser
     /// \param parXmlDom    in: xml doc
     explicit XmlUpdateParser();
 
+    /// \brief parse
     /// \brief Parses the XML-Data
-    /// \param parRawData   in: raw data
+    /// \param parRawData   [in]: raw data
     /// \return false on error
     bool parse(QByteArray parRawData);
 
-    QList<XmlUpdateParser::UpdateInfoBinary> getBinaryVersionList() {return binaries_;}
+    /// \brief getBinaryVersionList
+    /// \return a list of possible Binary updates
+    QList<XmlUpdateParser::UpdateInfoBinary> getBinaryUpdateList() {return binaries_;}
 
-    QList<XmlUpdateParser::UpdateInfoBaseDisk> getBaseDiskVersionList() {return baseDisks_;}
+    /// \brief getBaseDiskVersionList
+    /// \return a list of possible BaseDisk updates
+    QList<XmlUpdateParser::UpdateInfoBaseDisk> getBaseDiskUpdateList() {return baseDisks_;}
 
-    QList<XmlUpdateParser::UpdateInfoConfig> getConfigVersionList() {return configs_;}
-
-    /// \brief get the latest binary update details
-    /// \return zero pointer if no new binary is available
-    XmlUpdateParser::UpdateInfoBinary* getLatestBinaryVersion();
-
-    /// \brief get the latest BaseDisk update details
-    /// \return zero pointer if no new binary is available
-    XmlUpdateParser::UpdateInfoBaseDisk* getLatestBaseDiskVersion();
-
-    /*
-    bool getLatestPmBinary("Win64", QString& parUrlm QString& parCheckSum);
-    int getLatestPmConfigVersionString();
-    bool getLatestPmconfig("Win64", QString& parUrlm QString& parCheckSum);
-
-    int getLatestPmBaseDiskVersionString();
-    bool getLatestPmconfig(QList<BaseDiskUpdate>& parBasDiskUpdates);
-    */
+    /// \brief getConfigVersionList
+    /// \return a list of possible Config updates
+    QList<XmlUpdateParser::UpdateInfoConfig> getConfigUpdateList() {return configs_;}
 
   private:
     QDomDocument xmlDom_;

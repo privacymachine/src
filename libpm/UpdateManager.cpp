@@ -13,7 +13,7 @@ UpdateManager::UpdateManager(QObject *parent) :
   ptrInteraktiveUpdateWidget_ = NULL;
   ptrSystemConfig_ = NULL;
   baseDiskUpdateRequired_ = false;
-  interactive_ = false;
+  interactive_ = true; // TODO: non interactive update not implemented jet (maybe remove the possiblity because not needed anyways)
   vmMaskRegenerationNecessary_ = false;
   ptrVerifiedDownload_ = NULL;
   ptrExternalProcess_ = NULL;
@@ -83,7 +83,7 @@ void UpdateManager::slotCheckUpdateFinished()
 
 void UpdateManager::slotShowBinaryUpdate()
 {
-  ptrInteraktiveUpdateWidget_->setSkipButtonVisible(true);
+  // Connect slots to continue Update
   if (checkUpdate_.getavailableConfigUpdates().size() > 0)
   {
     connect (ptrInteraktiveUpdateWidget_, SIGNAL(signalUpdateSkipped()), this, SLOT(slotShowConfigUpdate()));
@@ -99,6 +99,8 @@ void UpdateManager::slotShowBinaryUpdate()
     connect (ptrInteraktiveUpdateWidget_, SIGNAL(signalUpdateSkipped()), this, SLOT(slotEmitSignalFinished()));
     connect (this, SIGNAL(signalUpdateFinished()), this, SLOT(slotEmitSignalFinished()));
   }
+
+  ptrInteraktiveUpdateWidget_->setSkipButtonVisible(true);
   ptrInteraktiveUpdateWidget_->setTitle("<h1>PrivacyMachine update available</h1>");
   ptrInteraktiveUpdateWidget_->setUpdateEffectsVisible(true);
   ptrInteraktiveUpdateWidget_->setUpdateEffectsText("<h3><em>This update requires a restart of the PrivacyMachine.</em></h3>");
@@ -112,7 +114,10 @@ void UpdateManager::slotShowBinaryUpdate()
 
 void UpdateManager::slotShowConfigUpdate()
 {
-  ptrInteraktiveUpdateWidget_->setSkipButtonVisible(true);
+
+  // TODO: maybe dissconnect old connections
+
+  // Connect slots to continue Update
   if (checkUpdate_.getavailableBaseDiskUpdates().size() > 0)
   {
     connect (ptrInteraktiveUpdateWidget_, SIGNAL(signalUpdateSkipped()), this, SLOT(slotShowBaseDiskUpdate()));
@@ -123,6 +128,8 @@ void UpdateManager::slotShowConfigUpdate()
     connect (ptrInteraktiveUpdateWidget_, SIGNAL(signalUpdateSkipped()), this, SLOT(slotEmitSignalFinished()));
     connect (this, SIGNAL(signalUpdateFinished()), this, SLOT(slotEmitSignalFinished()));
   }
+
+  ptrInteraktiveUpdateWidget_->setSkipButtonVisible(true);
   ptrInteraktiveUpdateWidget_->setTitle("<h1>Configuration update available</h1>");
   ptrInteraktiveUpdateWidget_->setButtonsVisible(true);
   ptrInteraktiveUpdateWidget_->setTextEditVisible(true);
@@ -135,7 +142,11 @@ void UpdateManager::slotShowConfigUpdate()
 
 void UpdateManager::slotShowBaseDiskUpdate()
 {
+  // TODO: maybe dissconnect old connections
+
+  // BaseDisk update is the latest possible Update so emit signalFinished() after compleation
   connect (this, SIGNAL(signalUpdateFinished()), this, SLOT(slotEmitSignalFinished()));
+
   if (baseDiskUpdateRequired_)
   {
     ptrInteraktiveUpdateWidget_->setTitle("<h1>Need to download a BaseDisk</h1>");
@@ -242,10 +253,10 @@ void UpdateManager::slotUpdateRequested(Update update)
   // https://bugreports.qt.io/browse/QTBUG-59770?jql=text%20~%20%22QCryptographicHash%22
   // So we use sha256 instead till qt5.9 is avaiable in debian and its distributions
   //ptrVerifiedDownload_->setHashAlgo(QCryptographicHash::Sha3_256);
-  ptrVerifiedDownload_->setHashAlgo(QCryptographicHash::Sha256);
+  ptrVerifiedDownload_->setHashAlgorithm(QCryptographicHash::Sha256);
 
   ptrVerifiedDownload_->setUrl(progressedUpdate_.Url);
-  ptrVerifiedDownload_->setSHA(progressedUpdate_.CheckSum);
+  ptrVerifiedDownload_->setCheckSum(progressedUpdate_.CheckSum);
 
   switch (progressedUpdate_.Type)
   {
@@ -408,41 +419,14 @@ void UpdateManager::slotUpdateDownloadFinished()
 
 void UpdateManager::binaryUpdateInstallRequested()
 {
-
+  // TODO: implement me
 }
 void UpdateManager::configUpdateInstallRequested()
 {
-
+  // TODO: implement me
 }
 void UpdateManager::baseDiskUpdateInstallRequested()
 {
-
-  // remove old BaseDisk
-  if( interactive_ )
-  {
-    ptrInteraktiveUpdateWidget_->setProgressBarText("Deleting old BaseDisk");
-    ptrInteraktiveUpdateWidget_->setProgressBarRange(0,0); //indicate busy
-    ptrInteraktiveUpdateWidget_->setProgressBarAbortButtonVisible(false);
-  }
-
-  QDirIterator it(ptrSystemConfig_->getBaseDiskPath(), QDirIterator::NoIteratorFlags);
-  while (it.hasNext())
-  {
-    QString filePath = it.next();
-    QFile ff(filePath);
-    QFileInfo fileInfo(ff);
-
-    if( fileInfo.fileName().startsWith( ptrSystemConfig_->getBaseDiskName() ) && fileInfo.isFile() )
-    {
-      // TODO: Is this a sensitive information?
-      ILOG( "Removing " + fileInfo.absolutePath() )
-      if( !ff.remove())
-      {
-        IERR( "Could not remove " + fileInfo.absolutePath())
-      }
-    }
-  }
-
 
   // extract new BaseDisk
 
@@ -496,6 +480,35 @@ void UpdateManager::slotBaseDiskExtractionFinished()
     return;
   }
   ILOG("Extraction successful. Output: \n" + QString(ptrExternalProcess_->readAllStandardOutput()));
+
+
+  // TODO: if delta update patch here!!
+
+  // remove old BaseDisk
+  if( interactive_ )
+  {
+    ptrInteraktiveUpdateWidget_->setProgressBarText("Deleting old BaseDisk");
+    ptrInteraktiveUpdateWidget_->setProgressBarRange(0,0); //indicate busy
+    ptrInteraktiveUpdateWidget_->setProgressBarAbortButtonVisible(false);
+  }
+
+  QDirIterator it(ptrSystemConfig_->getBaseDiskPath(), QDirIterator::NoIteratorFlags);
+  while (it.hasNext())
+  {
+    QString filePath = it.next();
+    QFile ff(filePath);
+    QFileInfo fileInfo(ff);
+
+    if( fileInfo.fileName().startsWith( ptrSystemConfig_->getBaseDiskName() ) && fileInfo.isFile() )
+    {
+      // TODO: Is this a sensitive information?
+      ILOG( "Removing " + fileInfo.absolutePath() )
+      if( !ff.remove())
+      {
+        IERR( "Could not remove " + fileInfo.absolutePath())
+      }
+    }
+  }
 
   // update SystemConfig
 

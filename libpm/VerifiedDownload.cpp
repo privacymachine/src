@@ -9,7 +9,7 @@ VerifiedDownload::VerifiedDownload(QObject *parent) :
   QObject(parent)
 {
   // this means hashAlgo_=0 and we don't want to use either Md4 or Md5 (1)
-  hashAlgo_=QCryptographicHash::Md4;
+  hashAlgorithm_=QCryptographicHash::Md4;
   ptrNetReply_ = NULL;
   ptrNAM_ = new QNetworkAccessManager(this);
   connect(this, SIGNAL(finished()), this, SLOT(slotFinished()));
@@ -47,17 +47,17 @@ bool VerifiedDownload::isReady()
   // If url and directory are ok set file path
   filePath_ = (initialized) ? targetDir_.absoluteFilePath(url_.fileName()) : "";
 
-  if(hashAlgo_ < QCryptographicHash::Sha1)
+  if(hashAlgorithm_ < QCryptographicHash::Sha1)
   {
     // neider Md4 nor Md5 should be used anymore!
     IWARN("No (secure) hash algrithm is choosen.");
     initialized = false;
   }
-  foreach (QChar c, shaSum_)
+  foreach (QChar c, checkSum_)
   {
     if(!c.isDigit() && !c.isLetter())
     {
-      IWARN("Hash '"+shaSum_+"' is not base64.");
+      IWARN("Hash '"+checkSum_+"' is not base64.");
       initialized = false;
       break;
     }
@@ -161,13 +161,13 @@ void VerifiedDownload::slotDownloadFinished()
 
   ILOG("VerifiedDownload: Checking the hash sum of "+file.fileName());
 
-  QCryptographicHash hash( hashAlgo_ );
+  QCryptographicHash hash( hashAlgorithm_ );
   if( file.open( QIODevice::ReadOnly ) && hash.addData( &file ) )
   {
-    if( hash.result().toHex() != shaSum_ )
+    if( hash.result().toHex() != checkSum_ )
     {
       IERR("Error: Failed to verify check sum of file '"+filePath_+"': "+hash.result().toHex() +
-           " does not match check sum, which is "+shaSum_+".");
+           " does not match check sum, which is "+checkSum_+".");
       file.close();
       error_ = IntegrityError;
       emit finished();
