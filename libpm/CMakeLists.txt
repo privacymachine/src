@@ -1,5 +1,5 @@
 ################################################################################
-#        Copyright (c) 2013-2017 by the Developers of PrivacyMachine.eu
+#        Copyright (c) 2013-2016 by the Developers of PrivacyMachine.eu
 #                         contact@privacymachine.eu
 #     OpenPGP-Fingerprint: 0C93 F15A 0ECA D404 413B 5B34 C6DE E513 0119 B175
 #
@@ -79,7 +79,6 @@ include_directories(${Qt5Widgets_INCLUDE_DIRS})
 include_directories(${Qt5Multimedia_INCLUDE_DIRS})
 include_directories(${Qt5Xml_INCLUDE_DIRS})
 
-set (PM_USES_QT_LIBRARIES Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Multimedia)
 
 add_definitions(${QT_DEFINITIONS})
 
@@ -153,6 +152,10 @@ set (MocReleatedSources
                     WidgetRdpView.cpp
                     WidgetUpdate.cpp
                     WindowMain.cpp
+                    UpdateManager.cpp
+                    CheckUpdate.cpp
+                    VerifiedDownload.cpp
+                    WidgetInteraktiveUpdate.cpp
                     )
 
 set (MocReleatedHeaders
@@ -172,6 +175,10 @@ set (MocReleatedHeaders
                     WidgetRdpView.h
                     WidgetUpdate.h
                     WindowMain.h
+                    UpdateManager.h
+                    CheckUpdate.h
+                    VerifiedDownload.h
+                    WidgetInteraktiveUpdate.h
                     )
 
 set(MocReleatedForms
@@ -183,6 +190,7 @@ set(MocReleatedForms
                     WidgetNewTab.ui
                     WidgetUpdate.ui
                     WindowMain.ui
+                    WidgetInteraktiveUpdate.ui
                     )
 
 #set(MocReleatedResources images.qrc)
@@ -297,6 +305,7 @@ endif()
 target_link_libraries(${PM_STATIC_LIB}
   ${Qt5Core_LIBRARIES}
   ${Qt5Widgets_LIBRARIES}
+  ${Qt5Xml_LIBRARIES}
   ${Qt5Test_LIBRARIES}
   Qt5::Multimedia
   ${AdditionalFreeRDPLibraries}

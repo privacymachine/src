@@ -5,9 +5,25 @@
 #include <QDomDocument>
 #include <QFile>
 #include <QProgressDialog>
+#include <QCryptographicHash>
+
+#include <QDateTime>
 
 int main(int argc, char *argv[])
 {
+
+  QDateTime dt;
+  QString format = "ddd, dd MMM yyyy HH:mm:ss";
+  QString dateStr= "Fri, 17 Mar 2017 13:55:27 CET";
+  dt = QDateTime::fromString(dateStr.left(dateStr.size()-4),format);
+
+  qDebug() << dt.toString(format);
+  qDebug() << "\n" <<dateStr.right(3);
+
+  qDebug() << QCryptographicHash::hash(QByteArray(""), QCryptographicHash::Sha3_256).toHex();
+
+  exit(0);
+
   QApplication a(argc, argv);
   /// @todo: bernhard: move to unit test
 
@@ -37,4 +53,5 @@ int main(int argc, char *argv[])
 //  d.show();
 
   return a.exec();
+
 }

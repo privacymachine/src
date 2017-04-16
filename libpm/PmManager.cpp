@@ -28,6 +28,7 @@
 #include <QSettings>
 #include <QDebug>
 #include <QCoreApplication>
+#include <QApplication>
 #include <QFile>
 #include <QJsonDocument>
 #include <QJsonArray>
@@ -37,8 +38,9 @@
 PmManager::PmManager() :
   configUser_(NULL),
   configSystem_(NULL),
-  configIsValid_(false),
-  firstFreeLocalPort_(4242)
+  baseDiskConfigIsValid_(false),
+  firstFreeLocalPort_(4242),
+  firstStart_(false)
 {
 }
 
@@ -85,12 +87,16 @@ PmManager::~PmManager()
 QString PmManager::getBaseDiskDirectoryPath()
 {
   return configSystem_->getBaseDiskPath();
-  
+}
+
+PmVersion PmManager::getBaseDiskVersion()
+{
+  return configSystem_->getBaseDiskVersion();
 }
 
 QString PmManager::baseDiskWithPath()
 {
-  return configSystem_->getBaseDiskPath() + configSystem_->getBaseDiskName();
+  return configSystem_->getBaseDiskPath() + "/" + configSystem_->getBaseDiskName();
 }
 
 bool PmManager::initConfiguration(const QString& parPmInstallPath, const QString& parVboxDefaultMachineFolder)
@@ -141,16 +147,15 @@ bool PmManager::initConfiguration(const QString& parPmInstallPath, const QString
   QString pmInternalConfigFile = pmConfigDir_.path() + "/" + constPmInternalConfigFileName;
   configSystem_ = new SystemConfig(pmInternalConfigFile);
   configSystem_->readFromFileOrSetDefaults();
+  // always set the Binary Version, Name and Path just to be sure
+  configSystem_->setBinaryVersion( QApplication::applicationVersion() );
+  configSystem_->setBinaryName( QApplication::applicationName() );
+  configSystem_->setBinaryPath(PmData::getInstance().getInstallDirPath());
 
   if(firstStart_)
   {
-    // we expect the BaseDisk-Version which was released at the same time as the binary
-    // BaseDisk-Version-Scheme: 0.10.<Z>.0 ... Z=0 means no basedisk available
-    configSystem_->setBaseDiskVersion("0.10.0.0");
-    configSystem_->setBaseDiskName("BaseDisk_0");
-
-    // Create the path for the BaseDisk
-    QString baseDiskPath = QDir::toNativeSeparators(pmConfigDir_.path() + "/BaseDisk/");
+    // Create the path for BaseDisk
+    QString baseDiskPath = QDir::toNativeSeparators(pmConfigDir_.path() + "/BaseDisk");
     configSystem_->setBaseDiskPath(baseDiskPath);
 
     QDir baseDiskDir(configSystem_->getBaseDiskPath());
@@ -167,11 +172,6 @@ bool PmManager::initConfiguration(const QString& parPmInstallPath, const QString
       return false;
     }
   }
-
-  // TODO olaf: please remove
-  configSystem_->setBaseDiskVersion("0.10.1.0");
-  configSystem_->setBaseDiskName("BaseDisk_1");
-
   return true;
 }
 
@@ -181,7 +181,9 @@ bool PmManager::readAndValidateConfiguration()
 
   configUser_ = new UserConfig(pmUserConfigFile, pmConfigDir_.path(), pmInstallDir_);
   if ( !configUser_->readFromFile() )
+  {
     return false;
+  }
 
   if (isBaseDiskAvailable())
   {
@@ -189,10 +191,10 @@ bool PmManager::readAndValidateConfiguration()
     // read BaseDisk_Z_capabilities.json
     QString json_val;
     QFile json_file;
-    json_file.setFileName(configSystem_->getBaseDiskPath() + configSystem_->getBaseDiskName() + "_capabilities.json");
+    json_file.setFileName(configSystem_->getBaseDiskPath() + "/" + configSystem_->getBaseDiskName() + "_capabilities.json");
     if ( !json_file.open(QIODevice::ReadOnly | QIODevice::Text) )
     {
-      IERR("Error while opening " + configSystem_->getBaseDiskPath() + configSystem_->getBaseDiskName() + "_capabilities.json");
+      IERR("Error while opening " + configSystem_->getBaseDiskPath() + "/" + configSystem_->getBaseDiskName() + "_capabilities.json");
       return false;
     }
     json_val = json_file.readAll();
@@ -276,25 +278,19 @@ bool PmManager::readAndValidateConfiguration()
   }
 
   // we can now mark the config as valid
-  configIsValid_ = true;
+  baseDiskConfigIsValid_ = true;
 
   return true;
 }
 
 bool PmManager::isBaseDiskAvailable()
 {
-  if (!configSystem_)
+  if (configSystem_ == NULL)
     return false;
 
-  PmVersion baseDiskVersion;
-
-  if (!baseDiskVersion.parse(configSystem_->getBaseDiskVersion()))
-    return false;
-
-  if (baseDiskVersion.getComponentMajor() != 0) // Z... When set to zero it's used as marker for 'no basedisk available'
+  // When ComponentMajor set to zero it's used as marker for 'no basedisk available'
+  if (configSystem_->getBaseDiskVersion().getComponentMajor() != 0)
     return true;
-  else
-    return false;
 }
 
 bool PmManager::allVmMasksExist()
@@ -423,7 +419,7 @@ bool PmManager::createCommandsToCreateVmMask( VmMaskData* parVmMask,
   args.append("--type");
   args.append("hdd");
   args.append("--medium");
-  args.append(configSystem_->getBaseDiskPath() + configSystem_->getBaseDiskName() + ".vmdk");
+  args.append(configSystem_->getBaseDiskPath() + "/" + configSystem_->getBaseDiskName() + ".vmdk");
   args.append("--mtype");
   args.append("immutable");
   curCmd = new PmCommand( vboxManageCommand, args, true, false, desc );

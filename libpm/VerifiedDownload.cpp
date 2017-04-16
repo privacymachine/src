@@ -9,11 +9,13 @@ VerifiedDownload::VerifiedDownload(QObject *parent) :
   QObject(parent)
 {
   // this means hashAlgo_=0 and we don't want to use either Md4 or Md5 (1)
-  hashAlgo_=QCryptographicHash::Md4;
+  hashAlgorithm_=QCryptographicHash::Md4;
   ptrNetReply_ = NULL;
   ptrNAM_ = new QNetworkAccessManager(this);
   connect(this, SIGNAL(finished()), this, SLOT(slotFinished()));
   filePath_="";
+  error_=NoError;
+  started_=false;
 }
 
 VerifiedDownload::~VerifiedDownload()
@@ -45,17 +47,17 @@ bool VerifiedDownload::isReady()
   // If url and directory are ok set file path
   filePath_ = (initialized) ? targetDir_.absoluteFilePath(url_.fileName()) : "";
 
-  if(hashAlgo_ < QCryptographicHash::Sha1)
+  if(hashAlgorithm_ < QCryptographicHash::Sha1)
   {
     // neider Md4 nor Md5 should be used anymore!
     IWARN("No (secure) hash algrithm is choosen.");
     initialized = false;
   }
-  foreach (QChar c, shaSum_)
+  foreach (QChar c, checkSum_)
   {
     if(!c.isDigit() && !c.isLetter())
     {
-      IWARN("Hash '"+shaSum_+"' is not base64.");
+      IWARN("Hash '"+checkSum_+"' is not base64.");
       initialized = false;
       break;
     }
@@ -83,7 +85,9 @@ bool VerifiedDownload::start()
     return false;
   }
   started_ = true;
+  error_=NoError;
 
+  ILOG("VerifiedDownload: Start download of "+url_.toString());
   QNetworkRequest request( url_ );
   request.setAttribute( QNetworkRequest::CacheLoadControlAttribute, QNetworkRequest::AlwaysNetwork );
   ptrNetReply_ = ptrNAM_->get(request);
@@ -115,6 +119,7 @@ void VerifiedDownload::abort()
   {
     ptrNetReply_->abort();
     error_ = Aborted;
+    started_=false;
     emit finished();
   }
 }
@@ -123,8 +128,7 @@ void VerifiedDownload::slotDownloadFinished()
 {
   if (error_ != NoError)
   {
-    if(error_ != Aborted)
-      emit finished();
+    emit finished();
     return;
   }
 
@@ -137,6 +141,7 @@ void VerifiedDownload::slotDownloadFinished()
     return;
   }
 
+  ILOG("VerifiedDownload: Start writing data to "+filePath_);
   QFile file( filePath_ );
   if( !file.open(QIODevice::WriteOnly)
     || file.write(ptrNetReply_->readAll()) == -1 )
@@ -149,15 +154,20 @@ void VerifiedDownload::slotDownloadFinished()
   }
   file.close();
 
+  //
+  emit downloadProgress(progressBarMax_/2+progressBarMax_/4, progressBarMax_);
+
   if(error_ == Aborted) return;
 
-  QCryptographicHash hash( hashAlgo_ );
+  ILOG("VerifiedDownload: Checking the hash sum of "+file.fileName());
+
+  QCryptographicHash hash( hashAlgorithm_ );
   if( file.open( QIODevice::ReadOnly ) && hash.addData( &file ) )
   {
-    if( hash.result().toHex() != shaSum_ )
+    if( hash.result().toHex() != checkSum_ )
     {
       IERR("Error: Failed to verify check sum of file '"+filePath_+"': "+hash.result().toHex() +
-           " does not match check sum, which is "+shaSum_+".");
+           " does not match check sum, which is "+checkSum_+".");
       file.close();
       error_ = IntegrityError;
       emit finished();
@@ -173,5 +183,13 @@ void VerifiedDownload::slotDownloadFinished()
     return;
   }
   file.close();
+  emit downloadProgress(progressBarMax_, progressBarMax_);
   emit finished();
+}
+
+void VerifiedDownload::slotReemitDownloadProgress(qint64 down, qint64 total)
+{
+  // set progress max to double to indicate integrity check is not done when download is finished
+  progressBarMax_ = 2*total;
+  emit downloadProgress(down, progressBarMax_);
 }

@@ -22,6 +22,7 @@
 #include <QStringList>
 #include <QVariant>
 #include <QColor>
+#include <QUrl>
 
 #include "VmMaskUserConfig.h"
 
@@ -29,11 +30,6 @@ class TestUserConfigOpenVPN;
 class VmMaskUserConfig;
 class VpnConfig;
 
-struct ConfigUpdate
-{
-    QString AppcastPM;
-    QString AppcastBaseDisk; // TODO: remove me
-};
 
 class UserConfig
 {
@@ -45,7 +41,7 @@ class UserConfig
 
     QList<VmMaskUserConfig*>& getConfiguredVmMasks();
     QList<VpnConfig*>& getConfiguredVPNs();
-    ConfigUpdate getUpdateConfig(){ return updateConfiguration_; }
+    QUrl getAppcastUrl(){ return appcastUrl_; }
 
     bool readFromFile();
     bool setDefaultsAndValidateConfiguration(const QJsonObject& parBaseDiskCapabilities);
@@ -61,5 +57,5 @@ class UserConfig
     QString installDir_;
     QList<VmMaskUserConfig*> configuredVmMasks_;
     QList<VpnConfig*> configuredVPNs_;
-    ConfigUpdate updateConfiguration_;
+    QUrl appcastUrl_;
 };

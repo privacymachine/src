@@ -43,6 +43,8 @@ void MainWindow::slotDownloaderFinished()
   else
     ui->labelFail->setVisible(true);
 
+  if (true)
+  {
   // test Update Manager
   updateManager_.setAppcastUrl(QUrl::fromLocalFile("../UpdaterTest/test.xml"));
 
@@ -52,7 +54,7 @@ void MainWindow::slotDownloaderFinished()
   cBaseDisk.parse("0.10.2.0");
   cConfig.parse("0.10.1.0");
 
-  updateManager_.setCurrentBaseDiskVersion(cBaseDisk);
+  /*updateManager_.setCurrentBaseDiskVersion(cBaseDisk);
   updateManager_.setCurrentBinaryVersion(cBinary);
   updateManager_.setCurrentConfigVersion(cConfig);
 
@@ -60,7 +62,8 @@ void MainWindow::slotDownloaderFinished()
   ui->showWidget->setVisible(false);
   ui->insertLayout->addWidget(updateWidget);
   updateWidget->show();
-  updateManager_.findUpdates();
+  updateManager_.findUpdates();*/
+  }
 }
 
 void MainWindow::slotUpdateFound(Update avaiableUpdate)
