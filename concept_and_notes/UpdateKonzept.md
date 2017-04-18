@@ -56,7 +56,7 @@ folgt nummeriert:
      |          |     |               |
      |          |     |         changes on Bugfix(es) 
      |          |     |
-     |          |   changes on each version (starts with 1)
+     |          |   changes on each version
      |          |     
      |        same as PM
      |        

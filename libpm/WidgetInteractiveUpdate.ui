@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>WidgetInteraktiveUpdate</class>
- <widget class="QWidget" name="WidgetInteraktiveUpdate">
+ <class>WidgetInteractiveUpdate</class>
+ <widget class="QWidget" name="WidgetInteractiveUpdate">
   <property name="geometry">
    <rect>
     <x>0</x>

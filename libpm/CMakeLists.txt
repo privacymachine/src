@@ -1,5 +1,5 @@
 ################################################################################
-#        Copyright (c) 2013-2016 by the Developers of PrivacyMachine.eu
+#        Copyright (c) 2013-2017 by the Developers of PrivacyMachine.eu
 #                         contact@privacymachine.eu
 #     OpenPGP-Fingerprint: 0C93 F15A 0ECA D404 413B 5B34 C6DE E513 0119 B175
 #
@@ -82,8 +82,6 @@ include_directories(${Qt5Xml_INCLUDE_DIRS})
 
 add_definitions(${QT_DEFINITIONS})
 
-# Needed by deprecated_fvupdater.cpp
-add_definitions(-DFV_GUI)
 
 set (NoMocSources
                     CpuFeatures.h
@@ -135,14 +133,6 @@ else()
 endif()
 
 set (MocReleatedSources
-                    # Fervor is deprecated in will be removed soon
-                    deprecated_fvavailableupdate.cpp
-                    deprecated_fvignoredversions.cpp
-                    deprecated_fvplatform.cpp
-                    deprecated_fvupdatedownloadprogress.cpp
-                    deprecated_fvupdater.cpp
-                    deprecated_fvupdatewindow.cpp
-                    deprecated_fvversioncomparator.cpp
                     images.qrc
                     PmCommandExec.cpp
                     VmInfoIpAddress.cpp
@@ -155,18 +145,10 @@ set (MocReleatedSources
                     UpdateManager.cpp
                     CheckUpdate.cpp
                     VerifiedDownload.cpp
-                    WidgetInteraktiveUpdate.cpp
+                    WidgetInteractiveUpdate.cpp
                     )
 
 set (MocReleatedHeaders
-                    # Fervor is deprecated in will be removed soon
-                    deprecated_fvavailableupdate.h
-                    deprecated_fvignoredversions.h
-                    deprecated_fvplatform.h
-                    deprecated_fvupdatedownloadprogress.h
-                    deprecated_fvupdater.h
-                    deprecated_fvupdatewindow.h
-                    #deprecated_fvversioncomparator.h
                     PmCommandExec.h
                     VmInfoIpAddress.h
                     WidgetAbout.h
@@ -178,19 +160,16 @@ set (MocReleatedHeaders
                     UpdateManager.h
                     CheckUpdate.h
                     VerifiedDownload.h
-                    WidgetInteraktiveUpdate.h
+                    WidgetInteractiveUpdate.h
                     )
 
 set(MocReleatedForms
-                    # Fervor is deprecated in will be removed soon
-                    deprecated_fvupdatedownloadprogress.ui
-                    deprecated_fvupdatewindow.ui
                     WidgetAbout.ui
                     WidgetCommandExec.ui
                     WidgetNewTab.ui
                     WidgetUpdate.ui
                     WindowMain.ui
-                    WidgetInteraktiveUpdate.ui
+                    WidgetInteractiveUpdate.ui
                     )
 
 #set(MocReleatedResources images.qrc)

@@ -1,3 +1,5 @@
+# Concept of BaseDisk creation  
+### For implementation and HOWTO look at (../packaging/BaseDisk/README.md)  
 
 ## Script libBaseDiskBuild.py
 
@@ -20,8 +22,8 @@
 
 ## Script checkForBaseDiskUpdates.py 
 
-**Purpose: check for new updates from apt-repositories (script called via cron)**
-** not existing now**
+**Purpose: check for new updates from apt-repositories (script called via cron)**  
+** not existing now**  
 
 ### Program flow
 * boots last released BaseDisk
@@ -29,8 +31,8 @@
 * creates a text based report
 
 ## Script report-changes.py
-**Purpose: bases on a whitelist create a report what's new -> send mail to release managers**
-** not existing now**
+**Purpose: bases on a whitelist create a report what's new -> send mail to release managers**  
+** not existing now**  
 
 ## Script buildNewBaseDisk.py 
 **Purpose: triggerd by maintainers to build a new basedisk and prepare for release**
@@ -45,8 +47,8 @@
 contains all needed manual steps like testing to be done by the Release-Mangers
 
 ## Script deployNewRelease.py
-**Purpose: do all needed stuff that the Users can update the new version**
-** not existing now**
+**Purpose: do all needed stuff that the Users can update the new version**  
+** not existing now**  
 
 Can be a combination of
 * BaseDisk

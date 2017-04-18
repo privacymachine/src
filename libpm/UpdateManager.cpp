@@ -10,7 +10,7 @@
 UpdateManager::UpdateManager(QObject *parent) :
   QObject(parent), checkUpdate_(this)
 {
-  ptrInteraktiveUpdateWidget_ = NULL;
+  ptrInteractiveUpdateWidget_ = NULL;
   ptrSystemConfig_ = NULL;
   baseDiskUpdateRequired_ = false;
   interactive_ = true; // TODO: non interactive update not implemented jet (maybe remove the possiblity because not needed anyways)
@@ -21,7 +21,7 @@ UpdateManager::UpdateManager(QObject *parent) :
 
 UpdateManager::~UpdateManager()
 {
-  if (ptrInteraktiveUpdateWidget_ != NULL) ptrInteraktiveUpdateWidget_->deleteLater();
+  if (ptrInteractiveUpdateWidget_ != NULL) ptrInteractiveUpdateWidget_->deleteLater();
 }
 
 void UpdateManager::slotCheckUpdateFinished()
@@ -86,30 +86,30 @@ void UpdateManager::slotShowBinaryUpdate()
   // Connect slots to continue Update
   if (checkUpdate_.getavailableConfigUpdates().size() > 0)
   {
-    connect (ptrInteraktiveUpdateWidget_, SIGNAL(signalUpdateSkipped()), this, SLOT(slotShowConfigUpdate()));
+    connect (ptrInteractiveUpdateWidget_, SIGNAL(signalUpdateSkipped()), this, SLOT(slotShowConfigUpdate()));
     connect (this, SIGNAL(signalUpdateFinished()), this, SLOT(slotShowConfigUpdate()));
   }
   else if (checkUpdate_.getavailableBaseDiskUpdates().size() > 0)
   {
-    connect (ptrInteraktiveUpdateWidget_, SIGNAL(signalUpdateSkipped()), this, SLOT(slotShowBaseDiskUpdate()));
+    connect (ptrInteractiveUpdateWidget_, SIGNAL(signalUpdateSkipped()), this, SLOT(slotShowBaseDiskUpdate()));
     connect (this, SIGNAL(signalUpdateFinished()), this, SLOT(slotShowBaseDiskUpdate()));
   }
   else
   {
-    connect (ptrInteraktiveUpdateWidget_, SIGNAL(signalUpdateSkipped()), this, SLOT(slotEmitSignalFinished()));
+    connect (ptrInteractiveUpdateWidget_, SIGNAL(signalUpdateSkipped()), this, SLOT(slotEmitSignalFinished()));
     connect (this, SIGNAL(signalUpdateFinished()), this, SLOT(slotEmitSignalFinished()));
   }
 
-  ptrInteraktiveUpdateWidget_->setSkipButtonVisible(true);
-  ptrInteraktiveUpdateWidget_->setTitle("<h1>PrivacyMachine update available</h1>");
-  ptrInteraktiveUpdateWidget_->setUpdateEffectsVisible(true);
-  ptrInteraktiveUpdateWidget_->setUpdateEffectsText("<h3><em>This update requires a restart of the PrivacyMachine.</em></h3>");
-  ptrInteraktiveUpdateWidget_->setButtonsVisible(true);
-  ptrInteraktiveUpdateWidget_->setTextEditVisible(true);
-  ptrInteraktiveUpdateWidget_->setProgressBarVisible(false);
-  ptrInteraktiveUpdateWidget_->showUpdate(checkUpdate_.getavailableBinaryUpdates());
+  ptrInteractiveUpdateWidget_->setSkipButtonVisible(true);
+  ptrInteractiveUpdateWidget_->setTitle("<h1>PrivacyMachine update available</h1>");
+  ptrInteractiveUpdateWidget_->setUpdateEffectsVisible(true);
+  ptrInteractiveUpdateWidget_->setUpdateEffectsText("<h3><em>This update requires a restart of the PrivacyMachine.</em></h3>");
+  ptrInteractiveUpdateWidget_->setButtonsVisible(true);
+  ptrInteractiveUpdateWidget_->setTextEditVisible(true);
+  ptrInteractiveUpdateWidget_->setProgressBarVisible(false);
+  ptrInteractiveUpdateWidget_->showUpdate(checkUpdate_.getavailableBinaryUpdates());
 
-  connect (ptrInteraktiveUpdateWidget_, SIGNAL(signalUpdateRequested(Update)), this, SLOT(slotUpdateRequested(Update)));
+  connect (ptrInteractiveUpdateWidget_, SIGNAL(signalUpdateRequested(Update)), this, SLOT(slotUpdateRequested(Update)));
 }
 
 void UpdateManager::slotShowConfigUpdate()
@@ -120,24 +120,24 @@ void UpdateManager::slotShowConfigUpdate()
   // Connect slots to continue Update
   if (checkUpdate_.getavailableBaseDiskUpdates().size() > 0)
   {
-    connect (ptrInteraktiveUpdateWidget_, SIGNAL(signalUpdateSkipped()), this, SLOT(slotShowBaseDiskUpdate()));
+    connect (ptrInteractiveUpdateWidget_, SIGNAL(signalUpdateSkipped()), this, SLOT(slotShowBaseDiskUpdate()));
     connect (this, SIGNAL(signalUpdateFinished()), this, SLOT(slotShowBaseDiskUpdate()));
   }
   else
   {
-    connect (ptrInteraktiveUpdateWidget_, SIGNAL(signalUpdateSkipped()), this, SLOT(slotEmitSignalFinished()));
+    connect (ptrInteractiveUpdateWidget_, SIGNAL(signalUpdateSkipped()), this, SLOT(slotEmitSignalFinished()));
     connect (this, SIGNAL(signalUpdateFinished()), this, SLOT(slotEmitSignalFinished()));
   }
 
-  ptrInteraktiveUpdateWidget_->setSkipButtonVisible(true);
-  ptrInteraktiveUpdateWidget_->setTitle("<h1>Configuration update available</h1>");
-  ptrInteraktiveUpdateWidget_->setButtonsVisible(true);
-  ptrInteraktiveUpdateWidget_->setTextEditVisible(true);
-  ptrInteraktiveUpdateWidget_->setUpdateEffectsVisible(false);
-  ptrInteraktiveUpdateWidget_->setProgressBarVisible(false);
-  ptrInteraktiveUpdateWidget_->showUpdate(checkUpdate_.getavailableConfigUpdates());
+  ptrInteractiveUpdateWidget_->setSkipButtonVisible(true);
+  ptrInteractiveUpdateWidget_->setTitle("<h1>Configuration update available</h1>");
+  ptrInteractiveUpdateWidget_->setButtonsVisible(true);
+  ptrInteractiveUpdateWidget_->setTextEditVisible(true);
+  ptrInteractiveUpdateWidget_->setUpdateEffectsVisible(false);
+  ptrInteractiveUpdateWidget_->setProgressBarVisible(false);
+  ptrInteractiveUpdateWidget_->showUpdate(checkUpdate_.getavailableConfigUpdates());
 
-  connect (ptrInteraktiveUpdateWidget_, SIGNAL(signalUpdateRequested(Update)), this, SLOT(slotUpdateRequested(Update)));
+  connect (ptrInteractiveUpdateWidget_, SIGNAL(signalUpdateRequested(Update)), this, SLOT(slotUpdateRequested(Update)));
 }
 
 void UpdateManager::slotShowBaseDiskUpdate()
@@ -149,25 +149,25 @@ void UpdateManager::slotShowBaseDiskUpdate()
 
   if (baseDiskUpdateRequired_)
   {
-    ptrInteraktiveUpdateWidget_->setTitle("<h1>Need to download a BaseDisk</h1>");
-    ptrInteraktiveUpdateWidget_->setSkipButtonVisible(false);
-    ptrInteraktiveUpdateWidget_->setUpdateEffectsVisible(false);
+    ptrInteractiveUpdateWidget_->setTitle("<h1>Need to download a BaseDisk</h1>");
+    ptrInteractiveUpdateWidget_->setSkipButtonVisible(false);
+    ptrInteractiveUpdateWidget_->setUpdateEffectsVisible(false);
   }
   else
   {
-    ptrInteraktiveUpdateWidget_->setTitle("<h1>BaseDisk update available</h1>");
-    ptrInteraktiveUpdateWidget_->setSkipButtonVisible(true);
-    ptrInteraktiveUpdateWidget_->setUpdateEffectsVisible(true);
-    connect (ptrInteraktiveUpdateWidget_, SIGNAL(signalUpdateSkipped()), this, SLOT(slotEmitSignalFinished()));
+    ptrInteractiveUpdateWidget_->setTitle("<h1>BaseDisk update available</h1>");
+    ptrInteractiveUpdateWidget_->setSkipButtonVisible(true);
+    ptrInteractiveUpdateWidget_->setUpdateEffectsVisible(true);
+    connect (ptrInteractiveUpdateWidget_, SIGNAL(signalUpdateSkipped()), this, SLOT(slotEmitSignalFinished()));
   }
 
-  ptrInteraktiveUpdateWidget_->setUpdateEffectsText("<h3><em>This update requires the regeneration of all VM-Masks.</em></h3>");
-  ptrInteraktiveUpdateWidget_->setButtonsVisible(true);
-  ptrInteraktiveUpdateWidget_->setTextEditVisible(true);
-  ptrInteraktiveUpdateWidget_->setProgressBarVisible(false);
-  ptrInteraktiveUpdateWidget_->showUpdate(checkUpdate_.getavailableBaseDiskUpdates());
+  ptrInteractiveUpdateWidget_->setUpdateEffectsText("<h3><em>This update requires the regeneration of all VM-Masks.</em></h3>");
+  ptrInteractiveUpdateWidget_->setButtonsVisible(true);
+  ptrInteractiveUpdateWidget_->setTextEditVisible(true);
+  ptrInteractiveUpdateWidget_->setProgressBarVisible(false);
+  ptrInteractiveUpdateWidget_->showUpdate(checkUpdate_.getavailableBaseDiskUpdates());
 
-  connect (ptrInteraktiveUpdateWidget_, SIGNAL(signalUpdateRequested(Update)), this, SLOT(slotUpdateRequested(Update)));
+  connect (ptrInteractiveUpdateWidget_, SIGNAL(signalUpdateRequested(Update)), this, SLOT(slotUpdateRequested(Update)));
 }
 
 bool UpdateManager::findUpdates()
@@ -185,21 +185,21 @@ bool UpdateManager::findUpdates()
   connect( &checkUpdate_, SIGNAL(finished()), this, SLOT(slotCheckUpdateFinished()) );
   if (interactive_)
   {
-    if (ptrInteraktiveUpdateWidget_ == NULL)
+    if (ptrInteractiveUpdateWidget_ == NULL)
     {
-      IERR("Interacive Update started but no WidgetInteraktiveUpdate was created!");
+      IERR("Interacive Update started but no WidgetInteractiveUpdate was created!");
       return false;
     }
 
-    ptrInteraktiveUpdateWidget_->setTitle("<h1>Checking for Updates</h1>");
-    ptrInteraktiveUpdateWidget_->setButtonsVisible(false);
-    ptrInteraktiveUpdateWidget_->setTextEditVisible(false);
-    ptrInteraktiveUpdateWidget_->setUpdateEffectsVisible(false);
-    ptrInteraktiveUpdateWidget_->setTextEditTitleVisible(false);
-    ptrInteraktiveUpdateWidget_->setProgressBarVisible(true);
-    ptrInteraktiveUpdateWidget_->setProgressBarAbortButtonVisible(false);
-    ptrInteraktiveUpdateWidget_->setProgressBarRange(0,0); //indicates busy
-    ptrInteraktiveUpdateWidget_->setProgressBarText("Downloading "+appcastUrl_.toString());
+    ptrInteractiveUpdateWidget_->setTitle("<h1>Checking for Updates</h1>");
+    ptrInteractiveUpdateWidget_->setButtonsVisible(false);
+    ptrInteractiveUpdateWidget_->setTextEditVisible(false);
+    ptrInteractiveUpdateWidget_->setUpdateEffectsVisible(false);
+    ptrInteractiveUpdateWidget_->setTextEditTitleVisible(false);
+    ptrInteractiveUpdateWidget_->setProgressBarVisible(true);
+    ptrInteractiveUpdateWidget_->setProgressBarAbortButtonVisible(false);
+    ptrInteractiveUpdateWidget_->setProgressBarRange(0,0); //indicates busy
+    ptrInteractiveUpdateWidget_->setProgressBarText("Downloading "+appcastUrl_.toString());
   }
 
   if (!checkUpdate_.start())
@@ -209,12 +209,12 @@ bool UpdateManager::findUpdates()
   }
 }
 
-WidgetInteraktiveUpdate* UpdateManager::getUpdateWidget(QWidget *parParent)
+WidgetInteractiveUpdate* UpdateManager::getUpdateWidget(QWidget *parParent)
 {
   interactive_ = true;
-  if (ptrInteraktiveUpdateWidget_ == NULL) ptrInteraktiveUpdateWidget_ = new WidgetInteraktiveUpdate(parParent);
-  connect( ptrInteraktiveUpdateWidget_, SIGNAL(destroyed()), this, SLOT(slotInteraktiveUpdateWidgetDestroyed()) );
-  return ptrInteraktiveUpdateWidget_;
+  if (ptrInteractiveUpdateWidget_ == NULL) ptrInteractiveUpdateWidget_ = new WidgetInteractiveUpdate(parParent);
+  connect( ptrInteractiveUpdateWidget_, SIGNAL(destroyed()), this, SLOT(slotInteractiveUpdateWidgetDestroyed()) );
+  return ptrInteractiveUpdateWidget_;
 }
 
 bool UpdateManager::isReady()
@@ -284,35 +284,35 @@ void UpdateManager::slotUpdateRequested(Update update)
 
   if(interactive_)
   {
-    connect( ptrInteraktiveUpdateWidget_, SIGNAL(signalAbortButtonPressed()),
+    connect( ptrInteractiveUpdateWidget_, SIGNAL(signalAbortButtonPressed()),
              ptrVerifiedDownload_, SLOT(abort()) );
-    ptrInteraktiveUpdateWidget_->setProgressBarAbortButtonVisible(true);
+    ptrInteractiveUpdateWidget_->setProgressBarAbortButtonVisible(true);
 
     connect( ptrVerifiedDownload_, SIGNAL(downloadProgress(qint64,qint64)),
-             ptrInteraktiveUpdateWidget_, SLOT(slotProgressBarUpdate(qint64,qint64)) );
-    ptrInteraktiveUpdateWidget_->setProgressBarText("Downloading "+ptrVerifiedDownload_->getUrl().toString());
+             ptrInteractiveUpdateWidget_, SLOT(slotProgressBarUpdate(qint64,qint64)) );
+    ptrInteractiveUpdateWidget_->setProgressBarText("Downloading "+ptrVerifiedDownload_->getUrl().toString());
     // Indicate busy but as soon as download started the Range will be updated
-    ptrInteraktiveUpdateWidget_->setProgressBarRange(0,0);
-    ptrInteraktiveUpdateWidget_->setProgressBarVisible(true);
-    ptrInteraktiveUpdateWidget_->setProgressBarAbortButtonVisible(true);
+    ptrInteractiveUpdateWidget_->setProgressBarRange(0,0);
+    ptrInteractiveUpdateWidget_->setProgressBarVisible(true);
+    ptrInteractiveUpdateWidget_->setProgressBarAbortButtonVisible(true);
 
     switch (update.Type)
     {
       case Update::BaseDisk:
-        ptrInteraktiveUpdateWidget_->setTitle("<h1>Downloading BaseDisk<h1>");
+        ptrInteractiveUpdateWidget_->setTitle("<h1>Downloading BaseDisk<h1>");
         break;
       case Update::Binary:
-        ptrInteraktiveUpdateWidget_->setTitle("<h1>Downloading PrivacyMachine<h1>");
+        ptrInteractiveUpdateWidget_->setTitle("<h1>Downloading PrivacyMachine<h1>");
         break;
       case Update::Config:
-        ptrInteraktiveUpdateWidget_->setTitle("<h1>Downloading Config<h1>");
+        ptrInteractiveUpdateWidget_->setTitle("<h1>Downloading Config<h1>");
     }
 
 
-    ptrInteraktiveUpdateWidget_->setTextEditTitleVisible(false);
-    ptrInteraktiveUpdateWidget_->setButtonsVisible(false);
-    ptrInteraktiveUpdateWidget_->setTextEditVisible(false);
-    ptrInteraktiveUpdateWidget_->setUpdateEffectsVisible(false);
+    ptrInteractiveUpdateWidget_->setTextEditTitleVisible(false);
+    ptrInteractiveUpdateWidget_->setButtonsVisible(false);
+    ptrInteractiveUpdateWidget_->setTextEditVisible(false);
+    ptrInteractiveUpdateWidget_->setUpdateEffectsVisible(false);
 
   }
 
@@ -452,9 +452,9 @@ void UpdateManager::baseDiskUpdateInstallRequested()
 
   if( interactive_ )
   {
-    ptrInteraktiveUpdateWidget_->setProgressBarText("Extracting new BaseDisk");
-    ptrInteraktiveUpdateWidget_->setProgressBarRange(0,0); // indicate busy
-    ptrInteraktiveUpdateWidget_->setProgressBarAbortButtonVisible(false);
+    ptrInteractiveUpdateWidget_->setProgressBarText("Extracting new BaseDisk");
+    ptrInteractiveUpdateWidget_->setProgressBarRange(0,0); // indicate busy
+    ptrInteractiveUpdateWidget_->setProgressBarAbortButtonVisible(false);
   }
 
   connect( ptrExternalProcess_, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(slotBaseDiskExtractionFinished()) );
@@ -494,9 +494,9 @@ void UpdateManager::slotBaseDiskExtractionFinished()
   // remove old BaseDisk
   if( interactive_ )
   {
-    ptrInteraktiveUpdateWidget_->setProgressBarText("Deleting old BaseDisk");
-    ptrInteraktiveUpdateWidget_->setProgressBarRange(0,0); //indicate busy
-    ptrInteraktiveUpdateWidget_->setProgressBarAbortButtonVisible(false);
+    ptrInteractiveUpdateWidget_->setProgressBarText("Deleting old BaseDisk");
+    ptrInteractiveUpdateWidget_->setProgressBarRange(0,0); //indicate busy
+    ptrInteractiveUpdateWidget_->setProgressBarAbortButtonVisible(false);
   }
 
   QDirIterator it(ptrSystemConfig_->getBaseDiskPath(), QDirIterator::NoIteratorFlags);

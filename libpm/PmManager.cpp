@@ -112,7 +112,7 @@ bool PmManager::initConfiguration(const QString& parPmInstallPath, const QString
 
   if(firstStart_)
   {
-    ILOG("Prepare the intital configuration at the location: " + pmConfigDir_.path());
+    ILOG("Prepare the initial configuration at the location: " + pmConfigDir_.path());
     if (!pmConfigDir_.mkpath("."))
     {
       IERR("Error creating initial config dir: " + pmConfigDir_.path());

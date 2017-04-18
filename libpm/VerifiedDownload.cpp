@@ -20,10 +20,11 @@ VerifiedDownload::VerifiedDownload(QObject *parent) :
 
 VerifiedDownload::~VerifiedDownload()
 {
-  if(ptrNAM_)
+  if(ptrNAM_ != NULL)
     delete ptrNAM_;
-  if(ptrNetReply_)
-    delete ptrNAM_;
+
+  if(ptrNetReply_ != NULL)
+    delete ptrNetReply_;
 }
 
 bool VerifiedDownload::isReady()

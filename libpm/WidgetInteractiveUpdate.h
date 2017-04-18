@@ -1,6 +1,4 @@
-#ifndef WIDGETINTERAKTIVEUPDATE_H
-#define WIDGETINTERAKTIVEUPDATE_H
-
+#pragma once
 
 #include "CheckUpdate.h" //for Update
 #include <QWidget>
@@ -8,19 +6,19 @@
 
 
 namespace Ui {
-  class WidgetInteraktiveUpdate;
+  class WidgetInteractiveUpdate;
 }
 
-/// \brief The WidgetInteraktiveUpdate class
+/// \brief The WidgetInteractiveUpdate class
 /// \brief widget to interact with the user during a update process
-class WidgetInteraktiveUpdate : public QWidget
+class WidgetInteractiveUpdate : public QWidget
 {
     Q_OBJECT
 
   public:
 
-    explicit WidgetInteraktiveUpdate(QWidget *parent = 0);
-    ~WidgetInteraktiveUpdate();
+    explicit WidgetInteractiveUpdate(QWidget *parent = 0);
+    ~WidgetInteractiveUpdate();
 
     /// setter
 
@@ -110,7 +108,7 @@ class WidgetInteraktiveUpdate : public QWidget
 
   private:
 
-    Ui::WidgetInteraktiveUpdate *ui;
+    Ui::WidgetInteractiveUpdate *ui;
     Update update_;
 
 
@@ -128,5 +126,3 @@ class WidgetInteraktiveUpdate : public QWidget
     /// \brief emitssignalAbortButtonPressed
     void slotEmitAbortButtonPressed() {emit signalAbortButtonPressed();}
 };
-
-#endif // WIDGETINTERAKTIVEUPDATE_H

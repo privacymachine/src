@@ -5,7 +5,7 @@
 #include <QUrl>
 #include <QProcess>
 #include "PmVersion.h"
-#include "WidgetInteraktiveUpdate.h"
+#include "WidgetInteractiveUpdate.h"
 #include "CheckUpdate.h"
 #include "SystemConfig.h"
 #include "VerifiedDownload.h"
@@ -23,7 +23,7 @@ class UpdateManager : public QObject
     /// \brief creates or returns a UpdateWidget to interact with the user
     /// \param parParent
     /// \return UpdateWidget*
-    WidgetInteraktiveUpdate* getUpdateWidget(QWidget *parParent = NULL);
+    WidgetInteractiveUpdate* getUpdateWidget(QWidget *parParent = NULL);
 
     /// \brief findUpdates
     /// \brief Download and parse appcast
@@ -84,9 +84,9 @@ class UpdateManager : public QObject
 
   private slots:
 
-    /// \brief slotInteraktiveUpdateWidgetDestroyed
-    /// \brief after the InteraktiveUpdateWidget is destroyed set the pointer to NULL
-    void slotInteraktiveUpdateWidgetDestroyed(){ ptrInteraktiveUpdateWidget_=NULL; }
+    /// \brief slotInteractiveUpdateWidgetDestroyed
+    /// \brief after the InteractiveUpdateWidget is destroyed set the pointer to NULL
+    void slotInteractiveUpdateWidgetDestroyed(){ ptrInteractiveUpdateWidget_=NULL; }
 
 
     /// \brief slotCheckUpdateFinished
@@ -133,7 +133,7 @@ class UpdateManager : public QObject
     void baseDiskUpdateInstallRequested();
 
     /// private variables:
-    WidgetInteraktiveUpdate* ptrInteraktiveUpdateWidget_;
+    WidgetInteractiveUpdate* ptrInteractiveUpdateWidget_;
     CheckUpdate checkUpdate_;
     QUrl appcastUrl_;
     PmVersion currentBaseDiskVersion_;
