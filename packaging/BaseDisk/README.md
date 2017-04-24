@@ -98,3 +98,13 @@ This is a python library that controls the actual build process of the BaseDisks
 This folder contains files which are copied to the BaseDisks. I.e. systemd scripts, openbox configurations....  
 **Note: Neider "pm_files/pm/fonts" nor "pm_files/home/liveuser/.mozilla" are part of the git repository!**  
 This is because of the size of this folders, for a complete download check out http://unstable.privacymachine.eu/BaseDisk_build/pm_files/
+
+
+## Tips ans Tricks
+
+### HowTo mount (loopback) the BaseDisk
+
+1. mkdir mounted_BaseDisk  
+2. losetup -o 1048576 /dev/loop0 empty-flat.vmdk  
+3. mount /dev/loop0 mounted_BaseDisk  
+
