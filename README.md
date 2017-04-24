@@ -4,7 +4,7 @@
 
 The PrivacyMachine is a browser which protects the privacy of the users.
 
-  * Technical Concept in english (TODO: translate file)
+  * Technical Concept in [english](concept_and_notes/TechnicalConcept_en.pdf)
   * Technical Concept in [german](concept_and_notes/TechnicalConcept_de.pdf)
 
 **Current Status:**
@@ -20,9 +20,10 @@ The branch **'master'** contains the last released version (the beta1 now).
 On the branch **'develop'** we continue the development.  
 
 Available documentation:
-  * The UserGuide in [german](https://www.privacymachine.eu/de/user-manual/) or [english - TODO:translate](https://www.privacymachine.eu/en/user-manual/) describes hardware and software requirements and an overview of the working principle.
+  * The UserGuide in [german](https://www.privacymachine.eu/de/user-manual/) describes hardware and software requirements.
+  * Here we describe an overview of the [working principle](https://www.privacymachine.eu/en/how-webtracking-works/).
   * The VPN Guide is currently only available on the german homepage: https://www.privacymachine.eu/de/vpn
-  * The folder pm/concept_and_notes contains many design documents  
+  * The folder [pm/concept_and_notes](pm/concept_and_notes) contains many design documents  
   * The BaseDisk-Build-HowTo is located at [packaging/BaseDisk/README.md](packaging/BaseDisk/README.md)  
   * In the source code we prefer to write the documentation in the header files.  
 
@@ -30,7 +31,7 @@ Available documentation:
 
 ### If you want to join us you are very welcome!
 We have also a big list of ideas and todo's where we really could need some help!  
-Even if we are a little paranoid, we are nice people and allways have some fun together:  
+Even if we are a little paranoid, we are nice people and always have some fun together:  
 https://www.privacymachine.eu/de/about/
 
 
@@ -43,7 +44,12 @@ PGP-Fingerprint: 0C93 F15A 0ECA D404 413B 5B34 C6DE E513 0119 B175
 
 
 ### HowTo build from Source
-   
+ 
+Checkout the source (we work in the "develop" branch):  
+```
+git clone -b develop https://github.com/privacymachine/src.git
+```  
+
 Please check the build-requirements for linux or windows first (sections below)
   
 This project uses the github repositories
@@ -53,7 +59,7 @@ This project uses the github repositories
 These repsoitories are checked out automatically during the build process.
 
 Even if you want to develop with Qt-Creator, please build the project one time from the console because problems are easier to target there.  
-Under Windows a cygwin installation is needed to execute the build scripts.
+Under Windows a [cygwin](https://www.cygwin.com/) installation is needed to execute the build scripts.
 
 #### Build the external libraries
 start the script "./buildExtLibs.sh" to build in the directory "<git-root>build_ext_libs".  
