@@ -117,7 +117,7 @@ There are some potential pitfalls you have to know:
   * Deselect Qt 5.9->Qt Gamepad
   * Deselect Qt 5.9->Qt Script
 
-* Install "Qt Creater Beta1"
+* Install "Qt Creator Beta1"
   
   * https://www.qt.io/download-open-source/
   * Install to C:\\Qt59\\qtcreator-4.3.0-beta1
