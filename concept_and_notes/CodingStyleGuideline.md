@@ -9,7 +9,7 @@ If it's easy readable it is easy comprehensible which is also an security benefi
 
 ## Additional brackets are welcome:
 ```c++
-if ((!hasErrors && Foo.success()) || errCount == 0) ...
+if ( (!hasErrors && Foo.success()) || errCount == 0 ) ...
 ```
 
 ## CamelCase-Names
@@ -104,7 +104,7 @@ Class -> function();
 
 **not allowed:**  
 ```c++
-if(PointerToObj != 0)
+if(!PointerToObj)
 ```
 
 **not optimal:**  
