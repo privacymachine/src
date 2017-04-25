@@ -108,7 +108,7 @@ class WidgetInteractiveUpdate : public QWidget
 
   private:
 
-    Ui::WidgetInteractiveUpdate *ui;
+    Ui::WidgetInteractiveUpdate *ui_;
     Update update_;
 
 

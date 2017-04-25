@@ -44,7 +44,6 @@ WindowMain::WindowMain(QWidget *parParent) :
 {
   ui_->setupUi(this);
 
-
   setWindowTitle(QApplication::applicationName());
   connect(ui_->actionQuit,
           SIGNAL(triggered()),
@@ -92,7 +91,6 @@ bool WindowMain::init(QString parPmInstallPath, QString parVboxDefaultMachineFol
 {
   // after this function the caller can use these functions to check the state:
   // pmManager_->isFirstStart()
-  // pmManager_->isConfigValid()
   // pmManager_->isBaseDiskAvailable()
 
   // set some window title
@@ -107,9 +105,8 @@ bool WindowMain::init(QString parPmInstallPath, QString parVboxDefaultMachineFol
   if(!pmManager_->initConfiguration(parPmInstallPath, parVboxDefaultMachineFolder))
     return false;
 
-  // read and validate the user config, also check for the BaseDisk
-  pmManager_->readAndValidateConfiguration();
-
+  // read the user config
+  pmManager_->readConfiguration();
 
   updateManager_ = new UpdateManager(this);
 
@@ -128,7 +125,7 @@ bool WindowMain::init(QString parPmInstallPath, QString parVboxDefaultMachineFol
 
   updateManager_->setInteractiveUpdate(true);
 
-  ui_->mainLayout_v->addWidget(updateManager_->getUpdateWidget(this));
+  ui_->mainLayout_v->addWidget(updateManager_->createUpdateWidgetIfNotExisting(this));
   updateManager_->findUpdates();
 
   connect( updateManager_, SIGNAL(signalFinished()), this, SLOT(slotUpdateFinished()) );
@@ -139,12 +136,17 @@ bool WindowMain::init(QString parPmInstallPath, QString parVboxDefaultMachineFol
 
 void WindowMain::slotUpdateFinished()
 {
-  // remove UpdateWidget from mainLayout, delete it
+  // remove and hide UpdateWidget from mainLayout (deletion is done inside the UpdateManager)
+  updateManager_->getUpdateWidget()->hide();
   ui_->mainLayout_v->removeWidget(updateManager_->getUpdateWidget());
-  updateManager_->getUpdateWidget()->deleteLater();
 
-  // read configuration again to validate it
-  pmManager_->readAndValidateConfiguration();
+  // validate configuration
+  if (!pmManager_->validateConfiguration())
+  {
+    QString message = QCoreApplication::translate("mainfunc", "Some errors occoured: Please check the logfile for Details.");
+    QMessageBox::warning(Q_NULLPTR, "PrivacyMachine", message);
+    return;
+  }
 
   if (pmManager_->isBaseDiskConfigValid() && pmManager_->isBaseDiskAvailable())
   {
@@ -153,28 +155,10 @@ void WindowMain::slotUpdateFinished()
   }
 
   // regeneration of the VM-Masks is needed when we have a new BaseDisk or when the user changes an important part of the configuration
-  if(pmManager_->vmMaskRegenerationNecessary() || updateManager_->vmMaskRegenerationNecessary() )
+  if(pmManager_->vmMaskRegenerationNecessary())
   {
     regenerateVmMasks();
-    return;
   }
-
-
-  // TODO: bernhard: continue working here: currently empty window
-  /*
-    if (pmManager_->isConfigValid())
-    {
-      if(pmManager_->vmMaskRegenerationNecessary())
-      {
-        regenerateVmMasks();
-        return true;
-      }
-    }
-    */
-
-  // TODO olaf: please check in the new tab for pmManager_->isConfigValid()
-
-
 
   setupTabWidget();
 }
@@ -215,21 +199,24 @@ void WindowMain::regenerateVmMasks()
 
   cleanVmMasksBlocking();
 
-  regenerationWidget_ = new WidgetUpdate(this);
-  if (!regenerationWidget_->init(pmManager_))
+  if (regenerationWidget_ == NULL)
   {
-    IERR("failed to initialize regenerationWidget (updateWidget) ");
-    delete regenerationWidget_;
-    regenerationWidget_ = NULL;
-    return;
+    regenerationWidget_ = new WidgetUpdate(this);
+    if (!regenerationWidget_->init(pmManager_))
+    {
+      IERR("failed to initialize regenerationWidget (updateWidget) ");
+      delete regenerationWidget_;
+      regenerationWidget_ = NULL;
+      return;
+    }
+
+    connect(regenerationWidget_,
+            SIGNAL(signalUpdateFinished(ePmCommandResult)),
+            this,
+            SLOT(slotRegenerationFinished(ePmCommandResult)));
+
+    ui_->mainLayout_v->addWidget(regenerationWidget_);
   }
-
-  connect(regenerationWidget_,
-          SIGNAL(signalUpdateFinished(ePmCommandResult)),
-          this,
-          SLOT(slotRegenerationFinished(ePmCommandResult)));
-
-  ui_->mainLayout_v->addWidget(regenerationWidget_);
 
   regenerationWidget_->start();
 }
@@ -420,9 +407,29 @@ void WindowMain::statusBarUpdate()
 
 WindowMain::~WindowMain()
 {
-  if (pmManager_) delete pmManager_;
-  if (aboutWidget_) delete aboutWidget_;
-  delete ui_;
+  if (pmManager_)
+  {
+    delete pmManager_;
+    pmManager_ = NULL;
+  }
+
+  if (aboutWidget_)
+  {
+    delete aboutWidget_;
+    aboutWidget_ = NULL;
+  }
+
+  if (updateManager_)
+  {
+    delete updateManager_;
+    updateManager_ = NULL;
+  }
+
+  if (ui_)
+  {
+    delete ui_;
+    ui_ = NULL;
+  }
 }
 
 void WindowMain::show()
@@ -475,14 +482,31 @@ void WindowMain::slotRegenerationFinished(ePmCommandResult parResult)
 
 void WindowMain::closeEvent(QCloseEvent * parEvent)
 {
+
   QString messageBoxText = "Are you shure you want to close the PrivacyMachine and all opened VM-Masks?";
-  QMessageBox msgBox;
-  msgBox.setWindowIcon(QIcon(":/resources/privacymachine.svg"));
-  msgBox.setWindowTitle(QApplication::applicationName());
-  msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Abort);
-  msgBox.setText(messageBoxText);
-  if (msgBox.exec() == QMessageBox::Abort)
-    return;
+  if (pmManager_)
+  {
+    bool oneVmMaskIsActive = false;
+    for (int vmMaskId = 0; vmMaskId < pmManager_->getVmMaskData().count(); vmMaskId++)
+    {
+      VmMaskData* vmMask = pmManager_->getVmMaskData()[vmMaskId];
+      if (vmMask->Instance != NULL && vmMask->Instance->getVmMaskIsActive())
+      {
+        oneVmMaskIsActive = true;
+       break;
+      }
+    }
+    if (oneVmMaskIsActive)
+    {
+      QMessageBox msgBox;
+      msgBox.setWindowIcon(QIcon(":/resources/privacymachine.svg"));
+      msgBox.setWindowTitle(QApplication::applicationName());
+      msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Abort);
+      msgBox.setText(messageBoxText);
+      if (msgBox.exec() == QMessageBox::Abort)
+        return;
+    }
+  }
 
   if (regenerationWidget_ != NULL)
   {

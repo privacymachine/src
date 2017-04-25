@@ -48,7 +48,8 @@ class PmManager
     virtual ~PmManager();
 
     bool initConfiguration(const QString& parPmInstallDir, const QString& parVboxDefaultMachineFolder);
-    bool readAndValidateConfiguration();
+    bool readConfiguration();
+    bool validateConfiguration();
 
     bool initAllVmMaskData();
     bool createCommandsToCreateAllVmMasks(QList<PmCommand*>& parCommandsList);

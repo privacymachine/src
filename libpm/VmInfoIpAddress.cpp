@@ -23,7 +23,7 @@ VmInfoIpAddress::VmInfoIpAddress(QStringList parVmMaskIpAddressProviders,
                                  QString parVmMaskBrowser,
                                  int parSshPort)
 {
-  vmMaskIpAddressProviders_ = parVmMaskIpAddressProviders;
+  vmMaskIpAddressProviders_ = parVmMaskIpAddressProviders; // already shuffled
   vmMaskFullName_ = parVmMaskFullName;
   vmMaskBrowser_ = parVmMaskBrowser;
   sshPort_ = parSshPort;
@@ -62,29 +62,6 @@ void VmInfoIpAddress::initialize()
                    this, &VmInfoIpAddress::slotExecFinished);
 
   exec_->connectSignalsAndSlots();
-  
-  // From http://stackoverflow.com/questions/6926433/how-to-shuffle-a-stdvector
-  // and http://en.cppreference.com/w/cpp/numeric/random/srand.
-  // TODO: AL: random_shuffle might not use rand() at all, which would reduce the entropy based on IP address lookups.
-  std::srand( std::time( 0 ) );
-}
-
-void VmInfoIpAddress::randomizeIpAddressProviders()
-{
-  // If there are no IP providers configured, the following simply does nothing. Otherwise, it creates a fresh list for 
-  // the first loop.
-  if( ipAddressProviderPermutation_.size() == 0 )
-  {
-    ipAddressProviderPermutation_ = QList<unsigned>();
-    for( unsigned i = 0; i < vmMaskIpAddressProviders_.size(); ++i )
-    {
-      ipAddressProviderPermutation_.push_back( i );     
-    }
-  }
-  
-  // FIXME AL: Does not seem to have any effect.
-  // See maybe http://en.cppreference.com/w/cpp/algorithm/random_shuffle
-  std::random_shuffle( ipAddressProviderPermutation_.begin(), ipAddressProviderPermutation_.end() );
 }
 
 void VmInfoIpAddress::slotExecFinished( ePmCommandResult result )
@@ -189,12 +166,6 @@ void VmInfoIpAddress::abort()
 
 PmCommand *VmInfoIpAddress::createPmCommandNextIpAddressProvider()
 {
-  // Randomize sequence of IP providers after we cycled through all providers.
-  if( nProvidersTried_ == 0 )
-  {
-    randomizeIpAddressProviders();
-  }
-
   QString curProvider = vmMaskIpAddressProviders_[ ipAddressProviderPermutation_[ nProvidersTried_ ] ];
   PmCommand *pCommand = GetPmCommandForSshCmdVmMaskInstance(sshPort_, QString( "curl -s " ) + curProvider);
   ++nProvidersTried_;

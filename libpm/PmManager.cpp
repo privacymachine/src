@@ -175,7 +175,7 @@ bool PmManager::initConfiguration(const QString& parPmInstallPath, const QString
   return true;
 }
 
-bool PmManager::readAndValidateConfiguration()
+bool PmManager::readConfiguration()
 {
   QString pmUserConfigFile = pmConfigDir_.path() + "/" + constPmUserConfigFileName;
 
@@ -185,9 +185,13 @@ bool PmManager::readAndValidateConfiguration()
     return false;
   }
 
+  return true;
+}
+
+bool PmManager::validateConfiguration()
+{
   if (isBaseDiskAvailable())
   {
-
     // read BaseDisk_Z_capabilities.json
     QString json_val;
     QFile json_file;
@@ -202,7 +206,7 @@ bool PmManager::readAndValidateConfiguration()
     QJsonDocument json_doc = QJsonDocument::fromJson(json_val.toUtf8());
     baseDiskCapabilities_ = json_doc.object();
 
-    /*
+  /*
   // ################################# example for JSON  useage #######################################
   // JSON types:
   //         Constant          Value       Description

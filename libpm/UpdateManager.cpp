@@ -8,8 +8,9 @@
 
 
 UpdateManager::UpdateManager(QObject *parent) :
-  QObject(parent), checkUpdate_(this)
+  QObject(parent)
 {
+  ptrCheckUpdate_ = NULL;
   ptrInteractiveUpdateWidget_ = NULL;
   ptrSystemConfig_ = NULL;
   baseDiskUpdateRequired_ = false;
@@ -21,12 +22,19 @@ UpdateManager::UpdateManager(QObject *parent) :
 
 UpdateManager::~UpdateManager()
 {
-  if (ptrInteractiveUpdateWidget_ != NULL) ptrInteractiveUpdateWidget_->deleteLater();
+  if (ptrInteractiveUpdateWidget_ != NULL)
+  {
+    delete (ptrInteractiveUpdateWidget_);
+    ptrInteractiveUpdateWidget_ = NULL;
+  }
 }
 
 void UpdateManager::slotCheckUpdateFinished()
 {
-  if( checkUpdate_.getError() != CheckUpdate::NoError)
+  if (ptrCheckUpdate_ == NULL)
+    return;
+
+  if( ptrCheckUpdate_->getError() != CheckUpdate::NoError)
   {
     ///@todo: implement non interactive error handling
     QMessageBox msgBox;
@@ -38,7 +46,7 @@ void UpdateManager::slotCheckUpdateFinished()
 
     message += QCoreApplication::translate("CheckUpdate Error msgBox",
                                            "<p><b>Please check PMUpdateUrl in PrivacyMachine.ini or start the problem reporter.</b></p>");
-    message += checkUpdate_.getErrorString();
+    message += ptrCheckUpdate_->getErrorString();
     msgBox.setStandardButtons(QMessageBox::Abort | QMessageBox::Ignore);
     ///@todo bernhard: why is this not working?!
 //    msgBox.button(QMessageBox::Ignore)->setText("Ignore and Continue Anyway");
@@ -52,26 +60,26 @@ void UpdateManager::slotCheckUpdateFinished()
     }
     else
     {
-      ILOG("User pressed Button 'Ignore and Continue Anyway' at Error of CheckUpdtae: "+checkUpdate_.getErrorString());
+      ILOG("User pressed Button 'Ignore and Continue Anyway' at Error of CheckUpdtae: " + ptrCheckUpdate_->getErrorString());
     }
   }
 
-  if( (checkUpdate_.getavailableBaseDiskUpdates().size() > 0) ||
-      (checkUpdate_.getavailableBinaryUpdates().size() > 0)   ||
-      (checkUpdate_.getavailableConfigUpdates().size() > 0) )
+  if( (ptrCheckUpdate_->getavailableBaseDiskUpdates().size() > 0) ||
+      (ptrCheckUpdate_->getavailableBinaryUpdates().size() > 0)   ||
+      (ptrCheckUpdate_->getavailableConfigUpdates().size() > 0) )
   {
     emit signalUpdatesFound();
     if (interactive_)
     {
-      if (checkUpdate_.getavailableBinaryUpdates().size() > 0)
+      if (ptrCheckUpdate_->getavailableBinaryUpdates().size() > 0)
       {
         slotShowBinaryUpdate();
       }
-      else if (checkUpdate_.getavailableConfigUpdates().size() > 0)
+      else if (ptrCheckUpdate_->getavailableConfigUpdates().size() > 0)
       {
         slotShowConfigUpdate();
       }
-      else if (checkUpdate_.getavailableBaseDiskUpdates().size() > 0)
+      else if (ptrCheckUpdate_->getavailableBaseDiskUpdates().size() > 0)
       {
         slotShowBaseDiskUpdate();
       }
@@ -83,13 +91,16 @@ void UpdateManager::slotCheckUpdateFinished()
 
 void UpdateManager::slotShowBinaryUpdate()
 {
+  if (ptrCheckUpdate_ == NULL)
+    return;
+
   // Connect slots to continue Update
-  if (checkUpdate_.getavailableConfigUpdates().size() > 0)
+  if (ptrCheckUpdate_->getavailableConfigUpdates().size() > 0)
   {
     connect (ptrInteractiveUpdateWidget_, SIGNAL(signalUpdateSkipped()), this, SLOT(slotShowConfigUpdate()));
     connect (this, SIGNAL(signalUpdateFinished()), this, SLOT(slotShowConfigUpdate()));
   }
-  else if (checkUpdate_.getavailableBaseDiskUpdates().size() > 0)
+  else if (ptrCheckUpdate_->getavailableBaseDiskUpdates().size() > 0)
   {
     connect (ptrInteractiveUpdateWidget_, SIGNAL(signalUpdateSkipped()), this, SLOT(slotShowBaseDiskUpdate()));
     connect (this, SIGNAL(signalUpdateFinished()), this, SLOT(slotShowBaseDiskUpdate()));
@@ -107,18 +118,20 @@ void UpdateManager::slotShowBinaryUpdate()
   ptrInteractiveUpdateWidget_->setButtonsVisible(true);
   ptrInteractiveUpdateWidget_->setTextEditVisible(true);
   ptrInteractiveUpdateWidget_->setProgressBarVisible(false);
-  ptrInteractiveUpdateWidget_->showUpdate(checkUpdate_.getavailableBinaryUpdates());
+  ptrInteractiveUpdateWidget_->showUpdate(ptrCheckUpdate_->getavailableBinaryUpdates());
 
   connect (ptrInteractiveUpdateWidget_, SIGNAL(signalUpdateRequested(Update)), this, SLOT(slotUpdateRequested(Update)));
 }
 
 void UpdateManager::slotShowConfigUpdate()
 {
+  if (ptrCheckUpdate_ == NULL)
+    return;
 
   // TODO: maybe dissconnect old connections
 
   // Connect slots to continue Update
-  if (checkUpdate_.getavailableBaseDiskUpdates().size() > 0)
+  if (ptrCheckUpdate_->getavailableBaseDiskUpdates().size() > 0)
   {
     connect (ptrInteractiveUpdateWidget_, SIGNAL(signalUpdateSkipped()), this, SLOT(slotShowBaseDiskUpdate()));
     connect (this, SIGNAL(signalUpdateFinished()), this, SLOT(slotShowBaseDiskUpdate()));
@@ -135,7 +148,7 @@ void UpdateManager::slotShowConfigUpdate()
   ptrInteractiveUpdateWidget_->setTextEditVisible(true);
   ptrInteractiveUpdateWidget_->setUpdateEffectsVisible(false);
   ptrInteractiveUpdateWidget_->setProgressBarVisible(false);
-  ptrInteractiveUpdateWidget_->showUpdate(checkUpdate_.getavailableConfigUpdates());
+  ptrInteractiveUpdateWidget_->showUpdate(ptrCheckUpdate_->getavailableConfigUpdates());
 
   connect (ptrInteractiveUpdateWidget_, SIGNAL(signalUpdateRequested(Update)), this, SLOT(slotUpdateRequested(Update)));
 }
@@ -165,24 +178,29 @@ void UpdateManager::slotShowBaseDiskUpdate()
   ptrInteractiveUpdateWidget_->setButtonsVisible(true);
   ptrInteractiveUpdateWidget_->setTextEditVisible(true);
   ptrInteractiveUpdateWidget_->setProgressBarVisible(false);
-  ptrInteractiveUpdateWidget_->showUpdate(checkUpdate_.getavailableBaseDiskUpdates());
+  ptrInteractiveUpdateWidget_->showUpdate(ptrCheckUpdate_->getavailableBaseDiskUpdates());
 
   connect (ptrInteractiveUpdateWidget_, SIGNAL(signalUpdateRequested(Update)), this, SLOT(slotUpdateRequested(Update)));
 }
 
 bool UpdateManager::findUpdates()
 {
+  if (ptrCheckUpdate_ == NULL)
+  {
+    ptrCheckUpdate_ = new CheckUpdate();
+  }
+
   if(!isReady())
   {
     IERR("UpdateManager: Could not start to check for updates");
     return false;
   }
-  checkUpdate_.setCurrentBaseDiskVersion(ptrSystemConfig_->getBaseDiskVersion());
-  checkUpdate_.setCurrentBinaryVersion(ptrSystemConfig_->getBinaryVersion());
-  checkUpdate_.setCurrentConfigVersion(ptrSystemConfig_->getConfigVersion());
-  checkUpdate_.setUrl(appcastUrl_);
+  ptrCheckUpdate_->setCurrentBaseDiskVersion(ptrSystemConfig_->getBaseDiskVersion());
+  ptrCheckUpdate_->setCurrentBinaryVersion(ptrSystemConfig_->getBinaryVersion());
+  ptrCheckUpdate_->setCurrentConfigVersion(ptrSystemConfig_->getConfigVersion());
+  ptrCheckUpdate_->setUrl(appcastUrl_);
 
-  connect( &checkUpdate_, SIGNAL(finished()), this, SLOT(slotCheckUpdateFinished()) );
+  connect( ptrCheckUpdate_, SIGNAL(finished()), this, SLOT(slotCheckUpdateFinished()) );
   if (interactive_)
   {
     if (ptrInteractiveUpdateWidget_ == NULL)
@@ -202,18 +220,27 @@ bool UpdateManager::findUpdates()
     ptrInteractiveUpdateWidget_->setProgressBarText("Downloading "+appcastUrl_.toString());
   }
 
-  if (!checkUpdate_.start())
+  if (!ptrCheckUpdate_->start())
   {
     IERR("Checking for updates failed!");
     return false;
   }
 }
 
-WidgetInteractiveUpdate* UpdateManager::getUpdateWidget(QWidget *parParent)
+WidgetInteractiveUpdate* UpdateManager::getUpdateWidget()
 {
   interactive_ = true;
-  if (ptrInteractiveUpdateWidget_ == NULL) ptrInteractiveUpdateWidget_ = new WidgetInteractiveUpdate(parParent);
-  connect( ptrInteractiveUpdateWidget_, SIGNAL(destroyed()), this, SLOT(slotInteractiveUpdateWidgetDestroyed()) );
+  return ptrInteractiveUpdateWidget_;
+}
+
+WidgetInteractiveUpdate* UpdateManager::createUpdateWidgetIfNotExisting(QWidget *parParent)
+{
+  interactive_ = true;
+
+  if (ptrInteractiveUpdateWidget_ == NULL)
+  {
+    ptrInteractiveUpdateWidget_ = new WidgetInteractiveUpdate(parParent);
+  }
   return ptrInteractiveUpdateWidget_;
 }
 

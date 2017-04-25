@@ -26,8 +26,6 @@
 #include <QMessageBox>
 #include <QVector>
 
-#include "deprecated_fvupdater.h"
-
 #include "WidgetAbout.h"
 #include "WidgetUpdate.h"
 #include "WidgetNewTab.h"

@@ -49,7 +49,7 @@ class VmInfoIpAddress: public QObject
   public:
 
     /// \brief Constructor of VmInfoIpAddress
-    /// \param parVmMaskIpAddressProviders in: List of IP-Adress-Providers
+    /// \param parVmMaskIpAddressProviders in: List of IP-Adress-Providers (already shuffled in UserConfig::diceNewVmMaskConfig())
     /// \param parVmMaskFullName           in: full name opf VmMask
     /// \param parVmMaskBrowser            in: current browser in use
     VmInfoIpAddress(QStringList parVmMaskIpAddressProviders,
@@ -80,7 +80,6 @@ class VmInfoIpAddress: public QObject
     void signalUpdateIpSuccess();
 
   private:
-    void randomizeIpAddressProviders();
 
     PmCommand *createPmCommandNextIpAddressProvider();
 

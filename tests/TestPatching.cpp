@@ -148,14 +148,14 @@ void TestPatching::testVerifyUpdate_7z()
   QVERIFY( download( referenceZipFileUrl, referenceZipFileName ) );
 
   qDebug() << "Extracting and renaiming base disk to obtain " << referenceFileName << ".";
-  QVERIFY( FvUpdater::sharedUpdater()->slotUnzipUpdate_7z( referenceZipFileName, "./", "" ) );
-  QVERIFY( QFile( componentFileName ).rename( referenceFileName ) );
+  //QVERIFY( FvUpdater::sharedUpdater()->slotUnzipUpdate_7z( referenceZipFileName, "./", "" ) );
+  //QVERIFY( QFile( componentFileName ).rename( referenceFileName ) );
 
   // set latest reference version inside app cast
   // set current app version, app cast url
-  FvUpdater::sharedUpdater()->SetComponentVersion( ComponentVersion( 1, 0, componentMajorVersion, 0 ) );
+  //FvUpdater::sharedUpdater()->SetComponentVersion( ComponentVersion( 1, 0, componentMajorVersion, 0 ) );
   QString referenceAppCastUrl = referenceDirectoryUrl + "appcast_" + referenceBaseDiskFilePrefix + ".xml";
-  FvUpdater::sharedUpdater()->SetFeedURL( referenceAppCastUrl );
+  //FvUpdater::sharedUpdater()->SetFeedURL( referenceAppCastUrl );
 
   if( referenceMajorVersion > componentMajorVersion )
   {
@@ -241,14 +241,14 @@ void TestPatching::testVerifyUpdate()
       QVERIFY( download( referenceZipFileUrl, referenceZipFileName ) );
       
       qDebug() << "Extracting and renaiming base disk to obtain " << referenceFileName << ".";
-      QVERIFY( FvUpdater::sharedUpdater()->slotUnzipUpdate( referenceZipFileName, "./", "" ) );
+      //QVERIFY( FvUpdater::sharedUpdater()->slotUnzipUpdate( referenceZipFileName, "./", "" ) );
       QVERIFY( QFile( componentFileName ).rename( referenceFileName ) );
 
       // set latest reference version inside app cast
       // set current app version, app cast url
-      FvUpdater::sharedUpdater()->SetComponentVersion( ComponentVersion( 1, 0, componentMajorVersion, 0 ) );
+      //FvUpdater::sharedUpdater()->SetComponentVersion( ComponentVersion( 1, 0, componentMajorVersion, 0 ) );
       QString referenceAppCastUrl = referenceDirectoryUrl + "appcast_" + referenceBaseDiskFilePrefix + ".xml";
-      FvUpdater::sharedUpdater()->SetFeedURL( referenceAppCastUrl );
+      //FvUpdater::sharedUpdater()->SetFeedURL( referenceAppCastUrl );
 
       if( referenceMajorVersion > componentMajorVersion )
       {
@@ -285,14 +285,14 @@ bool TestPatching::findUpdate()
 
   QEventLoop loop;
   connect( &timer, SIGNAL( timeout() ), &loop, SLOT( quit() ) );
-  connect( FvUpdater::sharedUpdater(), SIGNAL( signalFoundUpdate() ), &loop, SLOT( quit() ) );
+  //connect( FvUpdater::sharedUpdater(), SIGNAL( signalFoundUpdate() ), &loop, SLOT( quit() ) );
   timer.start( HTTP_TIMEOUT ); 
-  success = success && FvUpdater::sharedUpdater()->slotCheckForUpdates( Verbosity::Silent );
+  //success = success && FvUpdater::sharedUpdater()->slotCheckForUpdates( Verbosity::Silent );
   loop.exec();
 
   if( !timer.isActive() )
   {
-    disconnect( FvUpdater::sharedUpdater(), SIGNAL( signalFoundUpdate() ), &loop, SLOT( quit() ) );
+    //disconnect( FvUpdater::sharedUpdater(), SIGNAL( signalFoundUpdate() ), &loop, SLOT( quit() ) );
     success = false;
 
   }
@@ -311,16 +311,16 @@ bool TestPatching::installUpdate()
   
   QEventLoop loop;
   connect( &timer, SIGNAL( timeout() ), &loop, SLOT( quit() ) );
-  connect( FvUpdater::sharedUpdater(), SIGNAL( signalUpdateInstalled() ), &loop, SLOT( quit() ) );
-  connect( FvUpdater::sharedUpdater(), SIGNAL( signalUpdateInstalled() ), this, SLOT( slotUpdateInstalled() ) );
+  //connect( FvUpdater::sharedUpdater(), SIGNAL( signalUpdateInstalled() ), &loop, SLOT( quit() ) );
+  //connect( FvUpdater::sharedUpdater(), SIGNAL( signalUpdateInstalled() ), this, SLOT( slotUpdateInstalled() ) );
   timer.start( HTTP_TIMEOUT ); 
-  FvUpdater::sharedUpdater()->slotTriggerUpdate();
+  //FvUpdater::sharedUpdater()->slotTriggerUpdate();
   loop.exec();
 
   // updateInstalled might have been emitted before calling loop.exec(), so we also check updateInstalled_.
   if( !timer.isActive() && !updateInstalled_ )
   {
-    disconnect( FvUpdater::sharedUpdater(), SIGNAL( signalUpdateInstalled() ), &loop, SLOT( quit() ) );
+    //disconnect( FvUpdater::sharedUpdater(), SIGNAL( signalUpdateInstalled() ), &loop, SLOT( quit() ) );
     success = false;
 
   }

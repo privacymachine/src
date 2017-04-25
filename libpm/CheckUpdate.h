@@ -115,21 +115,16 @@ class CheckUpdate : public QObject
     /// \return a list of available Config updates
     QList<Update> getavailableConfigUpdates() {return updateListConfig_;}
 
+    /// \brief start
+    /// \brief starts the download of the appcast
+    /// \return true if the download of the appcast started successfully
+    bool start();
 
   signals:
 
     /// \brief finished
     /// \brief signal which is emitted if CheckUpdate is finished
     void finished();
-
-
-  public slots:
-
-    /// \brief start
-    /// \brief slot that starts the download of the appcast
-    /// \return true if the download of the appcast started successfully
-    bool start();
-
 
   private slots:
 

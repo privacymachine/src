@@ -180,6 +180,7 @@ qt5_wrap_ui(MocReleatedForms_MOC ${MocReleatedForms})
 
 add_library(${PM_STATIC_LIB} STATIC
                     ${NoMocSources}
+                    ${MocReleatedHeaders}
                     ${MocReleatedSources}
                     ${MocReleatedHeaders_MOC}
                     ${MocReleatedForms_MOC}

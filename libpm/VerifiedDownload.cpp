@@ -11,7 +11,7 @@ VerifiedDownload::VerifiedDownload(QObject *parent) :
   // this means hashAlgo_=0 and we don't want to use either Md4 or Md5 (1)
   hashAlgorithm_=QCryptographicHash::Md4;
   ptrNetReply_ = NULL;
-  ptrNAM_ = new QNetworkAccessManager(this);
+  ptrNam_ = new QNetworkAccessManager(this);
   connect(this, SIGNAL(finished()), this, SLOT(slotFinished()));
   filePath_="";
   error_=NoError;
@@ -20,8 +20,8 @@ VerifiedDownload::VerifiedDownload(QObject *parent) :
 
 VerifiedDownload::~VerifiedDownload()
 {
-  if(ptrNAM_ != NULL)
-    delete ptrNAM_;
+  if(ptrNam_ != NULL)
+    delete ptrNam_;
 
   if(ptrNetReply_ != NULL)
     delete ptrNetReply_;
@@ -70,7 +70,10 @@ void VerifiedDownload::slotFinished()
 {
   started_=false;
   if(ptrNetReply_)
+  {
     ptrNetReply_->deleteLater();
+    ptrNetReply_ = NULL;
+  }
 }
 
 bool VerifiedDownload::start()
@@ -91,7 +94,7 @@ bool VerifiedDownload::start()
   ILOG("VerifiedDownload: Start download of "+url_.toString());
   QNetworkRequest request( url_ );
   request.setAttribute( QNetworkRequest::CacheLoadControlAttribute, QNetworkRequest::AlwaysNetwork );
-  ptrNetReply_ = ptrNAM_->get(request);
+  ptrNetReply_ = ptrNam_->get(request);
 
   if( ptrNetReply_->error() != QNetworkReply::NoError)
   {
@@ -106,10 +109,21 @@ bool VerifiedDownload::start()
           SIGNAL(downloadProgress(qint64,qint64)),
           this,
           SLOT(slotReemitDownloadProgress(qint64,qint64)));
+
   connect(ptrNetReply_,
           SIGNAL(finished()),
           this,
           SLOT(slotDownloadFinished()));
+
+  connect(ptrNetReply_,
+          SIGNAL(error(QNetworkReply::NetworkError)),
+          this,
+          SLOT(slotError(QNetworkReply::NetworkError)));
+
+  connect(ptrNetReply_,
+          SIGNAL(sslErrors(QList<QSslError>)),
+          this,
+          SLOT(slotSslErrors(QList<QSslError>)));
 
   return true;
 }
@@ -120,9 +134,36 @@ void VerifiedDownload::abort()
   {
     ptrNetReply_->abort();
     error_ = Aborted;
-    started_=false;
+    started_ = false;
     emit finished();
   }
+}
+
+void VerifiedDownload::slotError(QNetworkReply::NetworkError parErrorCode)
+{
+  if (parErrorCode == QNetworkReply::OperationCanceledError)
+  {
+    ILOG("user canceled download")
+  }
+  else
+  {
+    IERR("Received network error: " + QString::number(parErrorCode));
+  }
+  error_ = Aborted;
+  started_ = false;
+  emit finished();
+}
+
+void VerifiedDownload::slotSslErrors(const QList<QSslError> &parSslErrors)
+{
+  IERR("Received ssl-network-errors: " );
+  foreach (QSslError err, parSslErrors)
+  {
+    IERR("  " + err.errorString());
+  }
+  error_ = NetworkError;
+  started_ = false;
+  emit finished();
 }
 
 void VerifiedDownload::slotDownloadFinished()

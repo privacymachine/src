@@ -20,10 +20,15 @@ class UpdateManager : public QObject
     virtual ~UpdateManager();
 
     /// \brief getUpdateWidget
-    /// \brief creates or returns a UpdateWidget to interact with the user
+    /// \brief returns the UpdateWidget to interact with the user
+    /// \return UpdateWidget*
+    WidgetInteractiveUpdate* getUpdateWidget();
+
+    /// \brief getUpdateWidget
+    /// \brief creates a new UpdateWidget if it does not already exist
     /// \param parParent
     /// \return UpdateWidget*
-    WidgetInteractiveUpdate* getUpdateWidget(QWidget *parParent = NULL);
+    WidgetInteractiveUpdate* createUpdateWidgetIfNotExisting(QWidget *parParent);
 
     /// \brief findUpdates
     /// \brief Download and parse appcast
@@ -44,13 +49,13 @@ class UpdateManager : public QObject
 
     /// \brief setAppcastUrl
     /// \param appcastUrl
-    void setAppcastUrl(QUrl appcastUrl) {appcastUrl_=appcastUrl;}
+    void setAppcastUrl(QUrl appcastUrl) {appcastUrl_ = appcastUrl;}
 
     /// \brief setInteractiveUpdate
     /// \brief activate to use the interactive frontend WidgetInteractiveUpdate
     /// \param interactive
     // TODO: non interactive update not implemented jet (maybe remove the possiblity because not needed anyways)
-    void setInteractiveUpdate(bool interactive) {interactive_=interactive;}
+    void setInteractiveUpdate(bool interactive) {interactive_ = interactive;}
 
     /// \brief setSystemConfig
     /// \brief used to determine currend versions and update them
@@ -60,7 +65,7 @@ class UpdateManager : public QObject
     /// \brief setBaseDiskUpdateRequired
     /// \brief if set forces the user to download a new BaseDisk
     /// \param baseDiskUpdateRequired
-    void setBaseDiskUpdateRequired(bool baseDiskUpdateRequired) {baseDiskUpdateRequired_=baseDiskUpdateRequired;}
+    void setBaseDiskUpdateRequired(bool baseDiskUpdateRequired) {baseDiskUpdateRequired_ = baseDiskUpdateRequired;}
 
   signals:
     /// \brief signalUpdatesFound
@@ -83,11 +88,6 @@ class UpdateManager : public QObject
 
 
   private slots:
-
-    /// \brief slotInteractiveUpdateWidgetDestroyed
-    /// \brief after the InteractiveUpdateWidget is destroyed set the pointer to NULL
-    void slotInteractiveUpdateWidgetDestroyed(){ ptrInteractiveUpdateWidget_=NULL; }
-
 
     /// \brief slotCheckUpdateFinished
     /// \brief does error handling after findUpdates() and calles slotShow*Update()
@@ -134,7 +134,7 @@ class UpdateManager : public QObject
 
     /// private variables:
     WidgetInteractiveUpdate* ptrInteractiveUpdateWidget_;
-    CheckUpdate checkUpdate_;
+    CheckUpdate* ptrCheckUpdate_;
     QUrl appcastUrl_;
     PmVersion currentBaseDiskVersion_;
     PmVersion currentBinaryVersion_;

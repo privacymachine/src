@@ -22,8 +22,7 @@
 #include <QtTest>
 #include <QtNetwork>
 
-#include "deprecated_fvupdater.h"
-
+#include "quazipfile.h"
 #include "utils.h"
 
 /// Tests the patching / download of base disks using fervor.

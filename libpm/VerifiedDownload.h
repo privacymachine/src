@@ -114,6 +114,16 @@ class VerifiedDownload : public QObject
     /// \brief does error handling of download and does the write down as well as the verifying process
     void slotDownloadFinished();
 
+    /// \brief slotError
+    /// \brief called when an error occours
+    /// \param parErrorCode contains the error
+    void slotError(QNetworkReply::NetworkError parErrorCode);
+
+    /// \brief slotSslError
+    /// \brief called when an ssl errors occours
+    /// \param parSslErrors list of errors
+    void slotSslErrors(const QList<QSslError> &parSslErrors);
+
     /// \brief slotFinished
     /// \brief does cleanup of ptrNetReply
     void slotFinished();
@@ -123,7 +133,7 @@ class VerifiedDownload : public QObject
     QUrl url_;
     QString filePath_;
     QDir targetDir_;
-    QNetworkAccessManager *ptrNAM_;
+    QNetworkAccessManager *ptrNam_;
     QNetworkReply *ptrNetReply_;
     VerifiedDownloadError error_;
     bool started_;

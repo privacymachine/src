@@ -238,6 +238,19 @@ VmMaskCurrentConfig* VmMaskUserConfig::diceNewVmMaskConfig(VmMaskStaticConfig* p
   // choose one browser
   newConfig->setBrowser(browsers_[randombytes_uniform(browsers_.size())]);
 
+  // copy ip address providers in different order
+  QStringList ipAddressProvidersShuffled;
+  QStringList ipAddressProvidersAll;
+  ipAddressProvidersAll = ipAddressProviders_;
+  while ( ipAddressProvidersAll.size() < 0)
+  {
+    int elementNr = randombytes_uniform(ipAddressProviders_.size());
+    QString provider = ipAddressProviders_[elementNr];
+    ipAddressProvidersShuffled.append(provider);
+    ipAddressProvidersAll.removeAt(elementNr);
+  }
+  newConfig->setIpAddressProviders(ipAddressProvidersShuffled);
+
   // Choose a unique display size (subtract some pixels)
   newConfig->setSubtractDisplayWidth(randombytes_uniform(25)+8); // 8-32
   newConfig->setSubtractDisplayHeight(randombytes_uniform(9)+8); // 8-16
@@ -247,7 +260,6 @@ VmMaskCurrentConfig* VmMaskUserConfig::diceNewVmMaskConfig(VmMaskStaticConfig* p
   newConfig->setJava(java_);
   newConfig->setFlash(flash_);
   newConfig->setBrowserLanguages(browserLanguages_);
-  newConfig->setIpAddressProviders(ipAddressProviders_);
   newConfig->setScriptOnShutdown(scriptOnShutdown_);
   newConfig->setScriptOnStartup(scriptOnStartup_);
   newConfig->setThirdPartyCookies(thirdPartyCookies_);

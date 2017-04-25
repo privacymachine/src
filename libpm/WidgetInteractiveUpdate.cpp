@@ -4,72 +4,76 @@
 
 WidgetInteractiveUpdate::WidgetInteractiveUpdate(QWidget *parent) :
   QWidget(parent),
-  ui(new Ui::WidgetInteractiveUpdate)
+  ui_(new Ui::WidgetInteractiveUpdate)
 {
-  ui->setupUi(this);
-  ui->widgetTextEdit->setVisible(false);
-  ui->buttonDownloadOnly->setVisible(false); // no nonblokin updates implemented now
+  ui_->setupUi(this);
+  ui_->widgetTextEdit->setVisible(false);
+  ui_->buttonDownloadOnly->setVisible(false); // no nonblokin updates implemented now
 
-  connect(ui->buttonIgnore,SIGNAL(clicked()),
+  connect(ui_->buttonIgnore,SIGNAL(clicked()),
           this,SLOT(slotEmitUpdateSkipped()));
-  connect(ui->buttonAbort,SIGNAL(clicked()),
+  connect(ui_->buttonAbort,SIGNAL(clicked()),
           this,SLOT(slotEmitAbortButtonPressed()));
 }
 
 WidgetInteractiveUpdate::~WidgetInteractiveUpdate()
 {
-  delete ui;
+  if (ui_)
+  {
+    delete ui_;
+    ui_ = NULL;
+  }
 }
 
 void WidgetInteractiveUpdate::setTitle(const QString title)
 {
-  ui->labelTitle->setText(title);
+  ui_->labelTitle->setText(title);
 }
 void WidgetInteractiveUpdate::setButtonsVisible(bool visible)
 {
-  ui->widgetButtons->setVisible(visible);
+  ui_->widgetButtons->setVisible(visible);
 }
 void WidgetInteractiveUpdate::setTextEditVisible(bool visible)
 {
-  ui->widgetTextEdit->setVisible(visible);
+  ui_->widgetTextEdit->setVisible(visible);
 }
 void WidgetInteractiveUpdate::setProgressBarVisible(bool visible)
 {
-  ui->widgetProcessBar->setVisible(visible);
+  ui_->widgetProcessBar->setVisible(visible);
 }
 void WidgetInteractiveUpdate::setSkipButtonVisible(bool visible)
 {
-  ui->buttonIgnore->setVisible(visible);
+  ui_->buttonIgnore->setVisible(visible);
 }
 void WidgetInteractiveUpdate::setTextEditTitleVisible(bool visible)
 {
-  ui->widgetUpdateTitle->setVisible(visible);
+  ui_->widgetUpdateTitle->setVisible(visible);
 }
 void WidgetInteractiveUpdate::setUpdateEffectsVisible(bool visible)
 {
-  ui->widgetUpdateEffects->setVisible(visible);
+  ui_->widgetUpdateEffects->setVisible(visible);
 }
 void WidgetInteractiveUpdate::setProgressBarAbortButtonVisible(bool visible)
 {
-  ui->buttonAbort->setVisible(visible);
+  ui_->buttonAbort->setVisible(visible);
 }
 
 void WidgetInteractiveUpdate::setProgressBarRange(int min, int max)
 {
-  ui->progressBar->setRange(min,max);
+  ui_->progressBar->setRange(min,max);
 }
 void WidgetInteractiveUpdate::setProgressBarText(QString text)
 {
-  ui->labelProgressBar->setText(text);
+  ui_->labelProgressBar->setText(text);
 }
 void WidgetInteractiveUpdate::setUpdateEffectsText(QString text)
 {
-  ui->labelUpdateEffects->setText(text);
+  ui_->labelUpdateEffects->setText(text);
 }
 void WidgetInteractiveUpdate::slotProgressBarUpdate(qint64 current, qint64 max)
 {
-  ui->progressBar->setValue(current);
-  ui->progressBar->setMaximum(max);
+  ui_->progressBar->setValue(current);
+  ui_->progressBar->setMaximum(max);
 }
 
 
@@ -83,9 +87,9 @@ void WidgetInteractiveUpdate::showUpdate(QList<Update> parUpdateList)
     changelog += update.Description;
     changelog += "\n\n";
   }
-  ui->textEditDescription->setText(changelog);
-  ui->labelUpdateTitle->setText(update_.Title);
-  connect( ui->buttonInstallNow, SIGNAL(clicked()), this, SLOT(slotEmitUpdateRequested()) );
+  ui_->textEditDescription->setText(changelog);
+  ui_->labelUpdateTitle->setText(update_.Title);
+  connect( ui_->buttonInstallNow, SIGNAL(clicked()), this, SLOT(slotEmitUpdateRequested()) );
 }
 
 
