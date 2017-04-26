@@ -1,8 +1,4 @@
 #include "VerifiedDownload.h"
-
-#include <QNetworkRequest>
-
-
 #include "utils.h"
 
 VerifiedDownload::VerifiedDownload(QObject *parent) :
@@ -12,7 +8,12 @@ VerifiedDownload::VerifiedDownload(QObject *parent) :
   hashAlgorithm_=QCryptographicHash::Md4;
   ptrNetReply_ = NULL;
   ptrNam_ = new QNetworkAccessManager(this);
-  connect(this, SIGNAL(finished()), this, SLOT(slotFinished()));
+
+  connect(this,
+          &VerifiedDownload::finished,
+          this,
+          &VerifiedDownload::slotFinished);
+
   filePath_="";
   error_=NoError;
   started_=false;
@@ -106,24 +107,24 @@ bool VerifiedDownload::start()
   }
 
   connect(ptrNetReply_,
-          SIGNAL(downloadProgress(qint64,qint64)),
+          &QNetworkReply::downloadProgress,
           this,
-          SLOT(slotReemitDownloadProgress(qint64,qint64)));
+          &VerifiedDownload::slotReemitDownloadProgress);
 
   connect(ptrNetReply_,
-          SIGNAL(finished()),
+          &QNetworkReply::finished,
           this,
-          SLOT(slotDownloadFinished()));
+          &VerifiedDownload::slotDownloadFinished);
 
   connect(ptrNetReply_,
-          SIGNAL(error(QNetworkReply::NetworkError)),
+          QOverload<QNetworkReply::NetworkError>::of(&QNetworkReply::error),
           this,
-          SLOT(slotError(QNetworkReply::NetworkError)));
+          &VerifiedDownload::slotError);
 
   connect(ptrNetReply_,
-          SIGNAL(sslErrors(QList<QSslError>)),
+          QOverload<const QList<QSslError>&>::of(&QNetworkReply::sslErrors),
           this,
-          SLOT(slotSslErrors(QList<QSslError>)));
+          &VerifiedDownload::slotSslErrors);
 
   return true;
 }

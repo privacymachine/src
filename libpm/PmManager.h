@@ -51,7 +51,7 @@ class PmManager
     bool readConfiguration();
     bool validateConfiguration();
 
-    bool initAllVmMaskData();
+    void initAllVmMaskData();
     bool createCommandsToCreateAllVmMasks(QList<PmCommand*>& parCommandsList);
 
     /// \brief Create a List of Commands which are needed to start a already prepared VmMask (Snapshot)

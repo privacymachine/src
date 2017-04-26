@@ -10,10 +10,15 @@ WidgetInteractiveUpdate::WidgetInteractiveUpdate(QWidget *parent) :
   ui_->widgetTextEdit->setVisible(false);
   ui_->buttonDownloadOnly->setVisible(false); // no nonblokin updates implemented now
 
-  connect(ui_->buttonIgnore,SIGNAL(clicked()),
-          this,SLOT(slotEmitUpdateSkipped()));
-  connect(ui_->buttonAbort,SIGNAL(clicked()),
-          this,SLOT(slotEmitAbortButtonPressed()));
+  connect(ui_->buttonIgnore,
+          &QAbstractButton::clicked,
+          this,
+          &WidgetInteractiveUpdate::slotEmitUpdateSkipped);
+
+  connect(ui_->buttonAbort,
+          &QAbstractButton::clicked,
+          this,
+          &WidgetInteractiveUpdate::slotEmitAbortButtonPressed);
 }
 
 WidgetInteractiveUpdate::~WidgetInteractiveUpdate()
@@ -89,7 +94,10 @@ void WidgetInteractiveUpdate::showUpdate(QList<Update> parUpdateList)
   }
   ui_->textEditDescription->setText(changelog);
   ui_->labelUpdateTitle->setText(update_.Title);
-  connect( ui_->buttonInstallNow, SIGNAL(clicked()), this, SLOT(slotEmitUpdateRequested()) );
+  connect( ui_->buttonInstallNow,
+           &QAbstractButton::clicked,
+           this,
+           &WidgetInteractiveUpdate::slotEmitUpdateRequested);
 }
 
 

@@ -62,7 +62,6 @@ class PmCommandExec : public QObject
     void signalWriteFromStandardOut( QString parOut );
     void signalWriteFromStandardErr( QString parOut );
 
-
   private:
     QString allStderr_;
     QString allStdout_;

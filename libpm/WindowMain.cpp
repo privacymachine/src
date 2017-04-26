@@ -45,18 +45,21 @@ WindowMain::WindowMain(QWidget *parParent) :
   ui_->setupUi(this);
 
   setWindowTitle(QApplication::applicationName());
+
   connect(ui_->actionQuit,
-          SIGNAL(triggered()),
+          &QAction::triggered,
           this,
-          SLOT(close()));
+          &QMainWindow::close);
+
   connect(ui_->actionAbout,
-          SIGNAL(triggered()),
+          &QAction::triggered,
           this,
-          SLOT(slotShowAbout()));
+          &WindowMain::slotShowAbout);
+
   connect(ui_->actionManual_force_VM_Mask_rebuild,
-          SIGNAL(triggered()),
+          &QAction::triggered,
           this,
-          SLOT(slotCleanAllVmMasks()));
+          &WindowMain::slotCleanAllVmMasks);
 }
 
 void WindowMain::slotShowAbout()
@@ -123,44 +126,58 @@ bool WindowMain::init(QString parPmInstallPath, QString parVboxDefaultMachineFol
   updateManager_->setSystemConfig( pmManager_->getSystemConfig() );
   updateManager_->setAppcastUrl( pmManager_->getAppcastUrl() );
 
-  updateManager_->setInteractiveUpdate(true);
-
   ui_->mainLayout_v->addWidget(updateManager_->createUpdateWidgetIfNotExisting(this));
   updateManager_->findUpdates();
 
-  connect( updateManager_, SIGNAL(signalFinished()), this, SLOT(slotUpdateFinished()) );
+  connect( updateManager_,
+           &UpdateManager::signalFinished,
+           this,
+           &WindowMain::slotUpdateFinished);
+
+  // How does it continue? slotUpdateFinished() is reached even if no update is needed
+  return true;
 }
-
-
-
 
 void WindowMain::slotUpdateFinished()
 {
+  ILOG("signalFinished received")
+
   // remove and hide UpdateWidget from mainLayout (deletion is done inside the UpdateManager)
   updateManager_->getUpdateWidget()->hide();
   ui_->mainLayout_v->removeWidget(updateManager_->getUpdateWidget());
 
-  // validate configuration
-  if (!pmManager_->validateConfiguration())
+  if (pmManager_->isBaseDiskAvailable())
   {
-    QString message = QCoreApplication::translate("mainfunc", "Some errors occoured: Please check the logfile for Details.");
-    QMessageBox::warning(Q_NULLPTR, "PrivacyMachine", message);
+    // we can now validate configuration based on the BaseDisk capabilites
+    if (!pmManager_->validateConfiguration())
+    {
+      QString message = QCoreApplication::translate("mainfunc", "Configuration (based on BaseDisk-data) is invalid: Please check the logfile for Details.");
+      QMessageBox::warning(Q_NULLPTR, "PrivacyMachine", message);
+      return;
+    }
+
+    // we finish the intialisation of the VmMask-Data
+    pmManager_->initAllVmMaskData();
+  }
+  else
+  {
+    // errors should already shown, just skip if no BaseDisk is available
     return;
   }
 
-  if (pmManager_->isBaseDiskConfigValid() && pmManager_->isBaseDiskAvailable())
-  {
-    // we initialize pmManager_ with BaseDisk data
-    pmManager_->initAllVmMaskData();
-  }
 
-  // regeneration of the VM-Masks is needed when we have a new BaseDisk or when the user changes an important part of the configuration
+  // regeneration of the VM-Masks is needed when we have a new BaseDisk or when the user changes an important part of the
+  // configuration: i.e. the name which affects the VM-Instance
   if(pmManager_->vmMaskRegenerationNecessary())
   {
+    // show a the UpdateWidget and execute the commands
     regenerateVmMasks();
   }
-
-  setupTabWidget();
+  else
+  {
+    // show the WidgetNewTab
+    setupTabWidget();
+  }
 }
 
 
@@ -197,25 +214,25 @@ void WindowMain::cleanVmMasksBlocking()
 void WindowMain::regenerateVmMasks()
 {
 
-  cleanVmMasksBlocking();
-
   if (regenerationWidget_ == NULL)
   {
     regenerationWidget_ = new WidgetUpdate(this);
-    if (!regenerationWidget_->init(pmManager_))
-    {
-      IERR("failed to initialize regenerationWidget (updateWidget) ");
-      delete regenerationWidget_;
-      regenerationWidget_ = NULL;
-      return;
-    }
 
     connect(regenerationWidget_,
-            SIGNAL(signalUpdateFinished(ePmCommandResult)),
+            &WidgetUpdate::signalUpdateFinished,
             this,
-            SLOT(slotRegenerationFinished(ePmCommandResult)));
+            &WindowMain::slotRegenerationFinished);
 
     ui_->mainLayout_v->addWidget(regenerationWidget_);
+  }
+
+  // Create the commands including a cleanup
+  if (!regenerationWidget_->init(pmManager_, true))
+  {
+    IERR("failed to initialize regenerationWidget (updateWidget) ");
+    delete regenerationWidget_;
+    regenerationWidget_ = NULL;
+    return;
   }
 
   regenerationWidget_->start();
@@ -245,14 +262,14 @@ void WindowMain::slotNewVmMaskStarted(int parVmMaskId)
   vmMask->Instance->getInfoIpAddress()->startPollingExternalIp();
   
   connect(&(*vmMask->Instance->getInfoIpAddress()),
-          SIGNAL( signalUpdateIpSuccess() ),
+          &VmInfoIpAddress::signalUpdateIpSuccess,
           this,
-          SLOT( slotRegenerationIpSuccess() ) );
+          &WindowMain::slotRegenerationIpSuccess);
 
   connect( rdpView, 
-           SIGNAL( signalScreenResize(QWidget*) ),
+           &WidgetRdpView::signalScreenResize,
            this,
-           SLOT( slotRdpViewScreenResize(QWidget*) ) );
+           &WindowMain::slotRdpViewScreenResize);
   
   statusBarUpdate();
 
@@ -293,16 +310,16 @@ void WindowMain::slotTabCloseRequested(int parTabIndex)
 
     // Disable screen resize messages
     disconnect( widgetRdpView,
-                SIGNAL( signalScreenResize( QWidget* )),
-                0,
-                0 );
+                &WidgetRdpView::signalScreenResize,
+                this,
+                &WindowMain::slotRdpViewScreenResize);
 
     // In case we still try to obtain the IP address, cancel it.
     vmMask->Instance->getInfoIpAddress()->abort();
-    disconnect( &(*vmMask->Instance->getInfoIpAddress()),
-                SIGNAL( signalUpdateIpSuccess() ),
-                0,
-                0 );
+    disconnect( vmMask->Instance->getInfoIpAddress().data(),
+                &VmInfoIpAddress::signalUpdateIpSuccess,
+                this,
+                &WindowMain::slotRegenerationIpSuccess);
 
     // Copy VPN logs before the machine shuts down.
     QList<PmCommand*> commandsList;
@@ -359,24 +376,24 @@ bool WindowMain::setupTabWidget()
   tabWidget_->tabBar()->setTabButton(0, QTabBar::RightSide, NULL);
 
   connect(tabWidget_,
-          SIGNAL(tabCloseRequested(int)),
+          &QTabWidget::tabCloseRequested,
           this,
-          SLOT(slotTabCloseRequested(int)));
+          &WindowMain::slotTabCloseRequested);
 
   connect(this,
-          SIGNAL(signalVmMaskClosed(int)),
+          &WindowMain::signalVmMaskClosed,
           newTab,
-          SLOT(slotVmMaskClosed(int)));
+          &WidgetNewTab::slotVmMaskClosed);
 
   connect(newTab,
-          SIGNAL(signalNewVmMaskReady(int)),
+          &WidgetNewTab::signalNewVmMaskReady,
           this,
-          SLOT(slotNewVmMaskStarted(int)));
+          &WindowMain::slotNewVmMaskStarted);
   
   connect( tabWidget_,
-           SIGNAL(currentChanged(int)),
+           &QTabWidget::currentChanged,
            this,
-           SLOT(slotTabCurrentChanged(int)));
+           &WindowMain::slotTabCurrentChanged);
 
   return true;
 }
@@ -451,12 +468,11 @@ void WindowMain::slotRegenerationFinished(ePmCommandResult parResult)
   {
     case aborted:
       message += "Generation of VM-Masks aborted.";
-      ui_->statusbar->showMessage(message, 5000);
-      QMessageBox::information(this, "PrivacyMachine", message);
+      ui_->statusbar->showMessage(message);
       break;
 
     case success:
-      message += "Generation of VM-Masks successful.";
+      message += "Generation of VM-Masks was successful.";
       ui_->statusbar->showMessage(message, 5000);
       break;
 
@@ -466,9 +482,9 @@ void WindowMain::slotRegenerationFinished(ePmCommandResult parResult)
       QMessageBox::warning(this, "PrivacyMachine", message);
   }
 
+  // hide the regeneration widget
+  regenerationWidget_->hide();
   ui_->mainLayout_v->removeWidget(regenerationWidget_);
-  regenerationWidget_->deleteLater();
-  regenerationWidget_=NULL;
 
   // Only proceed if all VMs are available - otherwise a user might e.g. abort the first update, leaving at least some
   // VMs missing
@@ -534,54 +550,5 @@ void WindowMain::closeEvent(QCloseEvent * parEvent)
   }
 
   ILOG("Saving internals")
-}
-
-
-bool WindowMain::showReleaseNotes(QString parUrl, ulong parTimeoutInMilliseconds)
-{
-  bool success = false;
-  // from http://stackoverflow.com/questions/13207493/qnetworkreply-and-qnetworkaccessmanager-timeout-in-http-request
-  QTimer timer;    
-  timer.setSingleShot(true);
-
-  // Start Release Notes Download
-  QNetworkRequest request( parUrl );
-  request.setAttribute( QNetworkRequest::CacheLoadControlAttribute, QNetworkRequest::AlwaysNetwork );
-	QNetworkAccessManager nam;
-  QNetworkReply* reply = nam.get( request );
-  QEventLoop loop;
-  connect(&timer, SIGNAL(timeout()), &loop, SLOT(quit()));
-  connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
-  timer.start(parTimeoutInMilliseconds);
-  loop.exec();
-  
-  if( timer.isActive() )
-  {
-    if (reply->error() != QNetworkReply::NoError)
-    {
-      qDebug()<<"Unable to download the release notes: " << reply->errorString();       
-    }
-    else if (reply->isReadable() )
-	  { 
-      QMessageBox msgBox;
-      msgBox.setIcon(QMessageBox::Information);
-      msgBox.setWindowTitle(QApplication::applicationName());
-      msgBox.setTextFormat(Qt::RichText);   // this is what makes the links clickable
-      msgBox.setText(reply->readAll());
-      msgBox.exec();
-
-      success = true;      
-    }    
-  }
-  else
-  {
-    // timeout
-    reply->abort();    
-    disconnect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
-     
-    qDebug()<<"Timeout after " << parTimeoutInMilliseconds << "ms while downloading release notes: " << reply->errorString();
-  }
-
-  return success;
 }
 

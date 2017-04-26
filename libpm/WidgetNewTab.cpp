@@ -44,22 +44,42 @@ void WidgetNewTab::connectSignalsAndSlots()
 {
   foreach( QAbstractButton *rbItem, radioButtons_->buttons() )
   {
-    connect( rbItem, SIGNAL( clicked() ), this, SLOT( slotRadioBtn_clicked() ) );
+    connect( rbItem,
+             &QAbstractButton::clicked,
+             this,
+             &WidgetNewTab::slotRadioBtn_clicked);
   }
 
-  connect( ui_->btnStartVmMask, SIGNAL( clicked() ), this, SLOT( slotBtnStart_clicked() ) );
-  connect( commandExec_, SIGNAL( signalFinished(ePmCommandResult) ), this, SLOT( slotFinished(ePmCommandResult) ) );
+  connect( ui_->btnStartVmMask,
+           &QAbstractButton::clicked,
+           this,
+           &WidgetNewTab::slotBtnStart_clicked);
+
+  connect( commandExec_,
+           &WidgetCommandExec::signalFinished,
+           this,
+           &WidgetNewTab::slotFinished);
 }
 
 void WidgetNewTab::disconnectSignalsAndSlots()
 {
   foreach(QAbstractButton *rbItem, radioButtons_->buttons())
   {
-    disconnect( rbItem, SIGNAL( clicked() ), 0, 0 );
+    disconnect( rbItem,
+                &QAbstractButton::clicked,
+                this,
+                &WidgetNewTab::slotRadioBtn_clicked);
   }
 
-  disconnect(ui_->btnStartVmMask, SIGNAL( clicked() ), 0, 0);
-  disconnect(commandExec_, SIGNAL( signalFinished(ePmCommandResult) ), 0, 0);
+  disconnect(ui_->btnStartVmMask,
+             &QAbstractButton::clicked,
+             this,
+             &WidgetNewTab::slotBtnStart_clicked);
+
+  disconnect(commandExec_,
+             &WidgetCommandExec::signalFinished,
+             this,
+             &WidgetNewTab::slotFinished);
 
 }
 
@@ -129,7 +149,7 @@ void WidgetNewTab::slotBtnStart_clicked()
       return;
     }
 
-    // mark as active
+    // mark VmMaks as active
     vmMask->Instance->setVmMaskIsActive(true);
 
     commandExec_->setCommands(commandList);
@@ -149,49 +169,44 @@ void WidgetNewTab::slotBtnStart_clicked()
 
 void WidgetNewTab::slotFinished(ePmCommandResult parExitCode)
 {
-  // enable all radio buttons as default
-  foreach (QAbstractButton* btn, radioButtons_->buttons())
+  if (parExitCode == failed)
   {
-    btn->setEnabled(true);
+    QMessageBox::warning(this, "Starting VM-Mask", "Starting the VirtualMachine failed. Please check the logfile for Details.");
   }
 
-  switch(parExitCode)
+  if (parExitCode == failed || parExitCode == aborted )
   {
-    case success:
-      radioButtons_->button(currentSelectedVmMaskId_)->setChecked( false );
-      radioButtons_->button(currentSelectedVmMaskId_)->setEnabled( false );
-
-      ui_->labelDescription->clear();
-      ui_->labelDescription->adjustSize();
-      emit signalNewVmMaskReady(currentSelectedVmMaskId_);
-
-      commandExec_->reset();
-      ui_->btnStartVmMask->setEnabled(false);
-      break;
-
-    case failed:
-      QMessageBox::warning(this, "Starting VM-Mask", "Starting the VirtualMachine failed. Please check the logfile for Details.");
-
-      // mark as inactive
-      if (currentSelectedVmMaskId_ >= 0)
-        pmManager_->getVmMaskData()[currentSelectedVmMaskId_]->Instance->setVmMaskIsActive(false);
-
-      break;
-
-    case aborted:
-      // In this case, the user would expect the "Start" button to be enabled even when not selecting another radio
-      // button.
-      ui_->btnStartVmMask->setEnabled(false);
-
-      // mark as inactive
-      if (currentSelectedVmMaskId_ >= 0)
-        pmManager_->getVmMaskData()[currentSelectedVmMaskId_]->Instance->setVmMaskIsActive(false);
-
-      break;
-
-    default:
-      break;
+    // Mark the VmMask as inactive
+    if (currentSelectedVmMaskId_ >= 0)
+      pmManager_->getVmMaskData()[currentSelectedVmMaskId_]->Instance->setVmMaskIsActive(false);
   }
+
+  // enable/disable all radio buttons based on the active status of the VmMasks
+  for (int i = 0; i < pmManager_->getVmMaskData().count(); i++)
+  {
+    if (pmManager_->getVmMaskData()[i]->Instance != NULL && pmManager_->getVmMaskData()[i]->Instance->getVmMaskIsActive())
+      radioButtons_->button(i)->setEnabled(false);
+    else
+      radioButtons_->button(i)->setEnabled(true);
+  }
+
+  if (parExitCode == success)
+  {
+    radioButtons_->button(currentSelectedVmMaskId_)->setChecked(false);
+
+    ui_->labelDescription->clear();
+    ui_->labelDescription->adjustSize();
+    emit signalNewVmMaskReady(currentSelectedVmMaskId_);
+
+    commandExec_->reset();
+
+    ui_->btnStartVmMask->setEnabled(false);
+  }
+  else
+  {
+    ui_->btnStartVmMask->setEnabled(true);
+  }
+
 }
 
 void WidgetNewTab::slotVmMaskClosed(int parVmMaskId)

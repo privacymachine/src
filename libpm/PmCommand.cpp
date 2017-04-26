@@ -18,6 +18,7 @@
 
 #include "utils.h"
 #include "PmCommand.h"
+#include "PmCommandExec.h"
 
 #include <QPixmap>
 
@@ -172,13 +173,11 @@ bool PmCommand::start(QProcess* parProc, QObject* parReceiver)
 
     // We use a singleShot-Timer for galvanic isolation
     QTimer::singleShot( 0, parReceiver, SLOT( slotCommandFinished() ) );
-
   }
   else if (type_ == sleepCommand)
   {
     // For sleeping, we do not really spawn a new process, but simply start a timer.
     QTimer::singleShot( timeoutMilliseconds_, parReceiver, SLOT( slotCommandFinished() ) );
-
   }
   else if( shellCmd_ != NULL )
   {
@@ -192,16 +191,13 @@ bool PmCommand::start(QProcess* parProc, QObject* parReceiver)
       QString msg = "Error starting process: '" + toExecute + "' resulted in:\n" + err;
       IERR(msg);
       return false;
-
     }
-
   }
   else
   {
     QString message = "No command provided for command type " + QString::number( type_ ) + ".";
     IERR( message );
     return false;
-
   }
 
   return true;

@@ -36,10 +36,10 @@ VmInfoIpAddress::VmInfoIpAddress(QStringList parVmMaskIpAddressProviders,
 
 VmInfoIpAddress::~VmInfoIpAddress()
 {
-  disconnect( &(*exec_),
-              SIGNAL( signalFinished( ePmCommandResult ) ),
-              0,
-              0 );
+  disconnect(exec_.data(),
+             &PmCommandExec::signalFinished,
+             this,
+             &VmInfoIpAddress::slotExecFinished);
 
   exec_->disconnectSignalsAndSlots();
 }
@@ -51,15 +51,10 @@ QString VmInfoIpAddress::getIpAddress()
 
 void VmInfoIpAddress::initialize()
 {
-  // TODO: bernhard: test the new qt5 syntax which checks errors at compile time!
-  /*
-  connect( &(*exec_),
-           SIGNAL( signalFinished( ePmCommandResult ) ),
-           this,
-           SLOT( slotExecFinished( ePmCommandResult ) ) );
-*/
-  QObject::connect(exec_.data(), &PmCommandExec::signalFinished,
-                   this, &VmInfoIpAddress::slotExecFinished);
+  connect(exec_.data(),
+          &PmCommandExec::signalFinished,
+          this,
+          &VmInfoIpAddress::slotExecFinished);
 
   exec_->connectSignalsAndSlots();
 }
@@ -166,10 +161,10 @@ void VmInfoIpAddress::abort()
 
 PmCommand *VmInfoIpAddress::createPmCommandNextIpAddressProvider()
 {
-  QString curProvider = vmMaskIpAddressProviders_[ ipAddressProviderPermutation_[ nProvidersTried_ ] ];
+  QString curProvider = vmMaskIpAddressProviders_[nProvidersTried_];
   PmCommand *pCommand = GetPmCommandForSshCmdVmMaskInstance(sshPort_, QString( "curl -s " ) + curProvider);
   ++nProvidersTried_;
-  nProvidersTried_ %= ipAddressProviderPermutation_.size();
+  nProvidersTried_ %= vmMaskIpAddressProviders_.size();
 
   pCommand->setTimeoutMilliseconds( 5000 );
   pCommand->setDescription( "Retreiving external IP address for VM-Mask " + vmMaskFullName_ + "'." );

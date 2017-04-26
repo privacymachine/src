@@ -36,9 +36,9 @@ WidgetCommandExec::WidgetCommandExec(QWidget *parParent) :
   ui_->verticalLayout->setAlignment( Qt::AlignTop );
 
   connect(ui_->btnDetails,
-          SIGNAL(clicked()),
+          &QAbstractButton::clicked,
           this,
-          SLOT(slotBtnDetails_clicked()));
+          &WidgetCommandExec::slotBtnDetails_clicked);
 }
 
 
@@ -52,53 +52,46 @@ WidgetCommandExec::~WidgetCommandExec()
 void WidgetCommandExec::connectSignalsAndSlots()
 {
   connect(ui_->btnAbort,
-          SIGNAL(clicked()),
+          &QAbstractButton::clicked,
           this,
-          SLOT(slotBtnAbort_clicked()));
+          &WidgetCommandExec::slotBtnAbort_clicked);
 
   if( exec_ )
   {
-    connect(
-      &(*exec_),
-      SIGNAL( signalStartingNextCommand() ),
-      this,
-      SLOT( slotStartingNextCommand() ) );
+    connect(exec_.data(),
+            &PmCommandExec::signalStartingNextCommand,
+            this,
+            &WidgetCommandExec::slotStartingNextCommand);
 
-    connect(
-      &(*exec_),
-      SIGNAL( signalStartingNextCommandFailed() ),
-      this,
-      SLOT( slotStartingNextCommandFailed() ) );
+    connect(exec_.data(),
+            &PmCommandExec::signalStartingNextCommandFailed,
+            this,
+            &WidgetCommandExec::slotStartingNextCommandFailed);
 
-    connect(
-      &(*exec_),
-      SIGNAL( signalFinished( ePmCommandResult ) ),
-      this,
-      SLOT( slotFinished( ePmCommandResult ) ) );
+    connect(exec_.data(),
+            &PmCommandExec::signalFinished,
+            this,
+            &WidgetCommandExec::slotFinished);
 
-    connect(
-      &(*exec_),
-      SIGNAL( signalUpdateProgress() ),
-      this,
-      SLOT( slotUpdateProgress() ) );
+    connect(exec_.data(),
+            &PmCommandExec::signalUpdateProgress,
+            this,
+            &WidgetCommandExec::slotUpdateProgress);
 
-    connect(
-      &(*exec_),
-      SIGNAL( signalWriteSuccess( QString ) ),
-      this,
-      SLOT( slotWriteSuccess( QString ) ) );
+    connect(exec_.data(),
+            &PmCommandExec::signalWriteSuccess,
+            this,
+            &WidgetCommandExec::slotWriteSuccess);
 
-    connect(
-      &(*exec_),
-      SIGNAL( signalWriteFromStandardErr( QString ) ),
-      this,
-      SLOT( slotWriteFromStandardErr( QString ) ) );
+    connect(exec_.data(),
+            &PmCommandExec::signalWriteFromStandardErr,
+            this,
+            &WidgetCommandExec::slotWriteFromStandardErr);
 
-    connect(
-      &(*exec_),
-      SIGNAL( signalWriteFromStandardOut( QString ) ),
-      this,
-      SLOT( slotWriteFromStandardOut( QString ) ) );
+    connect(exec_.data(),
+            &PmCommandExec::signalWriteFromStandardOut,
+            this,
+            &WidgetCommandExec::slotWriteFromStandardOut);
 
     exec_->connectSignalsAndSlots();
 
@@ -116,53 +109,46 @@ void WidgetCommandExec::disconnectSignalAndSlots()
 { 
   // https://stackoverflow.com/questions/28524925/how-to-disconnect-a-signal-with-a-slot-temporarily-in-qt
   disconnect(ui_->btnAbort,
-          SIGNAL(clicked()),
+          &QAbstractButton::clicked,
           0,
           0);
 
   if( exec_ )
   {
-    disconnect(
-      &(*exec_),
-      SIGNAL( signalStartingNextCommand() ),
-      0,
-      0 );
+    disconnect(exec_.data(),
+               &PmCommandExec::signalStartingNextCommand,
+               this,
+               &WidgetCommandExec::slotStartingNextCommand);
 
-    disconnect(
-      &(*exec_),
-      SIGNAL( signalStartingNextCommandFailed() ),
-      0,
-      0 );
+    disconnect(exec_.data(),
+               &PmCommandExec::signalStartingNextCommandFailed,
+               this,
+               &WidgetCommandExec::slotStartingNextCommandFailed);
 
-    disconnect(
-      &(*exec_),
-      SIGNAL( signalFinished( ePmCommandResult ) ),
-      0,
-      0 );
+    disconnect(exec_.data(),
+               &PmCommandExec::signalFinished,
+               this,
+               &WidgetCommandExec::slotFinished);
 
-    disconnect(
-      &(*exec_),
-      SIGNAL( signalUpdateProgress() ),
-      0,
-      0 );
+    disconnect(exec_.data(),
+               &PmCommandExec::signalUpdateProgress,
+               this,
+               &WidgetCommandExec::slotUpdateProgress);
 
-    disconnect(
-      &(*exec_),
-      SIGNAL( signalWriteSuccess( QString ) ),
-      0,
-      0 );
+    disconnect(exec_.data(),
+               &PmCommandExec::signalWriteSuccess,
+               this,
+               &WidgetCommandExec::slotWriteSuccess);
 
-    disconnect(
-      &(*exec_),
-      SIGNAL( signalWriteFromStandardErr( QString ) ),
-      0,
-      0 );
+    disconnect(exec_.data(),
+               &PmCommandExec::signalWriteFromStandardErr,
+               this,
+               &WidgetCommandExec::slotWriteFromStandardErr);
 
-    disconnect(
-      &(*exec_),
-      SIGNAL( signalWriteFromStandardOut( QString ) ),
-      0,
-      0 );
+    disconnect(exec_.data(),
+               &PmCommandExec::signalWriteFromStandardOut,
+               this,
+               &WidgetCommandExec::slotWriteFromStandardOut);
 
     exec_->disconnectSignalsAndSlots();
 
@@ -301,7 +287,6 @@ void WidgetCommandExec::slotStartingNextCommandFailed()
 void WidgetCommandExec::slotBtnAbort_clicked()
 {
   abort();
-
 }
 
 

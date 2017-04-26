@@ -17,6 +17,8 @@
 ==============================================================================*/
 
 #include "PmManager.h"
+#include "WindowMain.h"
+
 #include "WidgetUpdate.h"
 #include "ui_WidgetUpdate.h"
 
@@ -38,26 +40,33 @@ WidgetUpdate::~WidgetUpdate()
   delete ui_;
 }
 
-bool WidgetUpdate::init(PmManager* manager)
+bool WidgetUpdate::init(PmManager* parManager, bool parExecuteCleanupFirst)
 {
-  manager_ = manager;
+  pmManager_ = parManager;
 
   connect(widgetCommandExec_,
-          SIGNAL(signalFinished(ePmCommandResult)),
+          &WidgetCommandExec::signalFinished,
           this,
-          SLOT(slotCommandsFinished(ePmCommandResult)));
+          &WidgetUpdate::slotCommandsFinished);
 
   // frmMainWindows should receive Update-Status Messages
   connect(widgetCommandExec_,
-          SIGNAL(signalUpdateProgress(QString)),
-          this->parentWidget(),
-          SLOT(slotRegenerationProgress(QString)));
+          &WidgetCommandExec::signalUpdateProgress,
+          (WindowMain*)(this->parentWidget()),
+          &WindowMain::slotRegenerationProgress);
 
   widgetCommandExec_->connectSignalsAndSlots();
 
-  // create all commands
   QList<PmCommand*> allCommands;
-  manager->createCommandsToCreateAllVmMasks(allCommands);
+
+  // add VmMask cleanup commands
+  if (parExecuteCleanupFirst)
+  {
+    pmManager_->createCommandsToCleanupAllVirtualMachines(allCommands);
+  }
+
+  // add VmMask creation commands
+  pmManager_->createCommandsToCreateAllVmMasks(allCommands);
 
   if (!widgetCommandExec_->setCommands(allCommands)) // widgetCommandExec_ also deletes the memory of the commands
     return false;

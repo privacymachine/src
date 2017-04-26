@@ -105,15 +105,15 @@ class CheckUpdate : public QObject
 
     /// \brief getavailableBaseDiskUpdates
     /// \return a list of available BaseDisk updates
-    QList<Update> getavailableBaseDiskUpdates() {return updateListBaseDisk_;}
+    QList<Update> getAvailableBaseDiskUpdates() {return updateListBaseDisk_;}
 
     /// \brief getavailableBinaryUpdates
     /// \return a list of available Binary updates
-    QList<Update> getavailableBinaryUpdates() {return updateListBinary_;}
+    QList<Update> getAvailableBinaryUpdates() {return updateListBinary_;}
 
     /// \brief getavailableConfigUpdates
     /// \return a list of available Config updates
-    QList<Update> getavailableConfigUpdates() {return updateListConfig_;}
+    QList<Update> getAvailableConfigUpdates() {return updateListConfig_;}
 
     /// \brief start
     /// \brief starts the download of the appcast

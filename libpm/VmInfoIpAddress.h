@@ -94,9 +94,8 @@ class VmInfoIpAddress: public QObject
 
     unsigned nProvidersTried_;
 
-    QList<unsigned> ipAddressProviderPermutation_;
 
-    /// List of IP-Adress-Providers (copy from current VmMaskInstance)
+    /// \brief List of shuffled IP-Adress-Providers (copy from current VmMaskInstance)
     QStringList vmMaskIpAddressProviders_;
 
     QString vmMaskFullName_;

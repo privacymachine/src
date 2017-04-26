@@ -299,6 +299,7 @@ bool PmManager::isBaseDiskAvailable()
 
 bool PmManager::allVmMasksExist()
 {
+  ILOG("Check if all VmMasks exists");
   QString allOutput;
   QStringList args;
 
@@ -584,7 +585,7 @@ bool PmManager::createCommandsToCreateVmMask( VmMaskData* parVmMask,
   return true;
 }
 
-bool PmManager::initAllVmMaskData()
+void PmManager::initAllVmMaskData()
 {
   foreach(VmMaskUserConfig* userVmMaskConfig, configUser_->getConfiguredVmMasks())
   {
@@ -610,8 +611,6 @@ bool PmManager::initAllVmMaskData()
     // Store the data
     vmMaskData_.push_back(newVmMaskData);
   }
-
-  return true;
 }
 
 bool PmManager::createCommandsToCreateAllVmMasks(QList<PmCommand*>& parCmdList)

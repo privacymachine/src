@@ -51,12 +51,6 @@ class UpdateManager : public QObject
     /// \param appcastUrl
     void setAppcastUrl(QUrl appcastUrl) {appcastUrl_ = appcastUrl;}
 
-    /// \brief setInteractiveUpdate
-    /// \brief activate to use the interactive frontend WidgetInteractiveUpdate
-    /// \param interactive
-    // TODO: non interactive update not implemented jet (maybe remove the possiblity because not needed anyways)
-    void setInteractiveUpdate(bool interactive) {interactive_ = interactive;}
-
     /// \brief setSystemConfig
     /// \brief used to determine currend versions and update them
     /// \param ptrSystemConfig
@@ -115,8 +109,8 @@ class UpdateManager : public QObject
     void slotBaseDiskExtractionFinished();
 
 
-    /// \brief slotEmitSignalFinished
-    void slotEmitSignalFinished() {emit signalFinished();}
+    /// \brief slotReEmitSignalFinished
+    void slotReEmitSignalFinished() {emit signalFinished();}
 
   private:
 

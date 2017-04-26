@@ -65,10 +65,12 @@ bool CheckUpdate::start()
     emit finished();
     return false;
   }
+
   connect(ptrNetReply_,
-          SIGNAL(finished()),
+          &QNetworkReply::finished,
           this,
-          SLOT(slotDownloadFinished()));
+          &CheckUpdate::slotDownloadFinished);
+
   return true;
 }
 

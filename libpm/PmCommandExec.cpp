@@ -35,38 +35,38 @@ PmCommandExec::~PmCommandExec()
 void PmCommandExec::connectSignalsAndSlots()
 {
   connect(&proc_,
-          SIGNAL(readyReadStandardOutput()),
+          &QProcess::readyReadStandardOutput,
           this,
-          SLOT(slotReadyReadStandardOutput()));
+          &PmCommandExec::slotReadyReadStandardOutput);
 
   connect(&proc_,
-          SIGNAL(readyReadStandardError()),
+          &QProcess::readyReadStandardError,
           this,
-          SLOT(slotProcessReadyReadStandardError()));
+          &PmCommandExec::slotProcessReadyReadStandardError);
 
   connect(&proc_,
-          SIGNAL(finished(int,QProcess::ExitStatus)),
+          QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
           this,
-          SLOT(slotProcessFinished(int,QProcess::ExitStatus)));
+          &PmCommandExec::slotProcessFinished);
+
 }
 
 void PmCommandExec::disconnectSignalsAndSlots()
-{ 
-  // https://stackoverflow.com/questions/28524925/how-to-disconnect-a-signal-with-a-slot-temporarily-in-qt
+{
   disconnect(&proc_,
-          SIGNAL(readyReadStandardOutput()),
-          0,
-          0);
+             &QProcess::readyReadStandardOutput,
+             this,
+             &PmCommandExec::slotReadyReadStandardOutput);
 
   disconnect(&proc_,
-          SIGNAL(readyReadStandardError()),
-          0,
-          0);
+             &QProcess::readyReadStandardError,
+             this,
+             &PmCommandExec::slotProcessReadyReadStandardError);
 
   disconnect(&proc_,
-          SIGNAL(finished(int,QProcess::ExitStatus)),
-          0,
-          0);
+            QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
+            this,
+            &PmCommandExec::slotProcessFinished);
 }
 
 int PmCommandExec::getCostsAll()
@@ -309,7 +309,7 @@ void PmCommandExec::slotProcessFinished(int parExitCode, QProcess::ExitStatus pa
         break;
 
       case removeDirCommand:
-        Q_ASSERT("type removeDirCommand is unexpected for type bootUpDetection");
+        commandHasFinishedSuccessfully = true;
         break;
     }
 
@@ -319,6 +319,8 @@ void PmCommandExec::slotProcessFinished(int parExitCode, QProcess::ExitStatus pa
         signalWriteSuccess("sleep finished\n");
       else if (currentCommand_->getType() == bootUpDetection)
         signalWriteSuccess("boot up finished successfully\n");
+      else if (currentCommand_->getType() == removeDirCommand)
+        signalWriteSuccess("removeDirCommand finished successfully\n");
       else if (currentCommand_->getShellCommand()->IgnoreErrors)
         signalWriteSuccess("command finished (without error check)\n");
       else

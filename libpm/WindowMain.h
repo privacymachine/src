@@ -56,8 +56,6 @@ class WindowMain : public QMainWindow
     void regenerateVmMasks();
     void cleanVmMasksBlocking();
 
-    bool showReleaseNotes(QString parUrl, ulong parTimeoutInMilliseconds);
-
     PmManager *pmManager_;
     UpdateManager *updateManager_;
 
@@ -77,6 +75,8 @@ class WindowMain : public QMainWindow
   signals:
     void signalVmMaskClosed( int parVmMaskId );
 
+  public slots:
+    void slotRegenerationProgress(QString parProgress);
 
   private slots:
     void slotNewVmMaskStarted(int parVmMaskId);
@@ -88,7 +88,6 @@ class WindowMain : public QMainWindow
     void slotCleanAllVmMasks();
     void slotRegenerationFinished(ePmCommandResult parResult);
     void slotRegenerationIpSuccess();
-    void slotRegenerationProgress(QString parProgress);
     void slotShowAbout();
     void slotEnableMenueEntryForceCleanup();
 

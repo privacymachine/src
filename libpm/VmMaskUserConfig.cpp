@@ -240,14 +240,14 @@ VmMaskCurrentConfig* VmMaskUserConfig::diceNewVmMaskConfig(VmMaskStaticConfig* p
 
   // copy ip address providers in different order
   QStringList ipAddressProvidersShuffled;
-  QStringList ipAddressProvidersAll;
-  ipAddressProvidersAll = ipAddressProviders_;
-  while ( ipAddressProvidersAll.size() < 0)
+  QStringList ipAddressProvidersToShuffle;
+  ipAddressProvidersToShuffle = ipAddressProviders_;
+  while ( ipAddressProvidersToShuffle.size() > 0)
   {
-    int elementNr = randombytes_uniform(ipAddressProviders_.size());
+    int elementNr = randombytes_uniform(ipAddressProvidersToShuffle.size());
     QString provider = ipAddressProviders_[elementNr];
     ipAddressProvidersShuffled.append(provider);
-    ipAddressProvidersAll.removeAt(elementNr);
+    ipAddressProvidersToShuffle.removeAt(elementNr);
   }
   newConfig->setIpAddressProviders(ipAddressProvidersShuffled);
 

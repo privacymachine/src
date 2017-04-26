@@ -26,12 +26,12 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>19</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
     <property name="title">
-     <string>Menu</string>
+     <string>&amp;Menu</string>
     </property>
     <addaction name="actionGet_Downloads"/>
     <addaction name="actionAbout"/>
@@ -50,7 +50,7 @@
   </widget>
   <action name="actionAbout">
    <property name="text">
-    <string>About</string>
+    <string>&amp;About</string>
    </property>
   </action>
   <action name="actionGet_Downloads">
@@ -63,7 +63,7 @@
   </action>
   <action name="actionQuit">
    <property name="text">
-    <string>Quit</string>
+    <string>&amp;Quit</string>
    </property>
   </action>
   <action name="actionManual_force_VM_Mask_rebuild">
@@ -71,7 +71,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Force VM-Mask cleanup</string>
+    <string>Force VM-Mask &amp;cleanup</string>
    </property>
   </action>
  </widget>

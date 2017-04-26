@@ -79,15 +79,15 @@ WidgetRdpView::WidgetRdpView( QString parHost, QSharedPointer<VmMaskInstance> pa
   setLayout(loGrid_);
 
   connect(freeRDPwidget_,
-          SIGNAL(disconnected()),
+          &RemoteDisplayWidget::disconnected,
           this,
-          SLOT(slotDisconnected()));
+          &WidgetRdpView::slotDisconnected);
 
   timerResizeHappend_.setSingleShot(true);
   connect(&timerResizeHappend_,
-          SIGNAL(timeout()),
+          &QTimer::timeout,
           this,
-          SLOT(slotTimerResizeHappendFired()));
+          &WidgetRdpView::slotTimerResizeHappendFired);
 }
 
 WidgetRdpView::~WidgetRdpView()
@@ -203,9 +203,9 @@ void WidgetRdpView::slotDisconnected()
   if (freeRDPwidget_)
   {
     disconnect(freeRDPwidget_,
-            SIGNAL(disconnected()),
-            this,
-            SLOT(slotDisconnected()));
+               &RemoteDisplayWidget::disconnected,
+               this,
+               &WidgetRdpView::slotDisconnected);
 
     loGrid_->removeWidget(freeRDPwidget_);
     delete (freeRDPwidget_);
@@ -228,9 +228,9 @@ void WidgetRdpView::slotDisconnected()
   loGrid_->addWidget(freeRDPwidget_, 0, 0, 1, 1);
 
   connect(freeRDPwidget_,
-          SIGNAL(disconnected()),
+          &RemoteDisplayWidget::disconnected,
           this,
-          SLOT(slotDisconnected()));
+          &WidgetRdpView::slotDisconnected);
 
   ILOG("WidgetRdpView: we start a very short timer to call resizeVmDesktopAndConnectViaRdp() in 10ms");
   timerResizeHappend_.start(10);

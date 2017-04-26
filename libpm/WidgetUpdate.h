@@ -42,7 +42,11 @@ class WidgetUpdate : public QWidget
     explicit WidgetUpdate(QWidget *parent = NULL);
     ~WidgetUpdate();
 
-    bool init(PmManager* manager);
+    /// \brief do the initialisation (create command lists)
+    /// \param parManager [in] is the instance of the PmManager
+    /// \param parExecuteCleanupFirst [in] true, if a cleanup is required
+    /// \return false on error
+    bool init(PmManager* parManager, bool parExecuteCleanupFirst);
     void start();
     void abort();
 
@@ -56,7 +60,7 @@ class WidgetUpdate : public QWidget
   private:
     Ui::WidgetUpdate *ui_;
     WidgetCommandExec* widgetCommandExec_;
-    PmManager* manager_;
+    PmManager* pmManager_;
 
   private slots:
     void slotCommandsFinished(ePmCommandResult result); // used for communication with frmCommandExec
