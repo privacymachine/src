@@ -45,7 +45,7 @@ void PmCommandExec::connectSignalsAndSlots()
           &PmCommandExec::slotProcessReadyReadStandardError);
 
   connect(&proc_,
-          QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
+          static_cast<void (QProcess::*)(int, QProcess::ExitStatus)> (&QProcess::finished),
           this,
           &PmCommandExec::slotProcessFinished);
 
@@ -64,7 +64,7 @@ void PmCommandExec::disconnectSignalsAndSlots()
              &PmCommandExec::slotProcessReadyReadStandardError);
 
   disconnect(&proc_,
-            QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
+            static_cast<void (QProcess::*)(int, QProcess::ExitStatus)> (&QProcess::finished),
             this,
             &PmCommandExec::slotProcessFinished);
 }

@@ -540,7 +540,7 @@ void UpdateManager::baseDiskUpdateInstallRequested()
   ptrInteractiveUpdateWidget_->setProgressBarAbortButtonVisible(false);
 
   connect( ptrExternalProcess_,
-           QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
+           static_cast<void (QProcess::*)(int, QProcess::ExitStatus)> (&QProcess::finished),
            this,
            &UpdateManager::slotBaseDiskExtractionFinished);
 
