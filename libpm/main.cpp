@@ -308,8 +308,8 @@ bool checkSystemInstallation(QString& parVboxDefaultMachineFolder)
   // -> 5.1.9: ok, log warning
   // -> 5.1.1: show warning: too old
   // -> 5.2.1: show warning: unsupported
-  int  StableMajor = 5; int  StableMinor = 0; int  StableBugfix = 36;
-  int CurrentMajor = 5; int CurrentMinor = 1; int CurrentBugfix = 18;
+  int  StableMajor = 5; int  StableMinor = 0; int  StableBugfix = 38;
+  int CurrentMajor = 5; int CurrentMinor = 1; int CurrentBugfix = 20;
 
   // Supported Versions to show User i.e. "5.0.* + 5.1.*"
   QString supportedVersions;

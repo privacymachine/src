@@ -19,10 +19,7 @@ fi
 git clone https://github.com/pm-bernhard/FreeRDP.git
 
 # Get project RemoteDisplay from github
-git clone https://github.com/pm-bernhard/RemoteDisplay.git
-pushd RemoteDisplay
-git checkout updating
-popd
+git clone -b updating https://github.com/pm-bernhard/RemoteDisplay.git
 
 # LibSodium
 #   under debian based distros the package libsodium-dev is used
