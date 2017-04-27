@@ -153,3 +153,6 @@ There are some potential pitfalls you have to know:
 
   * install to C:\\Program Files (x86)\\GnuWin32
 
+* Download libsodium: (libsodium-1.0.11-msvc.zip) from https://download.libsodium.org/libsodium/releases/
+
+ * extract the content to c:\\libsodium

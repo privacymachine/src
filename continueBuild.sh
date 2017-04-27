@@ -17,7 +17,6 @@ function run_vs14
   cmd /Q /C call "$vssetup" x64 "&&" "${@}"
 }
 
-pushd build
 
 # detect operating system
 set OS=Linux
@@ -33,6 +32,8 @@ case "$(uname -s)" in
     return 1
     ;;
 esac
+
+pushd build_pm
 
 startTime=`date`
 

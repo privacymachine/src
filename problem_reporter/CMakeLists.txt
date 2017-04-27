@@ -45,10 +45,19 @@ link_directories(${CMAKE_BINARY_DIR}/../working_dir)
 link_directories(${CMAKE_BINARY_DIR}/../working_dir/lib)
 set (QUAZIP_LIBRARIES quazip5${PM_DEBUG_D_SUFFIX})
 
+# needed for libsodium
+find_package(LibSodium REQUIRED)
+include_directories(${SODIUM_INCLUDE_DIR})
+
 include_directories(${Qt5Core_INCLUDE_DIRS})
 include_directories(${Qt5Gui_INCLUDE_DIRS})
 include_directories(${Qt5Widgets_INCLUDE_DIRS})
 include_directories(${Qt5Multimedia_INCLUDE_DIRS})
+
+if(MSVC)
+  # we use our own zlib on windows, not the qt-version
+  include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../build_ext_libs/zlib) # needed for including zconf.h
+endif()
 
 set (PROBLEMREPORTER_USES_QT_LIBRARIES Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Multimedia)
 

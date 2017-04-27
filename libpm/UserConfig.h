@@ -28,7 +28,7 @@
 
 class TestUserConfigOpenVPN;
 class VmMaskUserConfig;
-class VpnConfig;
+struct VpnConfig;
 
 
 class UserConfig

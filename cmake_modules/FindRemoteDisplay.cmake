@@ -10,7 +10,7 @@ if(REMOTEDISPLAY_INCLUDE_DIRS AND REMOTEDISPLAY_LIBRARIES)
 else()
   find_package(PkgConfig QUIET)
   if(PKG_CONFIG_FOUND)
-    pkg_check_modules(_SODIUM QUIET sodium)
+    pkg_check_modules(_REMOTEDISPLAY QUIET remotedisplay)
   endif()
 
   find_path(REMOTEDISPLAY_INCLUDE_DIR
@@ -27,12 +27,12 @@ else()
   find_library(REMOTEDISPLAY_LIB
     NAMES RemoteDisplay libRemoteDisplay
     HINTS   ${CMAKE_CURRENT_SOURCE_DIR}/working_dir/lib
+            ${CMAKE_CURRENT_SOURCE_DIR}/working_dir/build_libs
             ${_REMOTEDISPLAY_LIBRARY_DIRS} 
             /usr/lib 
             /usr/local/lib 
             /opt/local/lib
   )
-  #MESSAGE ("XXXXX: ${CMAKE_CURRENT_SOURCE_DIR}/working_dir/lib")
 
   set(REMOTEDISPLAY_INCLUDE_DIRS ${REMOTEDISPLAY_INCLUDE_DIR} CACHE PATH "RemoteDisplay include dir")
   set(REMOTEDISPLAY_LIBRARIES ${REMOTEDISPLAY_LIB} CACHE STRING "RemoteDisplay libraries")

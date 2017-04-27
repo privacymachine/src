@@ -10,7 +10,7 @@ if(QUAZIP_INCLUDE_DIRS AND QUAZIP_LIBRARIES)
 else()
   find_package(PkgConfig QUIET)
   if(PKG_CONFIG_FOUND)
-    pkg_check_modules(_SODIUM QUIET sodium)
+    pkg_check_modules(_QUAZIP QUIET quazip)
   endif()
 
   find_path(QUAZIP_INCLUDE_DIR
@@ -27,6 +27,7 @@ else()
   find_library(QUAZIP_LIB
     NAMES QuaZip quazip5 quazip5d 
     HINTS   ${CMAKE_CURRENT_SOURCE_DIR}/../working_dir/lib
+            ${CMAKE_CURRENT_SOURCE_DIR}/../working_dir/build_libs
             ${_QUAZIP_LIBRARY_DIRS} 
             /usr/lib 
             /usr/local/lib 

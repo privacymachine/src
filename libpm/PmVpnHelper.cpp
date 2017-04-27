@@ -103,6 +103,7 @@ bool PmVpnHelper::addCmdToInitVPN(QList<PmCommand*>& parCmdList)
     parCmdList.append(curCmd);
   }
 
+  return true;
 }
 
 bool PmVpnHelper::addCmdToInitSystemD(QList<PmCommand*>& parCmdList, QString parBrowser)
@@ -149,4 +150,6 @@ bool PmVpnHelper::addCmdToInitSystemD(QList<PmCommand*>& parCmdList, QString par
   curCmd->setDescription(desc);
   curCmd->setExecutionCosts(200);
   parCmdList.append(curCmd);
+
+  return true;
 }

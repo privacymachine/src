@@ -295,6 +295,8 @@ bool PmManager::isBaseDiskAvailable()
   // When ComponentMajor set to zero it's used as marker for 'no basedisk available'
   if (configSystem_->getBaseDiskVersion().getComponentMajor() != 0)
     return true;
+
+  return false;
 }
 
 bool PmManager::allVmMasksExist()

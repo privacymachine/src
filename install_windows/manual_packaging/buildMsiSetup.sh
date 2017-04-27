@@ -3,7 +3,7 @@
 
 Candle="${PROGRAMFILES} (x86)/WiX Toolset v3.10/bin/candle.exe"
 Light="${PROGRAMFILES} (x86)/WiX Toolset v3.10/bin/light.exe"
-BuildDir=../../build/
+BuildDir=../../build_pm/
 OutDir=../../working_dir/
 
 echo "clean old build files"
@@ -21,7 +21,7 @@ echo "start candle..."
 "$Candle" -nologo -arch x64 -out "${BuildDir}/main.wixobj" "./main.wxs" || exit $?
 
 echo "start light..."
-"$Light" -nologo -out "${OutDir}/PrivacyMachine_Windows_0_9_0.msi" -ext "WixUIExtension" "-loc" "../CustomStrings.wxl"  "${BuildDir}/directories.wixobj" "${BuildDir}/files.wixobj" "${BuildDir}/features.wixobj" "${BuildDir}/main.wixobj" || exit $?
+"$Light" -nologo -out "${OutDir}/PrivacyMachine_Windows_0_10_0.msi" -ext "WixUIExtension" "-loc" "../CustomStrings.wxl"  "${BuildDir}/directories.wixobj" "${BuildDir}/files.wixobj" "${BuildDir}/features.wixobj" "${BuildDir}/main.wixobj" || exit $?
 
 echo "build finished"
 

@@ -22,10 +22,18 @@ if [ ! -d build_pm ]; then
   mkdir build_pm
 fi
 
-if [ ! -f working_dir/lib/libRemoteDisplay.so ]; then
-  echo "ERROR: External libraries like working_dir/lib/libRemoteDisplay.so are missing"
-  echo "ERROR: Please build them with the command './buildExtLibs.sh'"
-  exit 1;
+if [ "$OS" == "Windows" ]; then
+  if [ ! -f working_dir/build_libs/RemoteDisplay.lib ]; then
+    echo "ERROR!: External libraries like working_dir/build_libs/RemoteDisplay.lib are missing"
+    echo "ERROR: Please build them with the command './buildExtLibs.sh'"
+    exit 1;
+  fi
+else
+  if [ ! -f working_dir/lib/libRemoteDisplay.so ]; then
+    echo "ERROR: External libraries like working_dir/lib/libRemoteDisplay.so are missing"
+    echo "ERROR: Please build them with the command './buildExtLibs.sh'"
+    exit 1;
+  fi
 fi
 
 pushd build_pm

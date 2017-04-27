@@ -44,17 +44,11 @@ find_package(Qt5Xml REQUIRED)
 
 # needed for libsodium
 find_package(LibSodium REQUIRED)
-#include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../ext_libs/libsodium-1.0.11/src/libsodium/include)
-#link_directories(${CMAKE_CURRENT_SOURCE_DIR}/../ext_libs/libsodium-1.0.11/src/libsodium/.libs)
+include_directories(${SODIUM_INCLUDE_DIR})
 
 # needed for quazip
 find_package(QuaZip REQUIRED)
 include_directories(${QUAZIP_INCLUDE_DIRS})
-# old:
-#include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../ext_libs/quazip/quazip)
-#link_directories(${CMAKE_BINARY_DIR}/../working_dir)
-#link_directories(${CMAKE_BINARY_DIR}/../working_dir/lib)
-#set (QUAZIP_LIBRARIES quazip5${PM_DEBUG_D_SUFFIX})
 
 # needed for librsync
 find_package(LibRsync REQUIRED)
@@ -249,6 +243,10 @@ if(MSVC)
     ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
 
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    "c:/libsodium/x64/${CMAKE_BUILD_TYPE}/v140/dynamic/libsodium.dll"
+    ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
     "${VS140COMNTOOLS_DIR}../../VC/redist/x64/Microsoft.VC140.CRT/msvcp140.dll"
     ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
 
@@ -279,7 +277,9 @@ else()
 endif()
 
 if(MSVC)
-  set (MICROSOFT_LIBS wsock32)
+  set (OS_SPECIFIC_LIBS wsock32)
+else()
+  set (OS_SPECIFIC_LIBS stdc++)
 endif()
 
 target_link_libraries(${PM_STATIC_LIB}
@@ -291,10 +291,9 @@ target_link_libraries(${PM_STATIC_LIB}
   ${AdditionalFreeRDPLibraries}
   ${REMOTEDISPLAY_LIBRARIES}
   ${QUAZIP_LIBRARIES}
-  ${MICROSOFT_LIBS}
+  ${LIBSODIUM_LIBRARIES}
+  ${OS_SPECIFIC_LIBS}
   ${LIBRSYNC_LIB}
-  sodium
-  stdc++
   )
 
 target_link_libraries(PrivacyMachine

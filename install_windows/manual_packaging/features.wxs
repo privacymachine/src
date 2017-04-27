@@ -6,6 +6,7 @@
             <Feature Id="CM_G_needed" Title="needed">
                 <Feature Id="CM_C_ms_runtime" Title="Visual Studio Runtimes" Description="Runtime dll's needed by Microsoft Visual Studio" Display="hidden"/>
                 <Feature Id="CM_C_openssl_libraries" Title="OpenSSL - Libraries" Display="hidden"/>
+                <Feature Id="CM_C_libsodium_libraries" Title="libsodium - Libraries" Display="hidden"/>
                 <Feature Id="CM_C_pm_binaries" Title="PrivacyMachine - Binaries" Display="hidden"/>
                 <Feature Id="CM_C_pm_stuff" Title="PrivacyMachine - Additional Components" Display="hidden"/>
                 <Feature Id="CM_C_qtlibs" Title="Qt Libraries" Display="hidden"/>
@@ -28,6 +29,9 @@
         <FeatureRef Id="CM_C_openssl_libraries">
             <ComponentRef Id="CM_CP_openssl_libraries.libeay32.dll"/>
             <ComponentRef Id="CM_CP_openssl_libraries.ssleay32.dll"/>
+        </FeatureRef>
+        <FeatureRef Id="CM_C_libsodium_libraries">
+            <ComponentRef Id="CM_CP_libsodium_libraries.libsodium.dll"/>
         </FeatureRef>
         <FeatureRef Id="CM_C_pm_binaries">
             <ComponentRef Id="CM_CP_pm_binaries.plink.exe"/>

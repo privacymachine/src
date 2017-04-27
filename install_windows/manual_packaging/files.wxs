@@ -48,6 +48,11 @@
             </Component>
         </DirectoryRef>
         <DirectoryRef Id="INSTALL_ROOT">
+            <Component Id="CM_CP_libsodium_libraries.libsodium.dll" Guid="*">
+                <File Id="CM_FP_libsodium_libraries.libsodium.dll" Source="../../working_dir/libsodium.dll" KeyPath="yes"/>
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="INSTALL_ROOT">
             <Component Id="CM_CP_pm_binaries.plink.exe" Guid="*">
                 <File Id="CM_FP_pm_binaries.plink.exe" Source="../../working_dir/plink.exe" KeyPath="yes"/>
             </Component>

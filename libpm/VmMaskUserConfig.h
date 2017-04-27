@@ -25,7 +25,7 @@
 
 class SystemConfig;
 class VmMaskCurrentConfig;
-class VmMaskStaticConfig;
+struct VmMaskStaticConfig;
 
 struct VpnConfig
 {

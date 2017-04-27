@@ -410,7 +410,7 @@ QDir getPmConfigQDir()
 {
   QString pmConfigPath = QDir::homePath();
   #if (PM_WINDOWS)
-    userConfigPath += "/PrivacyMachine";
+    pmConfigPath += "/PrivacyMachine";
   #else
     pmConfigPath += "/.config/privacymachine";
   #endif

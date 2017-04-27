@@ -40,27 +40,33 @@ include_directories(${Qt5Test_INCLUDE_DIRS})
 include_directories(${Qt5Widgets_INCLUDE_DIRS})
 include_directories(${Qt5Xml_INCLUDE_DIRS})
 
-# needed for quazip
-#set (QUAZIP_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../ext_libs/quazip/quazip)
-#include_directories(${QUAZIP_INCLUDE_DIR})
-#link_directories(${CMAKE_BINARY_DIR}/../working_dir)
-#link_directories(${CMAKE_BINARY_DIR}/../working_dir/lib)
-#set (QUAZIP_LIBRARIES quazip5${PM_DEBUG_D_SUFFIX})
+# needed for libsodium
+find_package(LibSodium REQUIRED)
+include_directories(${SODIUM_INCLUDE_DIR})
 
 # needed for quazip
 find_package(QuaZip REQUIRED)
 include_directories(${QUAZIP_INCLUDE_DIRS})
 
-## needed for librsync
-#set (RSYNC_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../ext_libs/librsync/src)
-#include_directories(${RSYNC_INCLUDE_DIR})
-#include_directories(../build/ext_libs/librsync/src)
-
 # needed for librsync
 find_package(LibRsync REQUIRED)
 include_directories(${LIBRSYNC_INCLUDE_DIRS})
 
+## needed for zlib
+#find_package(Zlib REQUIRED)
+#include_directories(${ZLIB_INCLUDE_DIRS})
+
+
+
 macro (ADD_PM_TEST testclass)
+  if(MSVC)
+    # we use our own zlib on windows, not the qt-version
+    #set (ZLIB_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/zlib)
+    #set (ZLIB_LIBRARY zlib)
+    #include_directories(${ZLIB_ROOT}) # needed for including zlib.h
+    include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../build_ext_libs/zlib) # needed for including zconf.h
+  endif()
+
   include_directories("${CMAKE_CURRENT_SOURCE_DIR}/../libpm/")
   add_executable(${testclass} ${testclass}.cpp)
   find_package(Qt5Multimedia)

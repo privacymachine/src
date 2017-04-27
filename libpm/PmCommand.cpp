@@ -226,6 +226,7 @@ bool PmCommand::executeBlocking(bool parCheckExitCode)
     IERR( message );
     return false;
   }
+  return true;
 }
 
 bool PmCommand::getIgnoreErrors()

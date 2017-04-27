@@ -278,6 +278,8 @@ bool UpdateManager::findUpdates()
     IERR("Checking for updates failed!");
     return false;
   }
+
+  return true;
 }
 
 WidgetInteractiveUpdate* UpdateManager::getUpdateWidget()
@@ -538,7 +540,7 @@ void UpdateManager::baseDiskUpdateInstallRequested()
   ptrInteractiveUpdateWidget_->setProgressBarAbortButtonVisible(false);
 
   connect( ptrExternalProcess_,
-           static_cast<void (QProcess::*)(int, QProcess::ExitStatus)> (&QProcess::finished),
+           QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
            this,
            &UpdateManager::slotBaseDiskExtractionFinished);
 

@@ -27,6 +27,7 @@ else()
       /usr/include
       /usr/local/include
       /opt/local/include
+      c:/libsodium/include
   )
 
   find_library(SODIUM_LIB
@@ -37,6 +38,7 @@ else()
             /usr/lib
             /usr/local/lib
             /opt/local/lib
+            c:/libsodium/x64/${CMAKE_BUILD_TYPE}/v140/dynamic
   )
 
   set(LIBSODIUM_INCLUDE_DIRS ${SODIUM_INCLUDE_DIR} CACHE PATH "libsodium include dir")

@@ -10,7 +10,7 @@ if(LIBRSYNC_INCLUDE_DIRS AND LIBRSYNC_LIBRARIES)
 else()
   find_package(PkgConfig QUIET)
   if(PKG_CONFIG_FOUND)
-    pkg_check_modules(_SODIUM QUIET sodium)
+    pkg_check_modules(_LIBRSYNC QUIET librsync)
   endif()
 
   find_path(LIBRSYNC_INCLUDE_DIR
@@ -35,6 +35,7 @@ else()
   find_library(LIBRSYNC_LIB
     NAMES librsync liblibrsync
     HINTS   ${CMAKE_CURRENT_SOURCE_DIR}/../working_dir/lib
+            ${CMAKE_CURRENT_SOURCE_DIR}/../working_dir/build_libs
             ${_LIBRSYNC_LIBRARY_DIRS} 
             /usr/lib 
             /usr/local/lib 

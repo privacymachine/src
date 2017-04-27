@@ -5,7 +5,9 @@ project (PrivacyMachine-Project)
 # Add CMake submodules to the path
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake_modules ${CMAKE_MODULE_PATH})
 
-enable_testing()
+if(NOT MSVC)
+  enable_testing()
+endif()
 
 # Default to debug build
 if ("${CMAKE_BUILD_TYPE}" STREQUAL "")
@@ -34,7 +36,9 @@ endif()
 # search an library here explicit to provide nicer error messages to the user
 find_library(SomeExtLib_LIB
   NAMES RemoteDisplay libRemoteDisplay
-  HINTS   ${CMAKE_CURRENT_SOURCE_DIR}/working_dir/lib
+  HINTS   
+    ${CMAKE_CURRENT_SOURCE_DIR}/working_dir/build_libs  # RemoteDisplay.lib on windows
+    ${CMAKE_CURRENT_SOURCE_DIR}/working_dir/lib  # libRemoteDisplay.so on linux 
 )
 if ("${SomeExtLib_LIB}" STREQUAL "SomeExtLib_LIB-NOTFOUND")
   MESSAGE(FATAL_ERROR "ERROR: Please build the required Project 'ext_libs' first (via ./buildExtLibs.sh or opening the file ext_libs/CMakeLists.txt in Qt-Creator")
@@ -152,8 +156,10 @@ add_subdirectory(problem_reporter)
 ## Add the uac_deploy tool
 #add_subdirectory(uac_deploy)
 
-# Add the UnitTests
-add_subdirectory(tests)
+if(NOT MSVC)
+  # Add the UnitTests
+  add_subdirectory(tests)
+endif()
 
 # for Translation read <http://doc.qt.io/qt-5/internationalization.html>
 #  <http://www.cmake.org/Wiki/CMake:How_To_Build_Qt4_Software>
@@ -220,7 +226,7 @@ if ("${CMAKE_BUILD_TYPE}" MATCHES "Release")
   set(CPACK_PACKAGE_CONTACT ${CPACK_PACKAGE_VENDOR})
   
   set(CPACK_PACKAGE_VERSION_MAJOR "0") # Major-Version
-  set(CPACK_PACKAGE_VERSION_MINOR "9") # Minor-Version
+  set(CPACK_PACKAGE_VERSION_MINOR "10") # Minor-Version
   set(CPACK_PACKAGE_VERSION_PATCH "0") # Component-Major-Version
   set(CPACK_PACKAGE_VERSION "${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}") # only the first 3 numbers are interpreted by the windows installer
   set(CPACK_PACKAGE_FILE_NAME "PrivacyMachine_${PMInstallerSuffix}_${CPACK_PACKAGE_VERSION_MAJOR}_${CPACK_PACKAGE_VERSION_MINOR}_${CPACK_PACKAGE_VERSION_PATCH}")
