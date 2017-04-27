@@ -312,6 +312,13 @@ bool UpdateManager::isReady()
     ready = false;
   }
 
+  if( ptrInteractiveUpdateWidget_ == NULL)
+  {
+    IERR("UpdateManager: no InteractiveUpdateWidget was created");
+    ready = false;
+
+  }
+
   return ready;
 }
 

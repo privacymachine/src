@@ -37,7 +37,7 @@ class UpdateManager : public QObject
 
 
     /// \brief isReady
-    /// \return true if appcastUrl is valid and ScstemConfiguration is set
+    /// \return true if appcastUrl is valid and SystemConfiguration is set
     bool isReady();
 
 
