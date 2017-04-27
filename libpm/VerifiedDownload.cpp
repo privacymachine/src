@@ -117,12 +117,12 @@ bool VerifiedDownload::start()
           &VerifiedDownload::slotDownloadFinished);
 
   connect(ptrNetReply_,
-          QOverload<QNetworkReply::NetworkError>::of(&QNetworkReply::error),
+          static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)> (&QNetworkReply::error),
           this,
           &VerifiedDownload::slotError);
 
   connect(ptrNetReply_,
-          QOverload<const QList<QSslError>&>::of(&QNetworkReply::sslErrors),
+          static_cast<void (QNetworkReply::*)(const QList<QSslError>&)> (&QNetworkReply::sslErrors),
           this,
           &VerifiedDownload::slotSslErrors);
 
