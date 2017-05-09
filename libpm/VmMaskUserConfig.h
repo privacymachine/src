@@ -144,10 +144,13 @@ class VmMaskUserConfig
     QStringList fontsInBaseDisk_;
     QStringList browsersInBaseDisk_;
 
-    // TODO: implement or remove:
+    // TODO: implement or remove after beta2:
     bool flash_;
     bool java_;
     QString scriptOnShutdown_;
-    QString scriptOnStartup_;
+    QString scriptOnStartup_;    
+    // TODO: olaf implement
+    bool doNotTrack_;
+    // TODO: olaf implement
     QString thirdPartyCookies_;  // TODO: -> about:config + DoNotTrack
 };

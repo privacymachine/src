@@ -503,8 +503,8 @@ bool PmManager::createCommandsToCreateVmMask( VmMaskData* parVmMask,
   parCmdList.append(curCmd);
 
 /**  // Copy folder pm to VM
-//  TODO: At startup: ensure that we are at the location of the executable
-//  TODO: On Windows: the executable flag gets lost, and scripts have the wrong lineendings
+//  TODO: bernhard: At startup: ensure that we are at the location of the executable
+//  // On Windows: the executable flag gets lost, and scripts have the wrong lineendings
 //  args.clear();
 //  curCmd = GetPmCommandForScp2VM("liveuser",constVmIp,QString::number(parCurInstance->getConfig()->sshPort),constRootPw,"../../packaging/BaseDisk/pm_files/pm","/");
 //  curCmd->setDescription("Copy obfuscation-scripts to VM-Mask '" + parCurInstance->getConfig()->FullName + "'");

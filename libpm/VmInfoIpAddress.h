@@ -86,7 +86,7 @@ class VmInfoIpAddress: public QObject
     /// Contains the VM's IP Address, if it could be obtained successfully. \c"", otherwise.
     QString ipAddress_;
 
-    /// Needed to connect to the Vm (TODO: refactor)
+    /// Needed to connect to the Vm (TODO: bernhard: refactor)
     int sshPort_;
 
     /// \c true if ipAddress_ is supposed to contain an up-to-date value. \c false otherwise.

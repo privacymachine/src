@@ -54,7 +54,7 @@ void UpdateManager::slotCheckUpdateFinished()
     int ret = msgBox.exec();
     if (ret == QMessageBox::Abort)
     {
-      // TODO: Signal the mainwindow a clean shutdown
+      // TODO: olaf: Signal the mainwindow a clean shutdown
     }
     else
     {
@@ -409,9 +409,9 @@ void UpdateManager::slotUpdateRequested(Update update)
 
   if ( !ptrVerifiedDownload_->start() )
   {
+    // TODO: olaf test me
     QString errorStr="Could not start download of BaseDisk update.";
     IERR(errorStr);
-    // TODO: implement non interactive error handling
     QMessageBox msgBox;
     msgBox.setWindowIcon(QIcon(":/resources/privacymachine.svg"));
     msgBox.setIcon(QMessageBox::Critical);
@@ -419,8 +419,7 @@ void UpdateManager::slotUpdateRequested(Update update)
     QString message = "<h3>Error occured at downloading update</h3> \n"+
                       errorStr + "\n<b>Please quit and start the problem reporter.</b>";
     msgBox.setStandardButtons(QMessageBox::Abort);
-    // TODO: bernhard: why is this not working?!
-    //msgBox.button(QMessageBox::Abort)->setText("Quit");
+    msgBox.button(QMessageBox::Abort)->setText("Quit");
     msgBox.setText(message);
     msgBox.exec();
     exit(1);
@@ -596,11 +595,12 @@ void UpdateManager::slotBaseDiskExtractionFinished()
 
     if( fileInfo.fileName().startsWith( ptrSystemConfig_->getBaseDiskName() ) && fileInfo.isFile() )
     {
-      // TODO: Is this a sensitive information?
-      ILOG( "Removing " + fileInfo.absolutePath() )
+      ILOG( "Removing " + fileInfo.fileName() );
+      ILOG_SENSITIVE("  at: " + fileInfo.absolutePath() );
+
       if( !ff.remove())
       {
-        IERR( "Could not remove " + fileInfo.absolutePath())
+        IERR( "Could not remove " + fileInfo.fileName())
       }
     }
   }

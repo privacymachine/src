@@ -111,6 +111,6 @@ class VmMaskCurrentConfig
     QStringList ipAddressProviders_;
     QString scriptOnShutdown_;
     QString scriptOnStartup_;
-    QString thirdPartyCookies_;  // TODO: Not used? delete? -> about:config +  DoNotTrack
+    QString thirdPartyCookies_;  // TODO: olaf: about:config +  DoNotTrack
     VpnConfig vpnConfig_;
 };

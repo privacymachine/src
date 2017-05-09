@@ -61,7 +61,7 @@ bool VmMaskUserConfig::initWithBaseDiskCapabilities(const QJsonObject& parBaseDi
   // get available browsers
   browsersInBaseDisk_ = parBaseDiskCapabilities["browser"].toObject().keys();
 
-  // TODO: Why is this here? Delete?
+  // TODO: olaf: Why is this here? Delete?
   /*
   // Choose one Language
   browserLanguage = "en"; // init
@@ -175,6 +175,7 @@ bool VmMaskUserConfig::setConfigurationDefaultsAndCheckForErrors(const QJsonObje
   }
 
   // If the user has configured less than 2 dns servers we choose defaults (from <https://freedns.zone>)
+  // TODO: olaf: use in /etc/resolvconf/resolv.conf.d/tail
   if (dnsServers_.count() < 2)
   {
     dnsServers_.append("37.235.1.174");
@@ -197,8 +198,9 @@ bool VmMaskUserConfig::setConfigurationDefaultsAndCheckForErrors(const QJsonObje
     ipAddressProviders_.append("http://checkip.amazonaws.com");
   }
 
-  // TODO: Check name for special chars that can cause troubles in filesystems
-  // TODO: Check color, Java, Flash
+  // TODO: olaf: check vpn config
+
+  // TODO: olaf: Check for different colors, ...
 
   return true;
 }

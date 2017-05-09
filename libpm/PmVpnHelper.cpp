@@ -36,7 +36,7 @@ PmVpnHelper::~PmVpnHelper()
 
 QString PmVpnHelper::getRandomConfigFileName()
 {
-  // TODO: bernhard: move to VmMaskInstanceConfiguration::init()
+  // TODO: bernhard: move to VmMaskUserConfig::diceNewVmMaskConfig()
   int pos = randombytes_uniform(vpnConfig_.ConfigFiles.count());
   return vpnConfig_.ConfigFiles.at(pos);
 }

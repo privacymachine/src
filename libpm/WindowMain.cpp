@@ -72,7 +72,6 @@ void WindowMain::slotShowAbout()
   aboutWidget_->setWindowIcon(QIcon(":/resources/privacymachine.svg"));
   QLabel *logoLabel = new QLabel(aboutWidget_);
   aboutWidget_->setWindowTitle("About");
-  // TODO: add logo and valid description
   QPixmap pixmap = QIcon(":/resources/privacymachine.svg").pixmap(this->windowHandle(),QSize(150,150));
   logoLabel->setPixmap(pixmap);
   logoLabel->setMinimumSize(QSize(180,150));
