@@ -537,7 +537,7 @@ void UpdateManager::baseDiskUpdateInstallRequested()
   args.append( "-y" );
   args.append( "-o" + ptrSystemConfig_->getBaseDiskPath() );
   args.append( "e" );
-  args.append( ptrSystemConfig_->getBaseDiskPath() + "/" + progressedUpdate_.Url.fileName() );
+  args.append( QDir::toNativeSeparators(ptrSystemConfig_->getBaseDiskPath()) + "/" + progressedUpdate_.Url.fileName() );
 
   ILOG("Start extracting " + progressedUpdate_.Url.fileName()+". cmd: "+ cmd +" "+args.join(" "));
 
