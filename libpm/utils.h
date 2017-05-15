@@ -27,6 +27,7 @@
 #include <QDir>
 #include <QThread>
 #include <QCoreApplication>
+#include "PmLog.h"
 
 #include <sodium.h>
 

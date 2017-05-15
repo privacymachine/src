@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QUrl>
 #include <QProcess>
+#include "utils.h"
 #include "PmVersion.h"
 #include "WidgetInteractiveUpdate.h"
 #include "CheckUpdate.h"

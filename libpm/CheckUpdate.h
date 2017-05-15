@@ -1,13 +1,6 @@
 #ifndef CHECKUPDATE_H
 #define CHECKUPDATE_H
 
-#ifndef UTILS_H
-#define ILOG(message) {  qDebug() << qPrintable(message); }
-#define ILOG_SENSITIVE(message) {if (globalSensitiveLoggingEnabed) { qDebug() << qPrintable(message); } }
-#define IWARN(message) { qWarning() << qPrintable(message); }
-#define IERR(message) { qCritical() << qPrintable(message); }
-#endif // UTILS_H
-
 #include <QObject>
 #include <QUrl>
 #include <QNetworkReply>

@@ -2,6 +2,7 @@
 #include <QNetworkRequest>
 #include <QApplication>
 #include "PmVersion.h"
+#include "utils.h"
 
 
 CheckUpdate::CheckUpdate(QObject *parent) :
