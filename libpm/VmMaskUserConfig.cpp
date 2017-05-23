@@ -265,6 +265,7 @@ VmMaskCurrentConfig* VmMaskUserConfig::diceNewVmMaskConfig(VmMaskStaticConfig* p
   newConfig->setScriptOnShutdown(scriptOnShutdown_);
   newConfig->setScriptOnStartup(scriptOnStartup_);
   newConfig->setThirdPartyCookies(thirdPartyCookies_);
+  newConfig->setVpnConfig(vpnConfig_);
 
   return newConfig;
 }

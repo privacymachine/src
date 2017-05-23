@@ -94,7 +94,7 @@ class WindowMain : public QMainWindow
 
 
     // RENAME:
-    void slotUpdateFinished();
+    void slotUpdateManagerFinished();
 
 
 };

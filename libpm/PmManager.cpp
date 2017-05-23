@@ -800,6 +800,7 @@ bool PmManager::createCommandsToStartVmMask(int parVmMaskId,
 
   // Obfuscate dns-servers TODO: olaf: find a way for VPN via /etc/resolvconf/resolv.conf.d/tail or other openvpn parameters
   const VpnConfig& vpnConfig = vmMask->Instance->getConfig()->getVpnConfig();
+
   if( vpnConfig.VpnType != "OpenVPN" &&
       vpnConfig.VpnType != "VPNGate" )
   {

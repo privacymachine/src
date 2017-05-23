@@ -131,13 +131,12 @@ bool WindowMain::init(QString parPmInstallPath, QString parVboxDefaultMachineFol
   connect( updateManager_,
            &UpdateManager::signalFinished,
            this,
-           &WindowMain::slotUpdateFinished);
+           &WindowMain::slotUpdateManagerFinished);
 
-  // How does it continue? slotUpdateFinished() is reached even if no update is needed
   return true;
 }
 
-void WindowMain::slotUpdateFinished()
+void WindowMain::slotUpdateManagerFinished()
 {
   ILOG("signalFinished received")
 
@@ -167,7 +166,7 @@ void WindowMain::slotUpdateFinished()
 
   // regeneration of the VM-Masks is needed when we have a new BaseDisk or when the user changes an important part of the
   // configuration: i.e. the name which affects the VM-Instance
-  if(pmManager_->vmMaskRegenerationNecessary())
+  if(pmManager_->vmMaskRegenerationNecessary() || updateManager_->vmMaskRegenerationNecessary())
   {
     // show a the UpdateWidget and execute the commands
     regenerateVmMasks();
