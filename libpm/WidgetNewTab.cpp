@@ -226,7 +226,9 @@ void WidgetNewTab::slotRadioBtn_clicked()
   {
     VmMaskData* vmMaskData = pmManager_->getVmMaskData()[vmMaskId];
     ui_->labelDescription->setText(vmMaskData->UserConfig->getDescription());
-    ui_->labelDescription->adjustSize(); // From http://www.qtcentre.org/threads/2593-Auto-resize-QLabel
+
+    //TODO: @Bernhard: this caused a bug when you click a radio button multiple times, why is this neccesary?
+//    ui_->labelDescription->adjustSize(); // From http://www.qtcentre.org/threads/2593-Auto-resize-QLabel
 
     // cannot start if the some VmMask is currently created or if the current VmMask is already running
     if(commandExec_->isStillExecuting() ||

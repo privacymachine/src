@@ -91,9 +91,6 @@ class WindowMain : public QMainWindow
     void slotShowAbout();
     void slotEnableMenueEntryForceCleanup();
 
-
-
-    // RENAME:
     void slotUpdateManagerFinished();
 
 
