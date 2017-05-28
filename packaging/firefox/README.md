@@ -19,7 +19,7 @@ copied from _https://github.com/pyllyukko/user.js/tree/relaxed_
 
 ### prefs.js
 this file holds the user preferences of firefox  
-see _https://developer.mozilla.org/en-US/docs/Mozilla/Preferences/A_brief_guide_to_Mozilla_preferences_  
+see _https://developer.mozilla.org/en-US/docs/Mozilla/Preferences/A_brief_guide_to_Mozilla_preferences_ 7
   
 __the numer after prefs.js is only a version number fordeveloping__  
 
@@ -32,3 +32,6 @@ a prefs.js with blanc startpage
 
 #### prefs.js.2
 a cleand profile with comments and disabled telemetry
+
+#### prefs.js.3
+prefs.js.2 + disabled third party cookies
