@@ -43,9 +43,11 @@ https://addons.mozilla.org/de/firefox/addon/ezpp/
 
 # links:
 ## prefs.js
+https://www.ghacks.net/2015/08/18/a-comprehensive-list-of-firefox-privacy-and-security-settings/  
+https://www.bestvpn.com/blog/8499/make-firefox-secure-using-aboutconfig/  
 https://gecko.readthedocs.io/en/latest/toolkit/components/telemetry/telemetry/internals/preferences.html  
 https://developer.mozilla.org/en-US/docs/Mozilla/Preferences/A_brief_guide_to_Mozilla_preferences  
 https://developer.mozilla.org/en-US/docs/Mozilla/Preferences/Mozilla_networking_preferences  
 https://developer.mozilla.org/en-US/docs/Mozilla/Preferences/Preference_reference  
 https://developer.mozilla.org/en-US/docs/Mozilla/Preferences  
-https://developer.mozilla.org/en-US/docs/Mozillaer  
+https://developer.mozilla.org/en-US/docs/Mozilla

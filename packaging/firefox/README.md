@@ -35,3 +35,6 @@ a cleand profile with comments and disabled telemetry
 
 #### prefs.js.3
 prefs.js.2 + disabled third party cookies
+
+#### prefs.js.4
+prefs.js.3 + send DoNotTrack header
