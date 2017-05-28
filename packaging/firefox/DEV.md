@@ -1,5 +1,8 @@
 
 # notes:
+## there is a lot of stuff under services.sync we maby have to set mannually
+https://wiki.mozilla.org/Services/Sync  
+
 ## its possible to install a addon by copying the extensios directory and the extensions.json
 
 ## there is a global firefox preference file for debian in /etc/firefox/firefox.js
