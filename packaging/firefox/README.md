@@ -38,3 +38,6 @@ prefs.js.2 + disabled third party cookies
 
 #### prefs.js.4
 prefs.js.3 + send DoNotTrack header
+
+#### prefs.js.5
+prefs.js.4 + disabled sending any referrer 
