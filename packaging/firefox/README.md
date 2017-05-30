@@ -1,4 +1,4 @@
-# PrivacyMachiene adapted firefox profile
+# PrivacyMachine adapted firefox profile
 
 
 ## This File describes what's in this directory.
