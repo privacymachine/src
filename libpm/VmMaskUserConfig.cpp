@@ -62,6 +62,7 @@ bool VmMaskUserConfig::initWithBaseDiskCapabilities(const QJsonObject& parBaseDi
   browsersInBaseDisk_ = parBaseDiskCapabilities["browser"].toObject().keys();
 
   // TODO: olaf: Why is this here? Delete?
+  // check installed language pack (basedisk capabilities?)
   /*
   // Choose one Language
   browserLanguage = "en"; // init

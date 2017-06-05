@@ -118,6 +118,8 @@ set (NoMocSources
                     PmVersion.h
                     XmlUpdateParser.cpp
                     XmlUpdateParser.h
+                    VmMaskFireFoxConfig.cpp
+                    VmMaskFireFoxConfig.h
                     )
 
 if(MSVC)
