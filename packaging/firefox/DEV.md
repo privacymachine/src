@@ -1,18 +1,9 @@
 
 # notes:
-
-## persist session
-We can determine currently opened tabs from the folder sessionstore-backups.    
-   
-FF starts and loads cookies from the file cookies.sqlite   
-Use SQL-statement to delete all cookies from not currently opened sites
-   
-restore
-
-## there is a lot of stuff under services.sync we maybe have to set manually/deactivate
+## there is a lot of stuff under services.sync we maby have to set mannually
 https://wiki.mozilla.org/Services/Sync  
 
-## its possible to install a addon by copying the extensions directory and the extensions.json
+## its possible to install a addon by copying the extensios directory and the extensions.json
 
 ## there is a global firefox preference file for debian in /etc/firefox/firefox.js
 
@@ -65,4 +56,4 @@ https://developer.mozilla.org/en-US/docs/Mozilla/Preferences/Mozilla_networking_
 https://developer.mozilla.org/en-US/docs/Mozilla/Preferences/Preference_reference  
 https://developer.mozilla.org/en-US/docs/Mozilla/Preferences  
 https://developer.mozilla.org/en-US/docs/Mozilla
-
+https://www.privacy-handbuch.de/handbuch_21u.htm

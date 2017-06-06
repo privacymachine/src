@@ -1,4 +1,4 @@
-# PrivacyMachine adapted firefox profile
+# PrivacyMachiene adapted firefox profile
 
 
 ## This File describes what's in this directory.
@@ -41,3 +41,6 @@ prefs.js.3 + send DoNotTrack header
 
 #### prefs.js.5
 prefs.js.4 + disabled sending any referrer 
+
+#### prefs.js.6
+documented prefs.js with blank startup page (no correct version number) and disabled telemetry 
