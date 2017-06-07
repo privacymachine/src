@@ -9,6 +9,14 @@ CheckUpdate::CheckUpdate(QObject *parent) :
   QObject(parent)
 {
   ptrNAM_ = new QNetworkAccessManager(this);
+  ptrXmlUpdateParser_ = new XmlUpdateParser();
+}
+
+CheckUpdate::~CheckUpdate()
+{
+  if( ptrNAM_ != nullptr ) delete ptrNAM_;
+  if( ptrXmlUpdateParser_ != nullptr ) delete ptrXmlUpdateParser_;
+  if( ptrNetReply_ != nullptr ) delete ptrNetReply_;
 }
 
 bool CheckUpdate::isReady()
@@ -92,7 +100,7 @@ void CheckUpdate::slotDownloadFinished()
 
 
   // parse XML
-  if(!xmlUpdateParser_.parse(ptrNetReply_->readAll()))
+  if(!ptrXmlUpdateParser_->parse(ptrNetReply_->readAll()))
   {
     errorStr_ = "CheckUpdate: Error at parsing appcast XML.";
     IERR(errorStr_);
@@ -108,7 +116,7 @@ void CheckUpdate::findBinaryUpdates()
 {
 
   /// @todo: question @bernhard: is "auto binaryList = xmlUpdateParser_.getBinaryVersionList()" ok?
-  QList<XmlUpdateParser::UpdateInfoBinary> binaryList = xmlUpdateParser_.getBinaryUpdateList();
+  QList<XmlUpdateParser::UpdateInfoBinary> binaryList = ptrXmlUpdateParser_->getBinaryUpdateList();
 
 
   for (XmlUpdateParser::UpdateInfoBinary binary : binaryList)
@@ -167,7 +175,7 @@ void CheckUpdate::findBinaryUpdates()
 
 void CheckUpdate::findBaseDiskUpdates()
 {
-  QList<XmlUpdateParser::UpdateInfoBaseDisk> baseDiskList = xmlUpdateParser_.getBaseDiskUpdateList();
+  QList<XmlUpdateParser::UpdateInfoBaseDisk> baseDiskList = ptrXmlUpdateParser_->getBaseDiskUpdateList();
 
   for (XmlUpdateParser::UpdateInfoBaseDisk baseDisk : baseDiskList)
   {
@@ -219,7 +227,7 @@ void CheckUpdate::findBaseDiskUpdates()
 
 void CheckUpdate::findConfigUpdates()
 {
-  QList<XmlUpdateParser::UpdateInfoConfig> configList = xmlUpdateParser_.getConfigUpdateList();
+  QList<XmlUpdateParser::UpdateInfoConfig> configList = ptrXmlUpdateParser_->getConfigUpdateList();
 
 
   for (XmlUpdateParser::UpdateInfoConfig config : configList)

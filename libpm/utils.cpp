@@ -381,12 +381,12 @@ PmCommand* GetPmCommandForScp2Host(QString user, QString server, QString port, Q
 #ifdef PM_WINDOWS
 QString getLastErrorMsg()
 {
-  LPWSTR bufPtr = NULL;
+  LPWSTR bufPtr = nullptr;
   DWORD err = GetLastError();
   FormatMessageW(FORMAT_MESSAGE_ALLOCATE_BUFFER |
                  FORMAT_MESSAGE_FROM_SYSTEM |
                  FORMAT_MESSAGE_IGNORE_INSERTS,
-                 NULL, err, 0, (LPWSTR)&bufPtr, 0, NULL);
+                 nullptr, err, 0, (LPWSTR)&bufPtr, 0, nullptr);
   const QString result =
       (bufPtr) ? QString::fromUtf16((const ushort*)bufPtr).trimmed() :
                  QString("Unknown Error %1").arg(err);

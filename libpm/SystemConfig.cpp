@@ -45,7 +45,7 @@ SystemConfig::~SystemConfig()
   if (pSettings_)
   {
     delete pSettings_;
-    pSettings_ = NULL;
+    pSettings_ = nullptr;
   }
 }
 

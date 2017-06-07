@@ -55,6 +55,8 @@ class CheckUpdate : public QObject
 
     explicit CheckUpdate(QObject *parent = 0);
 
+    ~CheckUpdate();
+
     /// \brief isReady
     /// \return true if a valid configuration is avaiable
     bool isReady();
@@ -135,9 +137,10 @@ class CheckUpdate : public QObject
     CheckUpdateError error_ = NoError;
     QString errorStr_ = "";
     QNetworkAccessManager *ptrNAM_;
-    QNetworkReply *ptrNetReply_ = NULL;
+    QNetworkReply *ptrNetReply_ = nullptr;
 
-    XmlUpdateParser xmlUpdateParser_;
+
+    XmlUpdateParser *ptrXmlUpdateParser_;
     QList<Update> updateListBaseDisk_;
     QList<Update> updateListBinary_;
     QList<Update> updateListConfig_;

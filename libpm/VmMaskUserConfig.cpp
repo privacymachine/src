@@ -206,7 +206,7 @@ bool VmMaskUserConfig::setConfigurationDefaultsAndCheckForErrors(const QJsonObje
   return true;
 }
 
-/// This function generates a new random fingerprint (returns NULL on error)
+/// This function generates a new random fingerprint (returns nullptr on error)
 VmMaskCurrentConfig* VmMaskUserConfig::diceNewVmMaskConfig(VmMaskStaticConfig* parStaticConfig)
 {
   VmMaskCurrentConfig* newConfig = new VmMaskCurrentConfig(parStaticConfig);

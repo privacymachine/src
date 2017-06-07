@@ -70,7 +70,7 @@ PmCommand::PmCommand(int parMillisec)
   description_ = "Sleeping for " + QString::number( parMillisec ) + " milliseconds.";
   executionCost_ = 10; // some default
   timeoutMilliseconds_ = parMillisec;
-  shellCmd_ = NULL;
+  shellCmd_ = nullptr;
   hideStdOut_ = false;
 }
 
@@ -81,7 +81,7 @@ PmCommand::PmCommand(QString parFolder)
   type_ = removeDirCommand;
   description_ = "Remove folder: " + parFolder;
   folderName_ = parFolder;
-  shellCmd_ = NULL;
+  shellCmd_ = nullptr;
 }
 
 
@@ -90,7 +90,7 @@ PmCommand::~PmCommand()
   if (shellCmd_)
   {
     delete shellCmd_;
-    shellCmd_ = NULL;
+    shellCmd_ = nullptr;
   }
 }
 
@@ -179,7 +179,7 @@ bool PmCommand::start(QProcess* parProc, QObject* parReceiver)
     // For sleeping, we do not really spawn a new process, but simply start a timer.
     QTimer::singleShot( timeoutMilliseconds_, parReceiver, SLOT( slotCommandFinished() ) );
   }
-  else if( shellCmd_ != NULL )
+  else if( shellCmd_ != nullptr )
   {
     QString toExecute = shellCmd_->Cmd + " " + shellCmd_->Args.join(" ");
     ILOG("Execute PmCommand: " + toExecute);
@@ -214,7 +214,7 @@ bool PmCommand::executeBlocking(bool parCheckExitCode)
   {
     SleeperThread::msleep(timeoutMilliseconds_);
   }
-  else if( shellCmd_ != NULL )
+  else if( shellCmd_ != nullptr )
   {
     // logging is done in ExecShort()
     QString allOutput = "";

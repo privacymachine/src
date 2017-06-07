@@ -44,7 +44,7 @@ class WindowMain : public QMainWindow
     Q_OBJECT
     
   public:
-    explicit WindowMain(QWidget *parParent = NULL);
+    explicit WindowMain(QWidget *parParent = nullptr);
     void show();
     bool init(QString parPmInstallPath, QString parVboxDefaultMachineFolder);
     ~WindowMain();

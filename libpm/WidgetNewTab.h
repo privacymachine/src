@@ -38,7 +38,7 @@ class WidgetNewTab : public QWidget
     Q_OBJECT
     
   public:
-    explicit WidgetNewTab(QWidget *parParent = NULL);
+    explicit WidgetNewTab(QWidget *parParent = nullptr);
     bool init(PmManager *parPmManager);
     ~WidgetNewTab();
     

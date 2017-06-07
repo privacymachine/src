@@ -19,8 +19,8 @@
 #include "VmMaskData.h"
 
 VmMaskData::VmMaskData():
-  UserConfig(NULL),
-  StaticConfig(NULL),
-  Instance(NULL)
+  UserConfig(nullptr),
+  StaticConfig(nullptr),
+  Instance(nullptr)
 {
 }

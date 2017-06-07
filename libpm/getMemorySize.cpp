@@ -60,7 +60,7 @@ size_t getMemorySize( )
 #endif
 	int64_t size = 0;		/* 64-bit */
 	size_t len = sizeof( size );
-	if ( sysctl( mib, 2, &size, &len, NULL, 0 ) == 0 )
+	if ( sysctl( mib, 2, &size, &len, nullptr, 0 ) == 0 )
 		return (size_t)size;
 	return 0L;			/* Failed? */
 
@@ -89,7 +89,7 @@ size_t getMemorySize( )
 #endif
 	unsigned int size = 0;		/* 32-bit */
 	size_t len = sizeof( size );
-	if ( sysctl( mib, 2, &size, &len, NULL, 0 ) == 0 )
+	if ( sysctl( mib, 2, &size, &len, nullptr, 0 ) == 0 )
 		return (size_t)size;
 	return 0L;			/* Failed? */
 #endif /* sysctl and sysconf variants */

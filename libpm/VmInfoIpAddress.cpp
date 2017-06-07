@@ -64,7 +64,7 @@ void VmInfoIpAddress::slotExecFinished( ePmCommandResult result )
   QRegExp regexIpAddress( "[0-9]{1,3}\\.[0-9]{1,3}.[0-9]{1,3}\\.[0-9]{1,3}" );
   QString lastStdOut = exec_->getLastCommandLastLineStdOut();
   QList< PmCommand* > commands;
-  PmCommand *pCurrentCommand = NULL;
+  PmCommand *pCurrentCommand = nullptr;
 
   /*
   QString userConfigDir;
@@ -82,7 +82,7 @@ void VmInfoIpAddress::slotExecFinished( ePmCommandResult result )
 //  pCurrentCommand->setCosts(100);
 //  commands.append( pCurrentCommand );
 
-  pCurrentCommand = NULL;
+  pCurrentCommand = nullptr;
   if( result == success  &&  regexIpAddress.exactMatch( lastStdOut.trimmed() ) )
   {
     ipAddress_ = exec_->getLastCommandLastLineStdOut();
@@ -93,7 +93,7 @@ void VmInfoIpAddress::slotExecFinished( ePmCommandResult result )
     if( nProvidersTried_ != 0 )
     {
       pCurrentCommand = createPmCommandNextIpAddressProvider();
-      if( pCurrentCommand != NULL )
+      if( pCurrentCommand != nullptr )
       {
         commands.append( pCurrentCommand );
         exec_->setCommands( commands );
@@ -140,7 +140,7 @@ void VmInfoIpAddress::startPollingExternalIp()
   commands.append( pCurrentCommand );
 
   pCurrentCommand = createPmCommandNextIpAddressProvider();
-  if( pCurrentCommand != NULL )
+  if( pCurrentCommand != nullptr )
   {
     commands.append( pCurrentCommand );
 

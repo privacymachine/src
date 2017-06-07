@@ -34,7 +34,7 @@ WidgetNewTab::WidgetNewTab(QWidget *parParent) :
 {
   ui_->setupUi(this);
   m_parent_ = parParent;
-  pmManager_ = NULL;
+  pmManager_ = nullptr;
   commandExec_ = new WidgetCommandExec(this);
   ui_->btnStartVmMask->setEnabled(false);
   ui_->execLayout->addWidget(commandExec_);
@@ -119,7 +119,7 @@ WidgetNewTab::~WidgetNewTab()
   if (commandExec_)
   {
     delete commandExec_;
-    commandExec_ = NULL;
+    commandExec_ = nullptr;
   }
 
   while(radioButtons_->buttons().size())
@@ -128,7 +128,7 @@ WidgetNewTab::~WidgetNewTab()
   if (ui_)
   {
     delete ui_;
-    ui_ = NULL;
+    ui_ = nullptr;
   }
 }
 
@@ -184,7 +184,7 @@ void WidgetNewTab::slotFinished(ePmCommandResult parExitCode)
   // enable/disable all radio buttons based on the active status of the VmMasks
   for (int i = 0; i < pmManager_->getVmMaskData().count(); i++)
   {
-    if (pmManager_->getVmMaskData()[i]->Instance != NULL && pmManager_->getVmMaskData()[i]->Instance->getVmMaskIsActive())
+    if (pmManager_->getVmMaskData()[i]->Instance != nullptr && pmManager_->getVmMaskData()[i]->Instance->getVmMaskIsActive())
       radioButtons_->button(i)->setEnabled(false);
     else
       radioButtons_->button(i)->setEnabled(true);

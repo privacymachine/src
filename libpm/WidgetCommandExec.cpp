@@ -266,7 +266,7 @@ void WidgetCommandExec::slotStartingNextCommandFailed()
 {
 
   QString msg = "Start of";
-  if( exec_ && ( exec_->getCurrentCommand() != NULL ) )
+  if( exec_ && ( exec_->getCurrentCommand() != nullptr ) )
   {
     msg += " '" + exec_->getCurrentCommand()->getDescription() + "'";
 

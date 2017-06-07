@@ -14,16 +14,16 @@ UpdateManager::UpdateManager(QObject *parent) :
 
 UpdateManager::~UpdateManager()
 {
-  if (ptrInteractiveUpdateWidget_ != NULL)
+  if (ptrInteractiveUpdateWidget_ != nullptr)
   {
     delete (ptrInteractiveUpdateWidget_);
-    ptrInteractiveUpdateWidget_ = NULL;
+    ptrInteractiveUpdateWidget_ = nullptr;
   }
 }
 
 void UpdateManager::slotCheckUpdateFinished()
 {
-  if (ptrCheckUpdate_ == NULL)
+  if (ptrCheckUpdate_ == nullptr)
     return;
 
   if( ptrCheckUpdate_->getError() != CheckUpdate::NoError)
@@ -86,7 +86,7 @@ void UpdateManager::slotCheckUpdateFinished()
 
 void UpdateManager::slotShowBinaryUpdate()
 {
-  if (ptrCheckUpdate_ == NULL)
+  if (ptrCheckUpdate_ == nullptr)
     return;
 
   // Connect slots to continue the Update
@@ -144,7 +144,7 @@ void UpdateManager::slotShowBinaryUpdate()
 
 void UpdateManager::slotShowConfigUpdate()
 {
-  if (ptrCheckUpdate_ == NULL)
+  if (ptrCheckUpdate_ == nullptr)
     return;
 
   // TODO: maybe dissconnect old connections
@@ -230,7 +230,7 @@ void UpdateManager::slotShowBaseDiskUpdate()
 
 bool UpdateManager::findUpdates()
 {
-  if (ptrCheckUpdate_ == NULL)
+  if (ptrCheckUpdate_ == nullptr)
   {
     ptrCheckUpdate_ = new CheckUpdate();
   }
@@ -250,7 +250,7 @@ bool UpdateManager::findUpdates()
            this,
            &UpdateManager::slotCheckUpdateFinished);
 
-  if (ptrInteractiveUpdateWidget_ == NULL)
+  if (ptrInteractiveUpdateWidget_ == nullptr)
   {
     IERR("Interacive Update started but no WidgetInteractiveUpdate was created!");
     return false;
@@ -282,7 +282,7 @@ WidgetInteractiveUpdate* UpdateManager::getUpdateWidget()
 
 WidgetInteractiveUpdate* UpdateManager::createUpdateWidgetIfNotExisting(QWidget *parParent)
 {
-  if (ptrInteractiveUpdateWidget_ == NULL)
+  if (ptrInteractiveUpdateWidget_ == nullptr)
   {
     ptrInteractiveUpdateWidget_ = new WidgetInteractiveUpdate(parParent);
   }
@@ -293,7 +293,7 @@ bool UpdateManager::isReady()
 {
   bool ready = true;
 
-  if( ptrSystemConfig_ == NULL )
+  if( ptrSystemConfig_ == nullptr )
   {
     IERR("UpdateManager: no SystemConfig is set");
     ready = false;
@@ -305,7 +305,7 @@ bool UpdateManager::isReady()
     ready = false;
   }
 
-  if( ptrInteractiveUpdateWidget_ == NULL)
+  if( ptrInteractiveUpdateWidget_ == nullptr)
   {
     IERR("UpdateManager: no InteractiveUpdateWidget was created");
     ready = false;
@@ -319,7 +319,7 @@ bool UpdateManager::isReady()
 void UpdateManager::slotUpdateRequested(Update update)
 {
   progressedUpdate_ = update;
-  if(ptrVerifiedDownload_ == NULL)
+  if(ptrVerifiedDownload_ == nullptr)
   {
     ptrVerifiedDownload_ = new VerifiedDownload(this);
   }
@@ -513,7 +513,7 @@ void UpdateManager::baseDiskUpdateInstallRequested()
 {
   // extract new BaseDisk
 
-  if( ptrExternalProcess_ != NULL ) ptrExternalProcess_->deleteLater();
+  if( ptrExternalProcess_ != nullptr ) ptrExternalProcess_->deleteLater();
 
   ptrExternalProcess_ = new QProcess(this);
 

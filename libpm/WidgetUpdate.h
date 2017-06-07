@@ -39,7 +39,7 @@ class WidgetUpdate : public QWidget
     Q_OBJECT
     
   public:
-    explicit WidgetUpdate(QWidget *parent = NULL);
+    explicit WidgetUpdate(QWidget *parent = nullptr);
     ~WidgetUpdate();
 
     /// \brief do the initialisation (create command lists)

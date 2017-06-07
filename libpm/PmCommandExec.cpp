@@ -23,7 +23,7 @@
 PmCommandExec::PmCommandExec()
 { 
   running_ = false;
-  currentCommand_ = NULL;
+  currentCommand_ = nullptr;
 }
 
 PmCommandExec::~PmCommandExec()
@@ -117,7 +117,7 @@ bool PmCommandExec::setCommands( QList<PmCommand *>& parCommands )
   }
 
   commands_ = parCommands; // Copy the Pointers, we delete them here when we are finished
-  currentCommand_ = NULL;
+  currentCommand_ = nullptr;
   lastCommandStdOut_ = "";
   lastCommandStdErr_ = "";
   lastCommandExitCode_ = 0;
@@ -176,7 +176,7 @@ void PmCommandExec::writeFromStandardOut(QString parOut)
   lastCommandStdOut_ += parOut;
   lastCommandLastLineStdOut_ = parOut;
 
-  if (currentCommand_ != NULL && !currentCommand_->getHideStdOut())
+  if (currentCommand_ != nullptr && !currentCommand_->getHideStdOut())
   {
     ILOG(removeLastLF(parOut));
     emit signalWriteFromStandardOut( parOut );
@@ -279,7 +279,7 @@ void PmCommandExec::slotProcessFinished(int parExitCode, QProcess::ExitStatus pa
     // Initializing pattern to "" will make the regex match by default, so that regex checks pass by default if there 
     // was no regex pattern given.
     QRegularExpression regex("");
-    if( currentCommand_->getRegexPattern() != NULL )
+    if( currentCommand_->getRegexPattern() != nullptr )
     {
       regex.setPattern(currentCommand_->getRegexPattern());
     }

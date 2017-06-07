@@ -137,7 +137,7 @@ class VerifiedDownload : public QObject
     QString checkSum_ = "_invalid checksum_";
     QDir targetDir_ = QDir("/not_existing");
     QUrl url_ = QUrl("_invalid URL_", QUrl::StrictMode);
-    QNetworkReply *ptrNetReply_ = NULL;
+    QNetworkReply *ptrNetReply_ = nullptr;
     VerifiedDownloadError error_ = NoError;
     bool started_ = false;
     qint64 progressBarMax_ = 0;

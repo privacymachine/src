@@ -32,14 +32,14 @@
 
 WindowMain::WindowMain(QWidget *parParent) :
   QMainWindow(parParent),
-  pmManager_(NULL),
-  updateManager_(NULL),
-  currentWidget_(NULL),
-  questionBox_(NULL),
-  updateMessage_(NULL),
-  regenerationWidget_(NULL),
-  tabWidget_(NULL),
-  aboutWidget_(NULL),
+  pmManager_(nullptr),
+  updateManager_(nullptr),
+  currentWidget_(nullptr),
+  questionBox_(nullptr),
+  updateMessage_(nullptr),
+  regenerationWidget_(nullptr),
+  tabWidget_(nullptr),
+  aboutWidget_(nullptr),
   ui_(new Ui::WindowMain())
 {
   ui_->setupUi(this);
@@ -64,7 +64,7 @@ WindowMain::WindowMain(QWidget *parParent) :
 
 void WindowMain::slotShowAbout()
 {
-  if(aboutWidget_ != NULL)
+  if(aboutWidget_ != nullptr)
   {
     delete aboutWidget_;
   }
@@ -212,7 +212,7 @@ void WindowMain::cleanVmMasksBlocking()
 void WindowMain::regenerateVmMasks()
 {
 
-  if (regenerationWidget_ == NULL)
+  if (regenerationWidget_ == nullptr)
   {
     regenerationWidget_ = new WidgetUpdate(this);
 
@@ -229,7 +229,7 @@ void WindowMain::regenerateVmMasks()
   {
     IERR("failed to initialize regenerationWidget (updateWidget) ");
     delete regenerationWidget_;
-    regenerationWidget_ = NULL;
+    regenerationWidget_ = nullptr;
     return;
   }
 
@@ -285,7 +285,7 @@ void WindowMain::slotRegenerationIpSuccess()
 void WindowMain::slotRegenerationProgress(QString parProgress)
 {
   QString title = QApplication::applicationName();
-  if (regenerationWidget_ != NULL)
+  if (regenerationWidget_ != nullptr)
   {
     title += " - Update: ";
     title += parProgress;
@@ -302,7 +302,7 @@ void WindowMain::slotTabCloseRequested(int parTabIndex)
   
   // If this actually is a RDP Widget, we want to shut down the virtual machine it is associated
   // with, if there is any.
-  if( widgetRdpView != NULL )
+  if( widgetRdpView != nullptr )
   {    
     VmMaskData* vmMask = pmManager_->getVmMaskData()[widgetRdpView->getVmMaskId()];
 
@@ -321,7 +321,7 @@ void WindowMain::slotTabCloseRequested(int parTabIndex)
 
     // Copy VPN logs before the machine shuts down.
     QList<PmCommand*> commandsList;
-    PmCommand* pCurrentCommand = NULL;
+    PmCommand* pCurrentCommand = nullptr;
     pCurrentCommand = GetPmCommandForScp2Host(constRootUser, constLocalIp, QString::number( vmMask->Instance->getConfig()->getSshPort()), constRootPwd,
                                               pmManager_->getPmConfigDir().path() + "/logs/vmMask_" + vmMask->Instance->getConfig()->getName() + "_vpnLog.txt",
                                               "/var/log/openvpn.log");
@@ -371,7 +371,7 @@ bool WindowMain::setupTabWidget()
 
   // While we want to be able to close VM Mask tabs in general, we would not want to close the NewTab
   // => remove 'Close' button for this tab only.
-  tabWidget_->tabBar()->setTabButton(0, QTabBar::RightSide, NULL);
+  tabWidget_->tabBar()->setTabButton(0, QTabBar::RightSide, nullptr);
 
   connect(tabWidget_,
           &QTabWidget::tabCloseRequested,
@@ -402,7 +402,7 @@ void WindowMain::statusBarUpdate()
   // For all other widgets, we clear the status bar text.
   WidgetRdpView* widgetRdpView = dynamic_cast<WidgetRdpView*>( currentWidget_ );
   QString statusText = "";
-  if( widgetRdpView != NULL )
+  if( widgetRdpView != nullptr )
   {    
     VmMaskData* vmMask = pmManager_->getVmMaskData()[widgetRdpView->getVmMaskId()];
     statusText += vmMask->Instance->getConfig()->toString();
@@ -425,25 +425,25 @@ WindowMain::~WindowMain()
   if (pmManager_)
   {
     delete pmManager_;
-    pmManager_ = NULL;
+    pmManager_ = nullptr;
   }
 
   if (aboutWidget_)
   {
     delete aboutWidget_;
-    aboutWidget_ = NULL;
+    aboutWidget_ = nullptr;
   }
 
   if (updateManager_)
   {
     delete updateManager_;
-    updateManager_ = NULL;
+    updateManager_ = nullptr;
   }
 
   if (ui_)
   {
     delete ui_;
-    ui_ = NULL;
+    ui_ = nullptr;
   }
 }
 
@@ -504,7 +504,7 @@ void WindowMain::closeEvent(QCloseEvent * parEvent)
     for (int vmMaskId = 0; vmMaskId < pmManager_->getVmMaskData().count(); vmMaskId++)
     {
       VmMaskData* vmMask = pmManager_->getVmMaskData()[vmMaskId];
-      if (vmMask->Instance != NULL && vmMask->Instance->getVmMaskIsActive())
+      if (vmMask->Instance != nullptr && vmMask->Instance->getVmMaskIsActive())
       {
         oneVmMaskIsActive = true;
        break;
@@ -522,19 +522,19 @@ void WindowMain::closeEvent(QCloseEvent * parEvent)
     }
   }
 
-  if (regenerationWidget_ != NULL)
+  if (regenerationWidget_ != nullptr)
   {
     // Stop the running update
     regenerationWidget_->abort();
     ui_->mainLayout_v->removeWidget(regenerationWidget_);
     delete regenerationWidget_;
-    regenerationWidget_=NULL;
+    regenerationWidget_=nullptr;
   }
 
-  if (aboutWidget_ != NULL)
+  if (aboutWidget_ != nullptr)
   {
     delete aboutWidget_;
-    aboutWidget_ = NULL;
+    aboutWidget_ = nullptr;
   }
 
 

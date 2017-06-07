@@ -14,10 +14,10 @@ VerifiedDownload::VerifiedDownload(QObject *parent) :
 
 VerifiedDownload::~VerifiedDownload()
 {
-  if(ptrNam_ != NULL)
+  if(ptrNam_ != nullptr)
     delete ptrNam_;
 
-  if(ptrNetReply_ != NULL)
+  if(ptrNetReply_ != nullptr)
     delete ptrNetReply_;
 }
 
@@ -66,7 +66,7 @@ void VerifiedDownload::slotFinished()
   if(ptrNetReply_)
   {
     ptrNetReply_->deleteLater();
-    ptrNetReply_ = NULL;
+    ptrNetReply_ = nullptr;
   }
 }
 

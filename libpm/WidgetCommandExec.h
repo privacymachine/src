@@ -43,7 +43,7 @@ class WidgetCommandExec : public QWidget
   Q_OBJECT
     
   public:
-    explicit WidgetCommandExec(QWidget *parParent = NULL);
+    explicit WidgetCommandExec(QWidget *parParent = nullptr);
     ~WidgetCommandExec();
     void abort();
     void connectSignalsAndSlots();

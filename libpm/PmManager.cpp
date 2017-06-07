@@ -36,8 +36,8 @@
 
 
 PmManager::PmManager() :
-  configUser_(NULL),
-  configSystem_(NULL),
+  configUser_(nullptr),
+  configSystem_(nullptr),
   baseDiskConfigIsValid_(false),
   firstFreeLocalPort_(4242),
   firstStart_(false)
@@ -75,12 +75,12 @@ PmManager::~PmManager()
   if (configUser_)
   {
     delete configUser_;
-    configUser_ = NULL;
+    configUser_ = nullptr;
   }
   if (configSystem_)
   {
     delete configSystem_;
-    configSystem_ = NULL;
+    configSystem_ = nullptr;
   }
 }
 
@@ -289,7 +289,7 @@ bool PmManager::validateConfiguration()
 
 bool PmManager::isBaseDiskAvailable()
 {
-  if (configSystem_ == NULL)
+  if (configSystem_ == nullptr)
     return false;
 
   // When ComponentMajor set to zero it's used as marker for 'no basedisk available'
@@ -661,7 +661,7 @@ bool PmManager::createCommandsToCloseAllVmMasks(QList<PmCommand*>& parCmdList)
   for( VmMaskData* vmMask : vmMaskData_ )
   {
     // before closing copy VPN logs
-    PmCommand* pCurrentCommand = NULL;
+    PmCommand* pCurrentCommand = nullptr;
     pCurrentCommand = GetPmCommandForScp2Host(constRootUser, constLocalIp, QString::number( vmMask->StaticConfig->SshPort ), constRootPwd,
                                               pmConfigDir_.path() + "/logs/vmMask_" + vmMask->UserConfig->getName() + "_vpnLog.txt",
                                               "/var/log/openvpn.log");

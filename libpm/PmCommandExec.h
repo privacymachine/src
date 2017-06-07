@@ -39,7 +39,7 @@ class PmCommandExec : public QObject
     void disconnectSignalsAndSlots();
     int getCostsAll();
     int getCostsFinished();
-    /// \return The command that is scheduled to be run next or is currently being run. Might be \c NULL.
+    /// \return The command that is scheduled to be run next or is currently being run. Might be \c nullptr.
     PmCommand* getCurrentCommand();
     bool isRunning();
     QString getLastCommandLastLineStdErr();

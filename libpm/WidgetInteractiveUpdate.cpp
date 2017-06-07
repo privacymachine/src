@@ -26,7 +26,7 @@ WidgetInteractiveUpdate::~WidgetInteractiveUpdate()
   if (ui_)
   {
     delete ui_;
-    ui_ = NULL;
+    ui_ = nullptr;
   }
 }
 
