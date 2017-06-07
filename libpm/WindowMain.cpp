@@ -203,7 +203,7 @@ void WindowMain::cleanVmMasksBlocking()
   ILOG("remove all VmMasks");
   QList<PmCommand*> commandsList;
   pmManager_->createCommandsToCleanupAllVirtualMachines( commandsList );
-  foreach(PmCommand* cmd, commandsList)
+  for(PmCommand* cmd : commandsList)
   {
     cmd->executeBlocking(false);
   }
@@ -331,7 +331,7 @@ void WindowMain::slotTabCloseRequested(int parTabIndex)
 
     // additional append the commands to close the machine
     pmManager_->createCommandsToCloseVmMask(vmMask->UserConfig->getVmName(), vmMask->UserConfig->getFullName(), commandsList);
-    foreach(PmCommand* cmd, commandsList)
+    for(PmCommand* cmd : commandsList)
     {
       cmd->executeBlocking(false);
     }
@@ -542,7 +542,7 @@ void WindowMain::closeEvent(QCloseEvent * parEvent)
   QList<PmCommand*> commandsList;
   pmManager_->createCommandsToCloseAllVmMasks( commandsList );
   //pmManager_->createCommandsCleanupVirtualBoxVms( commandsList );
-  foreach(PmCommand* cmd, commandsList)
+  for(PmCommand* cmd : commandsList)
   {
     cmd->executeBlocking(false);
   }

@@ -15,15 +15,17 @@ class VmMaskFireFoxConfig
     VmMaskFireFoxConfig();
 
     /// \brief getConfigValueList
-    /// \return a empty list or when diceNewVmMaskFireFoxConfig was already called a list of configuration parameters
+    /// \return when diceNewVmMaskFireFoxConfig was called a list of configuration parameters otherwise a empty list
     QList< QPair<QString, QVariant> > getConfigValueList() { return configValueList_; }
 
+    /// \brief getPrefs
+    /// \return when diceNewVmMaskFireFoxConfig was called a firefox prefs.js otherwise a empty string
     QString getPrefs();
+
 
     friend VmMaskCurrentConfig * VmMaskUserConfig::diceNewVmMaskConfig(VmMaskStaticConfig *);
 
-
-  //protected:
+  protected:
 
     /// \brief diceNewVmMaskFireFoxConfig
     /// \brief generates a randomized firefox configuration
@@ -31,9 +33,17 @@ class VmMaskFireFoxConfig
     void diceNewVmMaskFireFoxConfig();
 
   private:
+
+    /// \brief variableConfigValueList_
+    /// \brief static list that holds the preferences to set always
     static QList< QPair<QString, QList<QVariant> > > variableConfigValueList_;
+
+    /// \brief staticConfigValueList_
+    /// \brief static list that holds the preferences to randomize
     static QList< QPair<QString, QVariant> > staticConfigValueList_;
 
+    /// \brief configValueList_
+    /// \brief list to store the current preferences
     QList< QPair<QString, QVariant> > configValueList_;
 };
 

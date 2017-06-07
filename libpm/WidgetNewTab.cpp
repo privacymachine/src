@@ -42,7 +42,7 @@ WidgetNewTab::WidgetNewTab(QWidget *parParent) :
 
 void WidgetNewTab::connectSignalsAndSlots()
 {
-  foreach( QAbstractButton *rbItem, radioButtons_->buttons() )
+  for( QAbstractButton *rbItem : radioButtons_->buttons() )
   {
     connect( rbItem,
              &QAbstractButton::clicked,
@@ -63,7 +63,7 @@ void WidgetNewTab::connectSignalsAndSlots()
 
 void WidgetNewTab::disconnectSignalsAndSlots()
 {
-  foreach(QAbstractButton *rbItem, radioButtons_->buttons())
+  for(QAbstractButton *rbItem : radioButtons_->buttons())
   {
     disconnect( rbItem,
                 &QAbstractButton::clicked,
@@ -160,7 +160,7 @@ void WidgetNewTab::slotBtnStart_clicked()
     // a success or failure in ePmCommandResult
 
     // disable all radio buttons in the meantime
-    foreach (QAbstractButton* btn, radioButtons_->buttons())
+    for (QAbstractButton* btn : radioButtons_->buttons())
     {
       btn->setEnabled(false);
     }

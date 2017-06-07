@@ -126,7 +126,7 @@ bool PmCommandExec::setCommands( QList<PmCommand *>& parCommands )
   userAborted_=false;
   internalAborted_=false;
 
-  foreach( PmCommand* cmd, commands_ )
+  for( PmCommand* cmd : commands_ )
   {
     costsAll_ += cmd->getAllExecutionCosts();
   }

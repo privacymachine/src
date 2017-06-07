@@ -1,4 +1,6 @@
 #include "VmMaskFireFoxConfig.h"
+
+#include "QMetaType"
 #include "utils.h"
 
 VmMaskFireFoxConfig::VmMaskFireFoxConfig()
@@ -18,11 +20,12 @@ QString VmMaskFireFoxConfig::getPrefs()
     {
       QString settingName = setting.first;
       QVariant settingValue = setting.second;
+      QString settingValueStr = settingValue.toString();
 
       // append the setting
       prefs += "user_pref(";
       prefs += "\"" + settingName + "\", ";
-      prefs += (settingValue.type() == QVariant::String) ? "\""+settingValue.toString()+"\"" : settingValue.toString();
+      prefs += (settingValue.type() == QMetaType::QString) ? "\"" + settingValueStr + "\"" : settingValueStr;
       prefs += ");\n";
     }
   }
@@ -40,13 +43,14 @@ void VmMaskFireFoxConfig::diceNewVmMaskFireFoxConfig()
   {
     QString settingName = setting.first;
     QVariant settingValue = setting.second;
+    QString settingValueStr = settingValue.toString();
 
     // append the setting
     configValueList_ << qMakePair(settingName, settingValue);
 
     // log the setting
     QString logMsg = "firefox setting: \"" + settingName + "\" = ";
-    logMsg += (settingValue.type() == QVariant::String) ? "\""+settingValue.toString()+"\"" : settingValue.toString();
+    logMsg += (settingValue.type() == QMetaType::QString) ? "\"" + settingValueStr + "\"" : settingValueStr;
     ILOG(logMsg);
   }
 
@@ -58,13 +62,14 @@ void VmMaskFireFoxConfig::diceNewVmMaskFireFoxConfig()
 
     // randomize the setting
     auto settingValue = settingValueList[randombytes_uniform(settingValueList.size())];
+    QString settingValueStr = settingValue.toString();
 
     // append the setting
     configValueList_ << qMakePair(settingName, settingValue);
 
     // log the setting
     QString logMsg = "firefox setting: \"" + settingName + "\" = ";
-    logMsg += (settingValue.type() == QVariant::String) ? "\""+settingValue.toString()+"\"" : settingValue.toString();
+    logMsg += (settingValue.type() == QMetaType::QString) ? "\"" + settingValueStr + "\"" : settingValueStr;
     ILOG(logMsg);
   }
 }
@@ -77,7 +82,7 @@ QList< QPair<QString, QList<QVariant> > > VmMaskFireFoxConfig::variableConfigVal
 
 /* PREF: general referrer
  * http://kb.mozillazine.org/Network.http.sendRefererHeader
- * VALUE 0: Never send the Referer header or set document.referrer. (NOT USED, can cause Problems)
+ * VALUE 0: Never send the Referer header or set document.referrer. (NOT USED, can cause problems)
  * VALUE 1: Send the Referer header when clicking on a link, and set document.referrer for the following page.
  * VALUE 2: Send the Referer header when clicking on a link or loading an image,
  *          and set document.referrer for the following page.
@@ -103,7 +108,7 @@ QList< QPair<QString, QList<QVariant> > > VmMaskFireFoxConfig::variableConfigVal
 QList< QPair<QString, QVariant> > VmMaskFireFoxConfig::staticConfigValueList_=
     QList< QPair<QString, QVariant> >()
 
-/* PREF: start FF with a blanc page
+/* PREF: start FF with a blank page
  * http://kb.mozillazine.org/Browser.startup.page
  * http://kb.mozillazine.org/Startup.homepage_override_url
  * http://kb.mozillazine.org/Browser.startup.homepage_override.mstone

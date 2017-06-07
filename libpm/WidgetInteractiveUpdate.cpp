@@ -87,7 +87,7 @@ void WidgetInteractiveUpdate::showUpdate(QList<Update> parUpdateList)
   std::sort( parUpdateList.begin(), parUpdateList.end(), Update::compare );
   update_ = parUpdateList[0];
   QString changelog = "";
-  foreach (Update update, parUpdateList)
+  for (Update update : parUpdateList)
   {
     changelog += update.Description;
     changelog += "\n\n";

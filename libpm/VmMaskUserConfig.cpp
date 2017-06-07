@@ -45,17 +45,17 @@ bool VmMaskUserConfig::initWithBaseDiskCapabilities(const QJsonObject& parBaseDi
 
   // get available fonts
   QJsonArray fontArray = parBaseDiskCapabilities["fonts"].toArray();
-  foreach (const QJsonValue &font, fontArray)
+  for (const QJsonValue &font : fontArray)
     fontsInBaseDisk_.append(font.toString());
 
   // get available locales
   QJsonArray localeArray = parBaseDiskCapabilities["locales"].toArray();
-  foreach (const QJsonValue &locale, localeArray)
+  for (const QJsonValue &locale : localeArray)
     localesInBaseDisk_.append(locale.toString());
 
   // get available timezones
   QJsonArray timeZonesArray = parBaseDiskCapabilities["timezones"].toArray();
-  foreach (const QJsonValue &timeZone, timeZonesArray)
+  for (const QJsonValue &timeZone : timeZonesArray)
     timeZonesInBaseDisk_.append(timeZone.toString());
 
   // get available browsers
@@ -356,7 +356,7 @@ void VmMaskUserConfig::setBrowsers(const QStringList& parBrowsers)
 {
   browsers_.clear();
   // Browsers needed to converted to lower case because that's the name inside the BaseDisk
-  foreach (QString val, parBrowsers)
+  for (QString val : parBrowsers)
   {
     browsers_.append(val.toLower());
   }

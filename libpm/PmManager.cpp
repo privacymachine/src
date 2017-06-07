@@ -305,7 +305,7 @@ bool PmManager::allVmMasksExist()
   QString allOutput;
   QStringList args;
 
-  foreach( VmMaskData* vmMask, vmMaskData_)
+  for( VmMaskData* vmMask : vmMaskData_)
   {
     // set the timeout to 10s because we get into real troubles if we have no correct information of the existance of a VM
     args.clear();
@@ -321,7 +321,7 @@ bool PmManager::saveConfiguredVmMasks()
 {
   QStringList userConfiguredVmMasks;
 
-  foreach (VmMaskData* vmMask, vmMaskData_)
+  for (VmMaskData* vmMask : vmMaskData_)
     userConfiguredVmMasks.append(vmMask->UserConfig->getVmName());
 
   configSystem_->setConfiguredVmMaskNames(userConfiguredVmMasks);
@@ -342,7 +342,7 @@ bool PmManager::vmMaskRegenerationNecessary()
   QSet<QString> oldConfiguredVmMasks = QSet<QString>::fromList(configSystem_->getConfiguredVmMaskNames());
   QSet<QString> currentConfiguredVmMasks;
 
-  foreach (VmMaskData* vmMask, vmMaskData_)
+  for (VmMaskData* vmMask : vmMaskData_)
     currentConfiguredVmMasks.insert(vmMask->UserConfig->getVmName());
 
   if( oldConfiguredVmMasks != currentConfiguredVmMasks)
@@ -589,7 +589,7 @@ bool PmManager::createCommandsToCreateVmMask( VmMaskData* parVmMask,
 
 void PmManager::initAllVmMaskData()
 {
-  foreach(VmMaskUserConfig* userVmMaskConfig, configUser_->getConfiguredVmMasks())
+  for(VmMaskUserConfig* userVmMaskConfig : configUser_->getConfiguredVmMasks())
   {
     VmMaskData* newVmMaskData = new VmMaskData();
     newVmMaskData->UserConfig = userVmMaskConfig;
@@ -617,7 +617,7 @@ void PmManager::initAllVmMaskData()
 
 bool PmManager::createCommandsToCreateAllVmMasks(QList<PmCommand*>& parCmdList)
 {
-  foreach (VmMaskData* vmMask, vmMaskData_)
+  for (VmMaskData* vmMask : vmMaskData_)
   {
     if(!createCommandsToCreateVmMask(vmMask, parCmdList))
       return false;
@@ -658,7 +658,7 @@ bool PmManager::createCommandsToCloseVmMask(QString parVmName,
 
 bool PmManager::createCommandsToCloseAllVmMasks(QList<PmCommand*>& parCmdList)
 {
-  foreach( VmMaskData* vmMask, vmMaskData_ )
+  for( VmMaskData* vmMask : vmMaskData_ )
   {
     // before closing copy VPN logs
     PmCommand* pCurrentCommand = NULL;
@@ -771,7 +771,7 @@ bool PmManager::createCommandsToStartVmMask(int parVmMaskId,
 #endif
 
   // Obfuscate fonts:
-  foreach(const QString &font, vmMask->Instance->getConfig()->getFonts())
+  for(const QString &font : vmMask->Instance->getConfig()->getFonts())
   {
     desc = "Installing font '" + font + "'";
     curCmd = genSshCmd("mv /pm/fonts/" + font + " /usr/local/share/fonts", sshPort);
@@ -808,7 +808,7 @@ bool PmManager::createCommandsToStartVmMask(int parVmMaskId,
     curCmd = genSshCmd("rm /etc/resolv.conf && touch /etc/resolv.conf", sshPort);
     curCmd->setDescription(desc);
     parCmdList.append(curCmd);
-    foreach(const QString &dns, vmMask->Instance->getConfig()->getDnsServers())
+    for(const QString &dns : vmMask->Instance->getConfig()->getDnsServers())
     {
       desc = "Installing DNS-Server " + dns;
       curCmd = genSshCmd("echo nameserver " + dns + " >> /etc/resolv.conf", sshPort);
@@ -886,13 +886,13 @@ bool PmManager::createCommandsToCleanupAllVirtualMachines(QList<PmCommand*>& par
   QStringList foundVmMasks = vboxDir.entryList( QDir::Dirs | QDir::Readable | QDir::CaseSensitive );
 
   // Add folders/VmMask-names to the list which are in the way for new VmMask creation
-  foreach (VmMaskData* vmMask, vmMaskData_)
+  for (VmMaskData* vmMask : vmMaskData_)
   {
     if (!foundVmMasks.contains(vmMask->UserConfig->getVmName()))
       foundVmMasks.append(vmMask->UserConfig->getVmName());
   }
 
-  foreach (const QString &oldVmMask, foundVmMasks)
+  for (const QString &oldVmMask : foundVmMasks)
   {
     // To be on the safe side, we attempt to stop the VM
     args.clear();
@@ -935,7 +935,7 @@ bool PmManager::createCommandsToCleanupAllVirtualMachines(QList<PmCommand*>& par
     baseDiskDir.setNameFilters( QStringList( "BaseDisk_*.vmdk" ) );
     QStringList foundBaseDisks = baseDiskDir.entryList( QDir::Files | QDir::Readable | QDir::CaseSensitive );
 
-    foreach (const QString &oldBaseDisk, foundBaseDisks)
+    for (const QString &oldBaseDisk : foundBaseDisks)
     {
       if (!oldBaseDisk.contains("_flat"))
       {

@@ -55,7 +55,7 @@ bool VerifiedDownload::isReady()
     IWARN("No (secure) hash algrithm is choosen.");
     initialized = false;
   }
-  foreach (QChar c, checkSum_)
+  for (QChar c : checkSum_)
   {
     if(!c.isDigit() && !c.isLetter())
     {
@@ -158,7 +158,7 @@ void VerifiedDownload::slotError(QNetworkReply::NetworkError parErrorCode)
 void VerifiedDownload::slotSslErrors(const QList<QSslError> &parSslErrors)
 {
   IERR("Received ssl-network-errors: " );
-  foreach (QSslError err, parSslErrors)
+  for (QSslError err : parSslErrors)
   {
     IERR("  " + err.errorString());
   }

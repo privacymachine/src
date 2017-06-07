@@ -55,7 +55,7 @@ bool UserConfig::parseBrowsers(QString browsers, QStringList& browserList)
 {
   QStringList rawBrowserList = browsers.split( ',', QString::SkipEmptyParts );
 
-  foreach( QString browser, rawBrowserList )
+  for( QString browser : rawBrowserList )
     browserList.append(browser.toLower());
 
   return true;
@@ -96,7 +96,7 @@ bool UserConfig::readFromFile()
     return false;
   }
 
-  foreach (QString section, settingsRead.childGroups())
+  for (QString section : settingsRead.childGroups())
   {
     if (section.startsWith(constVmMaskPrefix))
     {
@@ -197,7 +197,7 @@ bool UserConfig::setDefaultsAndValidateConfiguration(const QJsonObject& parBaseD
 {
   int vmMaskId = 0;
 
-  foreach (VmMaskUserConfig* vmMaskUserConfig, configuredVmMasks_)
+  for (VmMaskUserConfig* vmMaskUserConfig : configuredVmMasks_)
   {
     // Set the VmMask-Id (=same of radio buttons)
     vmMaskUserConfig->setVmMaskId(vmMaskId);
@@ -213,7 +213,7 @@ bool UserConfig::setDefaultsAndValidateConfiguration(const QJsonObject& parBaseD
     if ( connectionType.startsWith("VPN_") ) // VPNGate or custom OpenVPN-Provider
     {
       bool vpnConfigured = false;
-      foreach (const VpnConfig* vpnConfig, configuredVPNs_)
+      for (const VpnConfig* vpnConfig : configuredVPNs_)
       {
         if(connectionType == "VPN_" + vpnConfig->Name)
         {

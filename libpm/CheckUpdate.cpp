@@ -115,7 +115,7 @@ void CheckUpdate::findBinaryUpdates()
   QList<XmlUpdateParser::UpdateInfoBinary> binaryList = xmlUpdateParser_.getBinaryUpdateList();
 
 
-  foreach (XmlUpdateParser::UpdateInfoBinary binary, binaryList)
+  for (XmlUpdateParser::UpdateInfoBinary binary : binaryList)
   {
     if( PmVersion::greaterInRespectTo(binary.Version, currentBinaryVersion_, PmVersion::Major ) )
     {
@@ -133,12 +133,12 @@ void CheckUpdate::findBinaryUpdates()
         OS = "win64";
       #endif
 
-      foreach( XmlUpdateParser::CheckSumListBinary entry, binary.CheckSums )
+      for( XmlUpdateParser::CheckSumListBinary entry : binary.CheckSums )
       {
         if (entry.Os == OS)
         {
           binaryUpdate.CheckSum = entry.CheckSum;
-          foreach (QChar c, binaryUpdate.CheckSum)
+          for (QChar c : binaryUpdate.CheckSum)
           {
             if(!c.isDigit() && !c.isLetter())
             {
@@ -173,7 +173,7 @@ void CheckUpdate::findBaseDiskUpdates()
 {
   QList<XmlUpdateParser::UpdateInfoBaseDisk> baseDiskList = xmlUpdateParser_.getBaseDiskUpdateList();
 
-  foreach (XmlUpdateParser::UpdateInfoBaseDisk baseDisk, baseDiskList)
+  for (XmlUpdateParser::UpdateInfoBaseDisk baseDisk : baseDiskList)
   {
     if( PmVersion::greaterInRespectTo(baseDisk.Version, currentBaseDiskVersion_, PmVersion::ComponentMajor) || currentBaseDiskVersion_.isZero() )
     {
@@ -184,13 +184,13 @@ void CheckUpdate::findBaseDiskUpdates()
       baseDiskUpdate.Title = baseDisk.Title;
 
 
-      foreach( XmlUpdateParser::CheckSumListBaseDisk entry, baseDisk.CheckSums )
+      for( XmlUpdateParser::CheckSumListBaseDisk entry : baseDisk.CheckSums )
       {
         if( (entry.ComponentMajorUp == currentBaseDiskVersion_.getComponentMajor()) ||
             (entry.ComponentMajorUp == baseDisk.Version.getComponentMajor()) )
         {
           baseDiskUpdate.CheckSum = entry.CheckSum;
-          foreach (QChar c, baseDiskUpdate.CheckSum)
+          for (QChar c : baseDiskUpdate.CheckSum)
           {
             if(!c.isDigit() && !c.isLetter())
             {
@@ -226,7 +226,7 @@ void CheckUpdate::findConfigUpdates()
   QList<XmlUpdateParser::UpdateInfoConfig> configList = xmlUpdateParser_.getConfigUpdateList();
 
 
-  foreach (XmlUpdateParser::UpdateInfoConfig config, configList)
+  for (XmlUpdateParser::UpdateInfoConfig config : configList)
   {
     if( PmVersion::greaterInRespectTo(config.Version, currentConfigVersion_, PmVersion::ComponentMajor ) )
     {
@@ -244,12 +244,12 @@ void CheckUpdate::findConfigUpdates()
         OS = "win64";
       #endif
 
-      foreach( XmlUpdateParser::CheckSumListConfig entry, config.CheckSums )
+      for( XmlUpdateParser::CheckSumListConfig entry : config.CheckSums )
       {
         if (entry.Os == OS)
         {
           configUpdate.CheckSum = entry.CheckSum;
-          foreach (QChar c, configUpdate.CheckSum)
+          for (QChar c : configUpdate.CheckSum)
           {
             if(!c.isDigit() && !c.isLetter())
             {
