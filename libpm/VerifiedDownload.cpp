@@ -4,19 +4,12 @@
 VerifiedDownload::VerifiedDownload(QObject *parent) :
   QObject(parent)
 {
-  // this means hashAlgo_=0 and we don't want to use either Md4 or Md5 (1)
-  hashAlgorithm_=QCryptographicHash::Md4;
-  ptrNetReply_ = NULL;
   ptrNam_ = new QNetworkAccessManager(this);
 
   connect(this,
           &VerifiedDownload::finished,
           this,
           &VerifiedDownload::slotFinished);
-
-  filePath_="";
-  error_=NoError;
-  started_=false;
 }
 
 VerifiedDownload::~VerifiedDownload()

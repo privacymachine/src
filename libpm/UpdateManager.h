@@ -128,19 +128,22 @@ class UpdateManager : public QObject
     void baseDiskUpdateInstallRequested();
 
     /// private variables:
-    WidgetInteractiveUpdate* ptrInteractiveUpdateWidget_;
-    CheckUpdate* ptrCheckUpdate_;
-    QUrl appcastUrl_;
+    WidgetInteractiveUpdate* ptrInteractiveUpdateWidget_ = NULL;
+    CheckUpdate* ptrCheckUpdate_ = NULL;
+    SystemConfig* ptrSystemConfig_ = NULL;
+    VerifiedDownload* ptrVerifiedDownload_ = NULL;
+    QProcess *ptrExternalProcess_ = NULL;
+
+    bool baseDiskUpdateRequired_ = false;
+    bool vmMaskRegenerationNecessary_ = false;
+
     PmVersion currentBaseDiskVersion_;
     PmVersion currentBinaryVersion_;
     PmVersion currentConfigVersion_;
-    bool baseDiskUpdateRequired_;
-    bool vmMaskRegenerationNecessary_;
-    bool interactive_;
-    SystemConfig* ptrSystemConfig_;
-    VerifiedDownload* ptrVerifiedDownload_;
+
+    QUrl appcastUrl_;
     Update progressedUpdate_;
-    QProcess *ptrExternalProcess_;
+
 };
 
 

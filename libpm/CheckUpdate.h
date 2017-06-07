@@ -130,12 +130,13 @@ class CheckUpdate : public QObject
 
     /// private variables:
 
-    QUrl url_;
-    bool started_;
-    CheckUpdateError error_;
-    QString errorStr_;
+    QUrl url_ = QUrl("_invalid URL_", QUrl::StrictMode);
+    bool started_ = false;
+    CheckUpdateError error_ = NoError;
+    QString errorStr_ = "";
     QNetworkAccessManager *ptrNAM_;
-    QNetworkReply *ptrNetReply_;
+    QNetworkReply *ptrNetReply_ = NULL;
+
     XmlUpdateParser xmlUpdateParser_;
     QList<Update> updateListBaseDisk_;
     QList<Update> updateListBinary_;

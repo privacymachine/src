@@ -130,16 +130,20 @@ class VerifiedDownload : public QObject
     void slotFinished();
 
   private:
-    QString checkSum_;
-    QUrl url_;
-    QString filePath_;
-    QDir targetDir_;
+    // inititialized in constructor
     QNetworkAccessManager *ptrNam_;
-    QNetworkReply *ptrNetReply_;
-    VerifiedDownloadError error_;
-    bool started_;
-    QCryptographicHash::Algorithm hashAlgorithm_;
-    qint64 progressBarMax_;
+
+    QString filePath_ = "";
+    QString checkSum_ = "_invalid checksum_";
+    QDir targetDir_ = QDir("/not_existing");
+    QUrl url_ = QUrl("_invalid URL_", QUrl::StrictMode);
+    QNetworkReply *ptrNetReply_ = NULL;
+    VerifiedDownloadError error_ = NoError;
+    bool started_ = false;
+    qint64 progressBarMax_ = 0;
+    // this means hashAlgo_=0 and we don't want to use Md4 nor Md5 (1)
+    QCryptographicHash::Algorithm hashAlgorithm_ = QCryptographicHash::Md4;
+
 };
 
 #endif // DOWNLOADER_H

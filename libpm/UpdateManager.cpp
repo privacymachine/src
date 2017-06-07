@@ -10,13 +10,6 @@
 UpdateManager::UpdateManager(QObject *parent) :
   QObject(parent)
 {
-  ptrCheckUpdate_ = NULL;
-  ptrInteractiveUpdateWidget_ = NULL;
-  ptrSystemConfig_ = NULL;
-  baseDiskUpdateRequired_ = false;
-  vmMaskRegenerationNecessary_ = false;
-  ptrVerifiedDownload_ = NULL;
-  ptrExternalProcess_ = NULL;
 }
 
 UpdateManager::~UpdateManager()

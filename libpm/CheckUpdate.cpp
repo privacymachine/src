@@ -8,11 +8,7 @@
 CheckUpdate::CheckUpdate(QObject *parent) :
   QObject(parent)
 {
-  started_ = false;
-  ptrNetReply_ = NULL;
   ptrNAM_ = new QNetworkAccessManager(this);
-  error_= NoError;
-  errorStr_="";
 }
 
 bool CheckUpdate::isReady()
