@@ -100,7 +100,7 @@ Class . function();
 Class -> function();
 ```
 
-## Required: Use NULL instead of 0 for pointers
+## Required: Use nullptr instead of 0 for pointers
 
 **not allowed:**  
 ```c++
@@ -112,7 +112,32 @@ if(!PointerToObj)
 if(PointerToObj != 0)
 ```
 
-**best way:**  
 ```c++
 if(PointerToObj != NULL)
 ```
+
+**best way:**  
+```c++
+if(PointerToObj != nullptr)
+```
+
+## Required: Use c++11 features over QT features
+
+### for each
+
+**not allowed:**
+```c++
+foreach (var, container) 
+{
+  var++;
+}
+```
+  
+**allowed:**
+```c++
+for (var : container) 
+{
+  var++;
+}
+```
+
