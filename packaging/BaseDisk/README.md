@@ -1,4 +1,4 @@
-# Dokumentation of the BaseDisk build Process
+# Documentation of the BaseDisk-Build-Process
 Because of the higher stability we use libvirt for our build process.
 
 ## To build your own BaseDisk follow this steps (tested on debian jessie)
@@ -20,7 +20,7 @@ Because of the higher stability we use libvirt for our build process.
     2. Download "generateInitialConfig.py", "libBaseDiskBuild.py", "libVM.py", "cleanup.py" and "buildNewBaseDisk.py"
     3. Download the latest pm_files from http://unstable.privacymachine.eu/BaseDisk_build/pm_files/ and extract them
     4. Download latest guestadditions.iso from http://download.virtualbox.org/virtualbox/ and create a symlink:  
-         ln -s VBoxGuestAdditions_5.0.36.iso VBoxGuestAdditionsUsed.iso
+         ln -s VBoxGuestAdditions_5.1.26.iso VBoxGuestAdditionsUsed.iso
     5. Create a subfolder "grmlWithSshKey" and extract http://unstable.privacymachine.eu/BaseDisk_build/grmlWithSshKey/grmlWithSshKey.tar there
 
 3. Edit "generateInitialConfig.py" and run it afterwards to create the initial configuration as well as the folder structure
@@ -73,7 +73,7 @@ Because of the higher stability we use libvirt for our build process.
 ## File documentation
 
 ### generateInitialConfig.py
-This script generates the initial config, creates the folder structure and is **should be edited by the user before first run**. Because of the limitations of JSON files and the fact that buildNewBaseDisk.py updates its own config this script provides a easy way to generate an initial config. The configuration parameters are documented in this python script. Make sure you have no additional witespaces in lines ending with "\".
+This script generates the initial config, creates the folder structure and is **should be edited by the user before first run**. Because of the limitations of JSON files and the fact that buildNewBaseDisk.py updates its own config this script provides a easy way to generate an initial config. The configuration parameters are documented in this python script. Make sure you have no additional witespaces in lines ending with a backslash.
 
 ### buildNewBaseDisk.py
 This script reads the configuration file "buildBaseDiskConfig.json" and triggers the build process for a BaseDisk.

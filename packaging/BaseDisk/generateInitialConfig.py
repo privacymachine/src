@@ -87,11 +87,12 @@ if __name__ == '__main__':
                        # apt-cacher-ng is recommended but not required
                        'apt': \
                        { \
-                            # Example without cache for http://ftp.de.debian.org/debian
+                            # All examples are using the debian mirror 'http://ftp.de.debian.org/debian'
+                            # * Example without cache:
                            'deb_proxie':'http://', \
                            'deb_mirror':'ftp.de.debian.org/debian'
-                            # Example for a local machine 'cacher' with installed apt-cacher-ng: http://cacher:3142/ftp.de.debian.org/debian
-                            # remember to add the tailing / to 'deb_proxie'
+                            # * Example for a local machine named 'cacher' with installed apt-cacher-ng: 'http://cacher:3142/ftp.de.debian.org/debian
+                            #   Take care of the tailing '/' at the value of 'deb_proxie'
                             # 'deb_proxie':'http://cacher:1234/', \
                             # 'deb_mirror':'ftp.de.debian.org/debian'
                        }, \

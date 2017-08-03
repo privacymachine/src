@@ -148,7 +148,7 @@ if __name__ == '__main__':
 # Test for lockfile to prevent paralell execution
     if os.path.exists(config['base_paths']['lock_file']):
         print('prepare_old_base_disk_update.py is already running or faild at last execution \n lockfile: '+config['base_paths']['lock_file'])
-        print('To reset the build environment stop prepare_old_base_disk_update.py and run cleanup.py')
+        print('To reset the build environment stop buildNewBaseDisk.py and run cleanup.py')
         exit(1)
     os.mknod(config['base_paths']['lock_file'])
     
