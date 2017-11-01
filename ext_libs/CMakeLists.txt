@@ -160,6 +160,8 @@ if (NOT SKIP_FREERDP_CODE)
   set (WITH_OPENSSL ON)
   
   MESSAGE("Configuring FreeRDP...")
+  set(VENDOR "PrivacyMachine")
+  set(CLIENT_VENDOR_PATH "FreeRDP")
   set (FREERDP_SKIP_WINPR_TOOLS ON)
   set (FREERDP_CUSTOM_INSTALL ON)
   if (MSVC)
