@@ -138,7 +138,7 @@ bool PmVpnHelper::addCmdToInitSystemD(QList<PmCommand*>& parCmdList, QString par
   openvpn_pm.service starts the openvpn
   */
 
-  // TODO: rename systemd files:
+  // TODO olaf: rename systemd files:
   // firefox.service     -> pmFirefoxAutoStartAfterOpenVPN.service
   // firefox.path        -> pmFirefoxAutoStartAfterOpenVPN.path
   // openvpn_log.service -> pmOpenVpnLogViewer.service

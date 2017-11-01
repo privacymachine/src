@@ -137,24 +137,28 @@ void VerifiedDownload::slotError(QNetworkReply::NetworkError parErrorCode)
 {
   if (parErrorCode == QNetworkReply::OperationCanceledError)
   {
-    ILOG("user canceled download")
+    errorStr_ = "User canceled download.";
+    ILOG(errorStr_);
+    error_ = Aborted;
   }
   else
   {
-    IERR("Received network error: " + QString::number(parErrorCode));
+    errorStr_ = ptrNetReply_->errorString();
+    IERR("Recived network error: " + QString::number(parErrorCode)+"; "+errorStr_);
+    error_ = NetworkError;
   }
-  error_ = Aborted;
   started_ = false;
   emit finished();
 }
 
 void VerifiedDownload::slotSslErrors(const QList<QSslError> &parSslErrors)
 {
-  IERR("Received ssl-network-errors: " );
+  errorStr_ = "Received ssl-network-errors:";
   for (QSslError err : parSslErrors)
   {
-    IERR("  " + err.errorString());
+    errorStr_ += "\n  " + err.errorString();
   }
+  IERR(errorStr_);
   error_ = NetworkError;
   started_ = false;
   emit finished();
@@ -170,11 +174,7 @@ void VerifiedDownload::slotDownloadFinished()
 
   if( ptrNetReply_->error() != QNetworkReply::NoError )
   {
-    error_ = NetworkError;
-    IERR("Could not download "+url_.toDisplayString()+
-         " because of QNetworkReply::NetworkError "+QString::number(ptrNetReply_->error()));
-    emit finished();
-    return;
+    slotError(ptrNetReply_->error());
   }
 
   ILOG("VerifiedDownload: Start writing data to "+filePath_);
@@ -182,9 +182,11 @@ void VerifiedDownload::slotDownloadFinished()
   if( !file.open(QIODevice::WriteOnly)
     || file.write(ptrNetReply_->readAll()) == -1 )
   {
-    IERR("Failed to access '" + filePath_ + "' for writing.");
     file.close();
+    errorStr_ = "Failed to access '" + filePath_ + "' for writing.";
+    IERR(errorStr_);
     error_ = FileWriteError;
+    started_ = false;
     emit finished();
     return;
   }
@@ -200,25 +202,28 @@ void VerifiedDownload::slotDownloadFinished()
   QCryptographicHash hash( hashAlgorithm_ );
   if( file.open( QIODevice::ReadOnly ) && hash.addData( &file ) )
   {
+    file.close();
     if( hash.result().toHex() != checkSum_ )
     {
-      IERR("Error: Failed to verify check sum of file '"+filePath_+"': "+hash.result().toHex() +
-           " does not match check sum, which is "+checkSum_+".");
-      file.close();
+      errorStr_ = "Error: Failed to verify check sum of file '"+filePath_+"': "+hash.result().toHex() +
+           " does not match check sum, which is "+checkSum_+".";
+      IERR(errorStr_)
       error_ = IntegrityError;
+      started_ = false;
       emit finished();
       return;
     }
   }
   else
   {
-    IWARN("Error: Failed to access '" + filePath_ + "' for reading.");
     file.close();
+    errorStr_ = "Error: Failed to access '" + filePath_ + "' for reading.";
+    IERR(errorStr_);
     error_ = FileReadError;
+    started_ = false;
     emit finished();
     return;
   }
-  file.close();
   emit downloadProgress(progressBarMax_, progressBarMax_);
   emit finished();
 }

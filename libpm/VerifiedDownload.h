@@ -61,6 +61,10 @@ class VerifiedDownload : public QObject
     /// \return VerifiedDownload::VerifiedDownloadError
     VerifiedDownloadError getError() {return error_;}
 
+    /// \brief getErrorString
+    /// \return a human-readable description of the last device error that occurred.
+    QString getErrorString() {return errorStr_;}
+
     /// \brief getUrl
     /// \return QUrl
     QUrl getUrl() {return url_;}
@@ -135,6 +139,7 @@ class VerifiedDownload : public QObject
 
     QString filePath_ = "";
     QString checkSum_ = "_invalid checksum_";
+    QString errorStr_ = "";
     QDir targetDir_ = QDir("/not_existing");
     QUrl url_ = QUrl("_invalid URL_", QUrl::StrictMode);
     QNetworkReply *ptrNetReply_ = nullptr;
