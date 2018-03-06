@@ -10,11 +10,6 @@ if [ -d ./RemoteDisplay ]; then
   exit 1
 fi
 
-if [ -d ./libsodium ]; then
-  echo "The directory 'libsodium' does already exist, please delete it manually!"
-  exit 1
-fi
-
 # Get project FreeRDP from github
 git clone https://github.com/pm-bernhard/FreeRDP.git
 

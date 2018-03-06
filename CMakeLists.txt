@@ -21,6 +21,14 @@ endif()
 
 set(BUILD_SHARED_LIBS ON)
 
+# Disabled by default
+# TODO: "schiachabalaft" disables the usage of FreeRDP -> It's a Hack!
+set(SKIP_FREERDP_CODE "ON") # Valid values: ON/OFF
+if (SKIP_FREERDP_CODE)
+  # add a define useable in cpp source
+  add_definitions(-DSKIP_FREERDP_CODE)
+endif()
+
 # AL: Needed for compiling Fervor without QWebView
 # TODO: remove me
 set(SKIP_QWEBVIEW "ON") # Valid values: ON/OFF
@@ -32,17 +40,18 @@ if (SKIP_QWEBVIEW)
   add_definitions(-DSKIP_QWEBVIEW)
 endif()
 
-# It is needed that the Project 'ExtLib' is build first
-# search an library here explicit to provide nicer error messages to the user
-find_library(SomeExtLib_LIB
-  NAMES RemoteDisplay libRemoteDisplay
-  HINTS   
-    ${CMAKE_CURRENT_SOURCE_DIR}/working_dir/build_libs  # RemoteDisplay.lib on windows
-    ${CMAKE_CURRENT_SOURCE_DIR}/working_dir/lib  # libRemoteDisplay.so on linux 
-)
-if ("${SomeExtLib_LIB}" STREQUAL "SomeExtLib_LIB-NOTFOUND")
-  MESSAGE(FATAL_ERROR "ERROR: Please build the required Project 'ext_libs' first (via ./buildExtLibs.sh or opening the file ext_libs/CMakeLists.txt in Qt-Creator")
-endif()
+# TODO: Commented out for "schiachabalaft"
+# # It is needed that the Project 'ExtLib' is build first
+# # search an library here explicit to provide nicer error messages to the user
+# find_library(SomeExtLib_LIB
+#   NAMES RemoteDisplay libRemoteDisplay
+#   HINTS   
+#     ${CMAKE_CURRENT_SOURCE_DIR}/working_dir/build_libs  # RemoteDisplay.lib on windows
+#     ${CMAKE_CURRENT_SOURCE_DIR}/working_dir/lib  # libRemoteDisplay.so on linux 
+# )
+# if ("${SomeExtLib_LIB}" STREQUAL "SomeExtLib_LIB-NOTFOUND")
+#   MESSAGE(FATAL_ERROR "ERROR: Please build the required Project 'ext_libs' first (via ./buildExtLibs.sh or opening the file ext_libs/CMakeLists.txt in Qt-Creator")
+# endif()
 
 
 # search all Qt-Modules needed for Translation and Installers
@@ -53,8 +62,10 @@ find_package(Qt5Multimedia REQUIRED)
 find_package(Qt5LinguistTools REQUIRED)
 find_package(Qt5Test REQUIRED)
 find_package(Qt5Xml REQUIRED)
-find_package(RemoteDisplay REQUIRED)
-include_directories(${REMOTEDISPLAY_INCLUDE_DIR})
+if (NOT SKIP_FREERDP_CODE)
+  find_package(RemoteDisplay REQUIRED)
+  include_directories(${REMOTEDISPLAY_INCLUDE_DIR})
+endif()
 
 include_directories(build_ext_libs/librsync/src)
 

@@ -16,6 +16,7 @@ rm -f working_dir/freerdp-client.dll
 rm -f working_dir/freerdp-client.dll.manifest
 rm -f working_dir/isprefix_test.exe
 rm -f working_dir/isprefix_test.exe.manifest
+rm -f working_dir/isprefix_test
 rm -f working_dir/minigzip.exe
 rm -f working_dir/minigzip.exe.manifest
 rm -f working_dir/quazip5.dll
@@ -28,6 +29,7 @@ rm -f working_dir/RemoteDisplay.dll
 rm -f working_dir/RemoteDisplay.dll.manifest
 rm -f working_dir/RemoteDisplay-client.exe
 rm -f working_dir/RemoteDisplay-client.exe.manifest
+rm -f working_dir/RemoteDisplay-client
 rm -f working_dir/wfreerdp.exe
 rm -f working_dir/wfreerdp.exe.manifest
 rm -f working_dir/wfreerdp-client.dll

@@ -23,11 +23,12 @@ if [ ! -d build_ext_libs ]; then
   mkdir build_ext_libs
 fi
 
-if [ ! -d ext_libs/FreeRDP ]; then
-  pushd ext_libs
-  ./checkoutExternal.sh
-  popd
-fi
+# TODO: Commented out for "schiachabalaft"
+#if [ ! -d ext_libs/FreeRDP ]; then
+#  pushd ext_libs
+#  ./checkoutExternal.sh
+#  popd
+#fi
 
 pushd build_ext_libs
 

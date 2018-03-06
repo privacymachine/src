@@ -745,7 +745,11 @@ bool PmManager::createCommandsToStartVmMask(int parVmMaskId,
   args.append("startvm");
   args.append(vmName);
   args.append("--type");
-  args.append("headless"); // 'gui' or 'headless'
+  #ifndef SKIP_FREERDP_CODE
+    args.append("headless"); // 'gui' or 'headless'
+  #else
+    args.append("gui"); // 'gui' or 'headless'
+  #endif
   curCmd = new PmCommand( vboxManageCommand, args, true, false, desc );
   curCmd->setExecutionCosts(configSystem_->getMachineRestoreTime());
   parCmdList.append(curCmd);

@@ -78,10 +78,12 @@ WidgetRdpView::WidgetRdpView( QString parHost, QSharedPointer<VmMaskInstance> pa
   loGrid_->addWidget(freeRDPwidget_, 0, 0, 0, 0 );
   setLayout(loGrid_);
 
-  connect(freeRDPwidget_,
-          &RemoteDisplayWidget::disconnected,
-          this,
-          &WidgetRdpView::slotDisconnected);
+  #ifndef SKIP_FREERDP_CODE
+    connect(freeRDPwidget_,
+            &RemoteDisplayWidget::disconnected,
+            this,
+            &WidgetRdpView::slotDisconnected);
+  #endif
 
   timerResizeHappend_.setSingleShot(true);
   connect(&timerResizeHappend_,
@@ -202,10 +204,12 @@ void WidgetRdpView::slotDisconnected()
 
   if (freeRDPwidget_)
   {
-    disconnect(freeRDPwidget_,
-               &RemoteDisplayWidget::disconnected,
-               this,
-               &WidgetRdpView::slotDisconnected);
+    #ifndef SKIP_FREERDP_CODE
+      disconnect(freeRDPwidget_,
+                 &RemoteDisplayWidget::disconnected,
+                 this,
+                 &WidgetRdpView::slotDisconnected);
+    #endif
 
     loGrid_->removeWidget(freeRDPwidget_);
     delete (freeRDPwidget_);
@@ -227,10 +231,12 @@ void WidgetRdpView::slotDisconnected()
 
   loGrid_->addWidget(freeRDPwidget_, 0, 0, 1, 1);
 
-  connect(freeRDPwidget_,
-          &RemoteDisplayWidget::disconnected,
-          this,
-          &WidgetRdpView::slotDisconnected);
+  #ifndef SKIP_FREERDP_CODE
+    connect(freeRDPwidget_,
+            &RemoteDisplayWidget::disconnected,
+            this,
+            &WidgetRdpView::slotDisconnected);
+  #endif
 
   ILOG("WidgetRdpView: we start a very short timer to call resizeVmDesktopAndConnectViaRdp() in 10ms");
   timerResizeHappend_.start(10);
