@@ -42,6 +42,9 @@
 #include <string>
 #include <algorithm>
 #include <iostream>
+
+#include <CLI/CLI.hpp>
+
 using namespace std;
 
 // local function declarations

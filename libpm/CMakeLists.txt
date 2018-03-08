@@ -284,6 +284,29 @@ else()
   set (OS_SPECIFIC_LIBS stdc++)
 endif()
 
+
+set(CLI11_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../ext_libs/CLI11/include)
+MESSAGE("Include CLI11 from path: ${CLI11_SOURCE_DIR}")
+
+add_library(CLI11 INTERFACE)
+#target_sources(CLI11 INTERFACE App.hpp  CLI.hpp  Error.hpp  Ini.hpp  Option.hpp  Split.hpp  StringTools.hpp  Timer.hpp  TypeTools.hpp  Validators.hpp  Version.hpp)
+target_sources(CLI11 INTERFACE
+    ${CLI11_SOURCE_DIR}/CLI/App.hpp
+    ${CLI11_SOURCE_DIR}/CLI/CLI.hpp
+    ${CLI11_SOURCE_DIR}/CLI/Error.hpp
+    ${CLI11_SOURCE_DIR}/CLI/Ini.hpp
+    ${CLI11_SOURCE_DIR}/CLI/Option.hpp
+    ${CLI11_SOURCE_DIR}/CLI/Split.hpp
+    ${CLI11_SOURCE_DIR}/CLI/StringTools.hpp
+    ${CLI11_SOURCE_DIR}/CLI/Timer.hpp
+    ${CLI11_SOURCE_DIR}/CLI/TypeTools.hpp
+    ${CLI11_SOURCE_DIR}/CLI/Validators.hpp
+    ${CLI11_SOURCE_DIR}/CLI/Version.hpp
+    )
+target_include_directories(CLI11 INTERFACE
+    "${CLI11_SOURCE_DIR}"
+)
+
 target_link_libraries(${PM_STATIC_LIB}
   ${Qt5Core_LIBRARIES}
   ${Qt5Widgets_LIBRARIES}
@@ -296,6 +319,7 @@ target_link_libraries(${PM_STATIC_LIB}
   ${LIBSODIUM_LIBRARIES}
   ${OS_SPECIFIC_LIBS}
   ${LIBRSYNC_LIB}
+  CLI11
   )
 
 target_link_libraries(PrivacyMachine

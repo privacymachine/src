@@ -10,11 +10,22 @@ if [ -d ./RemoteDisplay ]; then
   exit 1
 fi
 
+if [ -d ./CLI11 ]; then
+  echo "The directory 'RemoteDisplay' does already exist, please delete it manually!"
+  exit 1
+fi
+
 # Get project FreeRDP from github
-git clone https://github.com/pm-bernhard/FreeRDP.git
+git clone -b PrivacyMachine_fRDP_2.0.0 https://github.com/pm-bernhard/FreeRDP.git
 
 # Get project RemoteDisplay from github
-git clone -b updating https://github.com/pm-bernhard/RemoteDisplay.git
+git clone -b PrivacyMachine_fRDP_2.0.0 https://github.com/pm-bernhard/RemoteDisplay.git
+
+# Get project CLI11 from github
+git clone https://github.com/CLIUtils/CLI11.git
+cd CLI11
+git checkout v1.3.0
+cd ..
 
 # LibSodium
 #   under debian based distros the package libsodium-dev is used
