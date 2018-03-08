@@ -36,7 +36,6 @@
 #include <QTextCodec>
 #include <QProcess>
 #include <QStringList>
-#include <QCommandLineParser>
 #include <QStyleFactory>
 
 #include <string>
@@ -60,6 +59,34 @@ int main(int argc, char *argv[])
   {
     cerr << "error initialize libsodium" << endl;
     return -1;
+  }
+
+  // parse command line input using CLI
+  CLI::App cliApp{"PrivacyMachine, a browser virtualisation programm wich aims to protect the users privacy."};
+
+  // enable config files (INI)
+  cliApp.set_config("-c, --config");
+
+  // create a CLI-INI-file
+  bool createCliIniFile;
+  auto createCliIniFileOption = cliApp.add_flag("-C, --create-config", createCliIniFile, "Prints a default configuration file in INI format and exits.");
+
+  bool cliOptionLogSensitiveData;
+  cliApp.add_flag("-s, --log-sensitive", cliOptionLogSensitiveData, "Enable logging of sensible data, i.e. passwords");
+
+  //QString pmConfigDirPath = getPmConfigQDir();
+  //cliApp.add_option("-w, --working-dir",pmConfigDirPath, "Change config directory. A independend instance will be build there.");
+
+
+  // parse the command line options
+  CLI11_PARSE(cliApp, argc, argv);
+
+  // Print default configuration file
+  if (createCliIniFile)
+  {
+      cliApp.remove_option(createCliIniFileOption);
+      std::cout << cliApp.config_to_str(true);
+      exit(0);
   }
 
   int retCode = -1;
@@ -105,7 +132,9 @@ int main(int argc, char *argv[])
   }
   if (!PmLog::getInstance().initAndRotateLogfiles(userConfigDir.path()))
     return false; // error message already logged to the console
-
+  // If requested by the user, set the global variable to enable logging of sensitive data via ILOG_SENSITIVE
+  if (cliOptionLogSensitiveData)
+    PmLog::getInstance().enableSensitiveLogging();
 
   // Enable Warning messages triggered by qDebug(), qWarning(), qCritical(), qFatal()
   qInstallMessageHandler(handleMessages);
@@ -143,20 +172,6 @@ int main(int argc, char *argv[])
     // init name
     QCoreApplication::setApplicationName(QCoreApplication::translate("mainfunc", constPrivacyMachineName));
     QCoreApplication::setApplicationVersion(constPrivacyMachineVersion);
-
-    QCommandLineParser parser;
-    parser.setApplicationDescription(QCoreApplication::translate("mainfunc", "This executeable launches the PrivacyMachine, a browser who protects your Privacy"));
-    parser.addHelpOption();
-    parser.addVersionOption();
-    parser.setSingleDashWordOptionMode(QCommandLineParser::ParseAsLongOptions);
-
-    QCommandLineOption optionLogSensitiveData("logsensitive", QCoreApplication::translate("mainfunc", "Enable logging of sensible data, i.e. passwords"));
-    parser.addOption(optionLogSensitiveData);
-    parser.process(app);
-
-    // set the global variable to enable logging of sensitive data via ILOG_SENSITIVE
-    if (parser.isSet(optionLogSensitiveData))
-      PmLog::getInstance().enableSensitiveLogging();
 
     // Check if all is installed what will be needed to run the PrivacyMachine
     if (!checkSystemInstallation(vboxDefaultMachineFolder))

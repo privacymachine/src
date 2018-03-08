@@ -16,7 +16,8 @@
                         limitations under the Licence.
 ==============================================================================*/
 
-#pragma once
+#ifndef PMLOG_H
+#define PMLOG_H
 
 #include <QString>
 
@@ -47,6 +48,7 @@ class PmLog
     PmLog();
 
     QString logFileName_;
-    bool sensitiveLogging_; // used for logging username/passwords (can be enabled per commandline)
+    bool sensitiveLogging_ = false; // used for logging username/passwords (can be enabled per commandline)
 };
 
+#endif // PMLOG_H

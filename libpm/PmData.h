@@ -16,9 +16,11 @@
                         limitations under the Licence.
 ==============================================================================*/
 
-#pragma once
+#ifndef PMDATA_H
+#define PMDATA_H
 
 #include <QString>
+#include "utils.h"
 
 // Singelton used storage of global used Data (Not Threadsafe)
 // Singelton-Pattern from http://stackoverflow.com/questions/1008019/c-singleton-design-pattern
@@ -42,11 +44,16 @@ class PmData
 
     QString getVBoxCommand() { return vboxCommand_; }
 
+    // set a working-dir related instance-ID to enable multiple PM configurations
+    void setUniqueInstanceId(QString id) { instanceId_ = id; }
+
   private:
     PmData();
     QString determineVBoxCommand();
 
     QString installDirPath_;
     QString vboxCommand_;
+    QString instanceId_;
 };
 
+#endif // PMDATA_H

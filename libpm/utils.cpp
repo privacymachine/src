@@ -39,7 +39,7 @@
 #include "VmMaskInstance.h"
 
 const char *constPrivacyMachineVersion = "0.10.0.0";
-const char *constPrivacyMachineName = "PrivacyMachine beta-2";
+const char *constPrivacyMachineName = "PrivacyMachine - Schiach aba laft";
 const char *constLocalIp = "127.0.0.1";
 const char *constRootUser = "root";
 const char *constRootPwd = "123";
@@ -48,7 +48,7 @@ const char *constLiveUserPwd = "123";
 const char *constVmMaskPrefix = "VmMask_";
 const char *constPmVmMaskPrefix = "pm_VmMask_";
 const char *constIniVpnPrefix = "VPN_";
-const char *constSnapshotName = "UpAndRunning";
+const char *constSnapshotName = "schiachabalaft";
 const char *constPmUserConfigFileName = "PrivacyMachine.ini";
 const char *constPmInternalConfigFileName = "PrivacyMachineInternals.ini";
 
@@ -406,6 +406,11 @@ QString getLastErrorMsg()
 /// \brief: example for linux: /home/johndoe/.config/privacymachine
 /// \brief: example for windows: %UserProfile%\PrivacyMachine
 /// \return the config dir which depends on the os
+
+// todo:
+//  change to return QString
+//  implement getPmConfigQDir() in PmData
+//  refactor complete code
 QDir getPmConfigQDir()
 {
   QString pmConfigPath = QDir::homePath();
