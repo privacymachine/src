@@ -2,8 +2,8 @@
 #include "utils.h"
 
 #include <QFile>
-#include <QDir>
 #include <QTextStream>
+#include <QCryptographicHash>
 
 PmData::PmData():
   installDirPath_("")
@@ -34,3 +34,12 @@ QString PmData::determineVBoxCommand()
   return vboxCommand;
 }
 
+void PmData::setPmConfigDir(QString configDir)
+{
+  configDir_ = configDir;
+  // We use md5 here because its not security relevant.
+  QCryptographicHash hash(QCryptographicHash::Md5);
+  hash.addData(configDir_.absolutePath().toLocal8Bit());
+  instanceId_ = QString::fromLocal8Bit(hash.result().toHex());
+  instanceId_.chop(instanceId_.length()-5);
+}

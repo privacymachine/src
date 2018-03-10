@@ -55,13 +55,13 @@ void SystemConfig::readFromFileOrSetDefaults()
   pSettings_->setIniCodec("UTF-8");
 
   pSettings_->beginGroup("BaseDisk");
-  baseDiskPath_ = pSettings_->value("BaseDiskPath",QVariant(getPmConfigQDir().absolutePath()+"/BaseDisk")).toString();
+  baseDiskPath_ = pSettings_->value("BaseDiskPath",QVariant(PmData::getInstance().getPmConfigDir().absolutePath()+"/BaseDisk")).toString();
   baseDiskName_ = pSettings_->value("BaseDiskName",QVariant("noBaseDiskAvailable")).toString();
   baseDiskVersion_ = PmVersion::fromString(pSettings_->value("BaseDiskVersion",QVariant("0.0.0.0")).toString());
   pSettings_->endGroup();
 
   pSettings_->beginGroup("Config");
-  configPath_ = pSettings_->value("ConfigPath",QVariant(getPmConfigQDir().absolutePath())).toString();
+  configPath_ = pSettings_->value("ConfigPath",QVariant(PmData::getInstance().getPmConfigDir().absolutePath())).toString();
   configName_ = pSettings_->value("ConfigName").toString();
   configVersion_ = PmVersion::fromString(pSettings_->value("ConfigVersion",QVariant("0.0.0.0")).toString());
   pSettings_->endGroup();

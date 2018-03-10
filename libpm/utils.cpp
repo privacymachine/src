@@ -410,8 +410,8 @@ QString getLastErrorMsg()
 // todo:
 //  change to return QString
 //  implement getPmConfigQDir() in PmData
-//  refactor complete code
-QDir getPmConfigQDir()
+//  refactor complete code getPmConfigQDir
+std::string getPmDefaultConfigQDir()
 {
   QString pmConfigPath = QDir::homePath();
   #if (PM_WINDOWS)
@@ -420,5 +420,5 @@ QDir getPmConfigQDir()
     pmConfigPath += "/.config/privacymachine";
   #endif
 
-  return QDir(pmConfigPath);
+  return pmConfigPath.toStdString();
 }

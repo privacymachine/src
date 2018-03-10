@@ -61,6 +61,12 @@ int main(int argc, char *argv[])
     return -1;
   }
 
+  // Hide the console on windows if no args specified
+  #ifdef PM_WINDOWS
+    if (argc == 1)
+      FreeConsole();
+  #endif
+
   // parse command line input using CLI
   CLI::App cliApp{"PrivacyMachine, a browser virtualisation programm wich aims to protect the users privacy."};
 
@@ -74,8 +80,8 @@ int main(int argc, char *argv[])
   bool cliOptionLogSensitiveData;
   cliApp.add_flag("-s, --log-sensitive", cliOptionLogSensitiveData, "Enable logging of sensible data, i.e. passwords");
 
-  //QString pmConfigDirPath = getPmConfigQDir();
-  //cliApp.add_option("-w, --working-dir",pmConfigDirPath, "Change config directory. A independend instance will be build there.");
+  std::string pmConfigDirPath = getPmDefaultConfigQDir();
+  cliApp.add_option("-w, --working-dir",pmConfigDirPath, "Change the config/working directory. A independend instance will be build there.");
 
 
   // parse the command line options
@@ -89,15 +95,13 @@ int main(int argc, char *argv[])
       exit(0);
   }
 
+  // Set pmConfigDir and calculate instanceID
+  PmData::getInstance().setPmConfigDir(QString::fromStdString(pmConfigDirPath));
+
+
   int retCode = -1;
   bool guiNeverShown = true;
   QString vboxDefaultMachineFolder;
-
-  // Hide the console on windows if no args specified
-  #ifdef PM_WINDOWS
-    if (argc == 1)
-      FreeConsole();
-  #endif
 
   QApplication app(argc, argv);
   app.setOrganizationName("PrivacyMachine");
@@ -121,7 +125,7 @@ int main(int argc, char *argv[])
     return abortMsg.exec();
   }
 
-  QDir userConfigDir = getPmConfigQDir();
+  QDir userConfigDir = PmData::getInstance().getPmConfigDir();
   if (!userConfigDir.exists())
   {
     if (!userConfigDir.mkpath("."))

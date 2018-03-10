@@ -20,7 +20,7 @@
 #define PMDATA_H
 
 #include <QString>
-#include "utils.h"
+#include <QDir>
 
 // Singelton used storage of global used Data (Not Threadsafe)
 // Singelton-Pattern from http://stackoverflow.com/questions/1008019/c-singleton-design-pattern
@@ -44,8 +44,11 @@ class PmData
 
     QString getVBoxCommand() { return vboxCommand_; }
 
-    // set a working-dir related instance-ID to enable multiple PM configurations
-    void setUniqueInstanceId(QString id) { instanceId_ = id; }
+    /// Sets the configDir_ of the current instance and calculates the instanceId_
+    void setPmConfigDir(QString configDir);
+
+    QDir getPmConfigDir() { return configDir_; }
+    QString getInstanceId() { return instanceId_; }
 
   private:
     PmData();
@@ -54,6 +57,7 @@ class PmData
     QString installDirPath_;
     QString vboxCommand_;
     QString instanceId_;
+    QDir configDir_;
 };
 
 #endif // PMDATA_H

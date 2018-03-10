@@ -124,7 +124,6 @@ PmCommand* GetPmCommandForScp2Host(QString user, QString server, QString port, Q
 template <typename T, int N> char( &dim_helper( T(&)[N] ) )[N];
 #define dim(x) (sizeof(dim_helper(x)))
 
-QDir getPmConfigQDir();
-
+std::string getPmDefaultConfigQDir();
 
 #endif // UTILS_H

@@ -105,7 +105,7 @@ bool PmManager::initConfiguration(const QString& parPmInstallPath, const QString
   vboxDefaultMachineFolder_ = parVboxDefaultMachineFolder;
 
   // determine the configuration directory (os dependend)
-  pmConfigDir_ = getPmConfigQDir();
+  pmConfigDir_ = PmData::getInstance().getPmConfigDir();
 
   QString pmUserConfigFile = pmConfigDir_.path() + "/" + constPmUserConfigFileName;
   firstStart_ = !QFile::exists(pmUserConfigFile);

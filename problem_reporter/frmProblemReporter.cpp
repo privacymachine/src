@@ -238,7 +238,9 @@ bool frmProblemReporter::addErrorDescription(QuaZip* zipFile, QString errorDescr
 bool frmProblemReporter::addAllPMLogsToZipFile(QuaZip* zipFile)
 {
 
-  QDir userConfigDir = getPmConfigQDir();
+  // TODO: Ugly fix is now in PmData
+  QDir userConfigDir = QString::fromStdString(getPmDefaultConfigQDir());
+
   if (!userConfigDir.exists())
   {
     IERR("error getting user config dir");
