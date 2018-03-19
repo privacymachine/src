@@ -43,13 +43,13 @@ using namespace std;
 extern QString staticGlobalLogFileName; // defined in main.cpp
 
 frmProblemReporter::frmProblemReporter(QString executableDir, QWidget *parent) :
-  executableAbsDir_(executableDir),
   QMainWindow(parent),
+  executableAbsDir_(executableDir),
   ui(new Ui::frmProblemReporter)
 {
   ui->setupUi(this);
 
-  setWindowTitle("ProblemReporter of PrivacyMachine " + QString(constPrivacyMachineVersion));
+  setWindowTitle("ProblemReporter of PrivacyMachine " + QString(PMVERSION));
   setWindowIcon(QIcon(":/images/PrivacyMachine_Logo_Icon32.png"));
 
   connect(ui->txtProblemDescription, SIGNAL(textChanged()), this, SLOT(txtProblemDescription_textChanged()));

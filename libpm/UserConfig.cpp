@@ -19,6 +19,7 @@
 #include "utils.h"
 #include "UserConfig.h"
 #include "VmMaskUserConfig.h"
+#include "PmData.h"
 
 #include <QSettings>
 #include <QCoreApplication>
@@ -98,11 +99,11 @@ bool UserConfig::readFromFile()
 
   for (QString section : settingsRead.childGroups())
   {
-    if (section.startsWith(constVmMaskPrefix))
+    if (section.startsWith(PmData::getInstance().getVmMaskPrefix()))
     {
       VmMaskUserConfig* vmMaskUserConfig = new VmMaskUserConfig();
-      QString vmMaskName = section.mid(QString(constVmMaskPrefix).length());
-      QString sec = constVmMaskPrefix + vmMaskName; // section in Ini-File
+      QString vmMaskName = section.mid(QString(PmData::getInstance().getVmMaskPrefix()).length());
+      QString sec = PmData::getInstance().getVmMaskPrefix() + vmMaskName; // section in Ini-File
 
       vmMaskUserConfig->setName(vmMaskName);
       vmMaskUserConfig->setFullName(convertIniValueToString(settingsRead.value(sec + "/FullName")));
@@ -134,16 +135,16 @@ bool UserConfig::readFromFile()
 
       configuredVmMasks_.append(vmMaskUserConfig);
     }
-    else if (section.startsWith(constIniVpnPrefix))
+    else if (section.startsWith(PmData::getInstance().getVpnPrefix()))
     {
       VpnConfig* curVPNConfig = new VpnConfig();
-      QString vpnName = section.mid(QString(constIniVpnPrefix).length());
+      QString vpnName = section.mid(QString(PmData::getInstance().getVpnPrefix()).length());
       curVPNConfig->Name = vpnName;
 
-      curVPNConfig->VpnType = convertIniValueToString(settingsRead.value(constIniVpnPrefix + vpnName + "/Type"));
+      curVPNConfig->VpnType = convertIniValueToString(settingsRead.value(PmData::getInstance().getVpnPrefix() + vpnName + "/Type"));
       if (curVPNConfig->VpnType == "OpenVPN")
       {
-        QString configFilesSearch = convertIniValueToString(settingsRead.value(constIniVpnPrefix + vpnName + "/ConfigFiles"));
+        QString configFilesSearch = convertIniValueToString(settingsRead.value(PmData::getInstance().getVpnPrefix() + vpnName + "/ConfigFiles"));
         QString configPath;
         QString directoryName;
         QString configFilter;

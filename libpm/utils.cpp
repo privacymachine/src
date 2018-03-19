@@ -24,6 +24,7 @@
 
 #include <QProcess>
 #include <QRegularExpression>
+#include <QCryptographicHash>
 #include <QtGlobal>
 #if QT_VERSION >= 0x050400
   #include <QStorageInfo>
@@ -38,19 +39,6 @@
 // Included here, not in utils.h, to resolve dependency cycle
 #include "VmMaskInstance.h"
 
-const char *constPrivacyMachineVersion = "0.10.0.0";
-const char *constPrivacyMachineName = "PrivacyMachine - Schiach aba laft";
-const char *constLocalIp = "127.0.0.1";
-const char *constRootUser = "root";
-const char *constRootPwd = "123";
-const char *constLiveUser = "liveuser";
-const char *constLiveUserPwd = "123";
-const char *constVmMaskPrefix = "VmMask_";
-const char *constPmVmMaskPrefix = "pm_VmMask_";
-const char *constIniVpnPrefix = "VPN_";
-const char *constSnapshotName = "schiachabalaft";
-const char *constPmUserConfigFileName = "PrivacyMachine.ini";
-const char *constPmInternalConfigFileName = "PrivacyMachineInternals.ini";
 
 bool ExecShort(QString parCmd, QStringList& parArgs, QString* parAllOutput, bool parCheckExitCode, int parSecondsToRespond, bool parDoNotLog)
 {
@@ -279,28 +267,28 @@ PmCommand* GetPmCommandForSshCmd(QString user, QString server, QString port, QSt
 /// "Overload" that assumes "root" as user, and which takes VM-related values from pVmMaskInstance.
 PmCommand* GetPmCommandForSshCmdVmMaskInstance(QSharedPointer<VmMaskInstance>& parVmMaskInstance, QString command )
 {
-  return GetPmCommandForSshCmd( constRootUser, constLocalIp, QString::number( parVmMaskInstance->getConfig()->getSshPort() ), constRootPwd, command );
+  return GetPmCommandForSshCmd( PmData::getInstance().getBaseDiskRootUser(), PmData::getInstance().getPmServerIp(), QString::number( parVmMaskInstance->getConfig()->getSshPort() ), PmData::getInstance().getBaseDiskRootUserPassword(), command );
 }
 
 /// "Overload" that assumes "root" as user, and the specific port
 PmCommand* GetPmCommandForSshCmdVmMaskInstance(int parSshPort, QString command )
 {
-  return GetPmCommandForSshCmd( constRootUser, constLocalIp, QString::number(parSshPort), constRootPwd, command );
+  return GetPmCommandForSshCmd( PmData::getInstance().getBaseDiskRootUser(), PmData::getInstance().getPmServerIp(), QString::number(parSshPort), PmData::getInstance().getBaseDiskRootUserPassword(), command );
 }
 
 PmCommand* genSshCmd(QString parCommand, int parSshPort)
 {
-  return GetPmCommandForSshCmd( constRootUser, constLocalIp, QString::number(parSshPort), constRootPwd, parCommand);
+  return GetPmCommandForSshCmd( PmData::getInstance().getBaseDiskRootUser(), PmData::getInstance().getPmServerIp(), QString::number(parSshPort), PmData::getInstance().getBaseDiskRootUserPassword(), parCommand);
 }
 
 PmCommand* genSshCmdLiveUser(QString parCommand, int parSshPort)
 {
-  return GetPmCommandForSshCmd( constLiveUser, constLocalIp, QString::number(parSshPort), constLiveUserPwd, parCommand);
+  return GetPmCommandForSshCmd( PmData::getInstance().getBaseDiskLiveUser(), PmData::getInstance().getPmServerIp(), QString::number(parSshPort), PmData::getInstance().getBaseDiskLiveUserPassword(), parCommand);
 }
 
 PmCommand* genScpCmd(QString parLocalDir, QString parRemoteDir, int parSshPort)
 {
-  return GetPmCommandForScp2VM( constRootUser, constLocalIp, QString::number(parSshPort), constRootPwd, parLocalDir, parRemoteDir);
+  return GetPmCommandForScp2VM( PmData::getInstance().getBaseDiskRootUser(), PmData::getInstance().getPmServerIp(), QString::number(parSshPort), PmData::getInstance().getBaseDiskRootUserPassword(), parLocalDir, parRemoteDir);
 }
 
 
@@ -407,10 +395,6 @@ QString getLastErrorMsg()
 /// \brief: example for windows: %UserProfile%\PrivacyMachine
 /// \return the config dir which depends on the os
 
-// todo:
-//  change to return QString
-//  implement getPmConfigQDir() in PmData
-//  refactor complete code getPmConfigQDir
 std::string getPmDefaultConfigQDir()
 {
   QString pmConfigPath = QDir::homePath();
@@ -421,4 +405,16 @@ std::string getPmDefaultConfigQDir()
   #endif
 
   return pmConfigPath.toStdString();
+}
+
+
+std::string calculateConfigDirId(std::string configDir)
+{
+  QDir configQDir{ QString::fromStdString(configDir) };
+  // We use md5 here because its not security relevant.
+  QCryptographicHash hash(QCryptographicHash::Md5);
+  hash.addData(configQDir.absolutePath().toLocal8Bit());
+  QString pmConfigId = QString::fromLocal8Bit(hash.result().toHex());
+  pmConfigId.truncate(5);
+  return pmConfigId.toStdString();
 }

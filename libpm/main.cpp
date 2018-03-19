@@ -54,6 +54,8 @@ bool checkSystemInstallation(QString& parVboxDefaultMachineFolder);
 
 int main(int argc, char *argv[])
 {
+
+
   // libsodium needs to be initialized before first use, because this can be security relevant, we make it at the beginning
   if (sodium_init() == -1)
   {
@@ -75,13 +77,46 @@ int main(int argc, char *argv[])
 
   // create a CLI-INI-file
   bool createCliIniFile;
-  auto createCliIniFileOption = cliApp.add_flag("-C, --create-config", createCliIniFile, "Prints a default configuration file in INI format and exits.");
+  auto cliOptionCreateCliIniFile = cliApp.add_flag("-C, --create-config", createCliIniFile, "Prints a default configuration file in INI format and exits.");
 
-  bool cliOptionLogSensitiveData;
-  cliApp.add_flag("-s, --log-sensitive", cliOptionLogSensitiveData, "Enable logging of sensible data, i.e. passwords");
+  bool logSensitiveData;
+  cliApp.add_flag("-s, --log-sensitive", logSensitiveData, "Enable logging of sensible data, i.e. passwords");
 
   std::string pmConfigDirPath = getPmDefaultConfigQDir();
-  cliApp.add_option("-w, --working-dir",pmConfigDirPath, "Change the config/working directory. A independend instance will be build there.");
+  auto cliOptionPmConfigDir = cliApp.add_option("-w, --working-dir", pmConfigDirPath, "Change the config/working directory. A independend instance will be build there. (default " + pmConfigDirPath +")");
+
+  std::string vmMaskPrefix = "VmMask_";
+  auto cliOptionVmMaskPrefix = cliApp.add_option("--VmMask-prefix", vmMaskPrefix, "DO NOT CHANGE! The VmMask prefix for the INI file. (default " + vmMaskPrefix +")");
+
+  std::string pmVmMaskPrefix = "pm_"+vmMaskPrefix;
+  auto cliOptionPmVmMaskPrefix = cliApp.add_option("--PmVmMask-prefix", pmVmMaskPrefix, "The PM-VmMask prefix. (default " + pmVmMaskPrefix +")");
+
+  std::string vpnPrefix = "VPN_";
+  cliApp.add_option("--VPN-prefix", vpnPrefix, "DO NOT CHANGE! The VPN prefix for the INI file. (default " + vpnPrefix +")");
+
+  std::string pmUserConfigFilePath = pmConfigDirPath+"/PrivacyMachine.ini";
+  auto cliOptionPmUserConfigFilePath = cliApp.add_option("--pm-user-config", pmUserConfigFilePath, "NOT SUPPORTED! The path to the PM user config file. (default " + pmUserConfigFilePath +")");
+
+  std::string pmInternalConfigFilePath = pmConfigDirPath+"/PrivacyMachineInternals.ini";
+  auto cliOptionPmInternalConfigFilePath = cliApp.add_option("--pm-internal-config", pmInternalConfigFilePath, "NOT SUPPORTED! The path to the PM internal config file. (default " + pmInternalConfigFilePath +")");
+
+  std::string pmServerIp = "127.0.0.1";
+  cliApp.add_option("--pm-server-ip", pmServerIp, "NOT SUPPORTED! The IP of a remote PM-server. (default " + pmServerIp +")");
+
+  std::string vmSnapshotName = "UpAndRunning";
+  cliApp.add_option("--VM-snapshot-name", vmSnapshotName, "Name of the clean VM-Mask snapshots. (default " + vmSnapshotName +")");
+
+  std::string baseDiskRootUser = "root";
+  cliApp.add_option("--BaseDisk-root-user", baseDiskRootUser, "Name of the base disk 'root' user. (default " + baseDiskRootUser +")");
+
+  std::string baseDiskRootUserPassword = "123";
+  cliApp.add_option("--BaseDisk-root-user-password", baseDiskRootUserPassword, "Password of the base disk 'root' user. (default " + baseDiskRootUserPassword +")");
+
+  std::string baseDiskLiveUser = "liveuser";
+  cliApp.add_option("--BaseDisk-live-user", baseDiskLiveUser, "Name of the base disk 'live' user. (default " + baseDiskLiveUser +")");
+
+  std::string baseDiskLiveUserPassword = "123";
+  cliApp.add_option("--BaseDisk-live-user-password", baseDiskLiveUserPassword, "Password of the base disk 'live' user. (default " + baseDiskLiveUserPassword +")");
 
 
   // parse the command line options
@@ -90,13 +125,39 @@ int main(int argc, char *argv[])
   // Print default configuration file
   if (createCliIniFile)
   {
-      cliApp.remove_option(createCliIniFileOption);
+      cliApp.remove_option(cliOptionCreateCliIniFile);
       std::cout << cliApp.config_to_str(true);
       exit(0);
   }
 
-  // Set pmConfigDir and calculate instanceID
-  PmData::getInstance().setPmConfigDir(QString::fromStdString(pmConfigDirPath));
+  // Set PmData values
+  auto& pmData = PmData::getInstance();
+  pmData.setPmConfigDirPath( QString::fromStdString( pmConfigDirPath ) );
+
+  // check that we not accedentially use the same PM-VmMask prefix
+  if( cliOptionPmConfigDir->count() > 0 && cliOptionPmVmMaskPrefix->count() == 0 )
+    pmVmMaskPrefix += calculateConfigDirId(pmConfigDirPath) + "_";
+
+  // check that we not accedentially use the wrong UserConfigFile
+  if( cliOptionPmConfigDir->count() > 0 && cliOptionPmUserConfigFilePath->count() == 0 )
+    pmUserConfigFilePath = pmConfigDirPath + "/PrivacyMachine.ini";
+
+  // check that we not accedentially use the wrong InternalConfigFile
+  if( cliOptionPmConfigDir->count() > 0 && cliOptionPmInternalConfigFilePath->count() == 0 )
+    pmInternalConfigFilePath = pmConfigDirPath + "/PrivacyMachineInternals.ini";
+
+
+  pmData.setPmServerIp( QString::fromStdString( pmServerIp ) );
+  pmData.setBaseDiskLiveUser( QString::fromStdString( baseDiskLiveUser ) );
+  pmData.setBaseDiskLiveUserPassword( QString::fromStdString( baseDiskLiveUserPassword ) );
+  pmData.setBaseDiskRootUser( QString::fromStdString( baseDiskRootUser ) );
+  pmData.setBaseDiskRootUserPassword( QString::fromStdString( baseDiskRootUserPassword ) );
+  pmData.setPmInternalConfigFilePath( QString::fromStdString( pmInternalConfigFilePath ) );
+  pmData.setPmUserConfigFilePath( QString::fromStdString( pmUserConfigFilePath ) );
+  pmData.setPmVmMaskPrefix( QString::fromStdString( pmVmMaskPrefix ) );
+  pmData.setVmMaskPrefix( QString::fromStdString( vmMaskPrefix ) );
+  pmData.setVpnPrefix( QString::fromStdString( vpnPrefix ) );
+  pmData.setVmSnapshotName( QString::fromStdString( vmSnapshotName ) );
 
 
   int retCode = -1;
@@ -105,17 +166,23 @@ int main(int argc, char *argv[])
 
   QApplication app(argc, argv);
   app.setOrganizationName("PrivacyMachine");
-  app.setApplicationName(constPrivacyMachineName);
-  app.setApplicationVersion(constPrivacyMachineVersion);
+  app.setApplicationName(PMRELEASENAME);
+  app.setApplicationVersion(PMVERSION);
   app.setOrganizationDomain("https://www.privacymachine.eu");
 
   // Get the path to the current running executable (only works before we change the current path inside this application)
   QString pmInstallDirPath = app.applicationDirPath();
   // remember the path
-  PmData::getInstance().setInstallDirPath(pmInstallDirPath);
+  pmData.setInstallDirPath(pmInstallDirPath);
 
+  // PmData should be compleatly filled now!
+  if( !pmData.completelyFilled() )
+  {
+    IERR("FATAL: Logic error at initializing PmData!");
+    exit(1);
+  }
   // Be save to run only one instance
-  RunGuard guard( "PrivacyMachine is running   uniqe-key = 90hQlQsd1Gp+sPeD+ANdUGymXxUtdLwgoxsdjDqK7Q1zZ2hYQBnQBw" );
+  RunGuard guard( "PrivacyMachine is running   Config ID = " + QString::fromStdString(calculateConfigDirId(pmConfigDirPath)) );
   if ( !guard.tryToRun() )
   {
     qDebug() <<  "An other instance of the PrivacyMachine is already running";
@@ -137,7 +204,7 @@ int main(int argc, char *argv[])
   if (!PmLog::getInstance().initAndRotateLogfiles(userConfigDir.path()))
     return false; // error message already logged to the console
   // If requested by the user, set the global variable to enable logging of sensitive data via ILOG_SENSITIVE
-  if (cliOptionLogSensitiveData)
+  if (logSensitiveData)
     PmLog::getInstance().enableSensitiveLogging();
 
   // Enable Warning messages triggered by qDebug(), qWarning(), qCritical(), qFatal()
@@ -145,7 +212,7 @@ int main(int argc, char *argv[])
 
 
   QString startTime = currentTimeStampAsISO();
-  ILOG("Starting up at " + startTime + " Version:" + constPrivacyMachineVersion);
+  ILOG("Starting up at " + startTime + " Version:" + PMVERSION);
 
   // TODO: bernhard: remove this encoding test under windows
   ILOG("remove this encoding test under windows: 'böße'");
@@ -163,6 +230,9 @@ int main(int argc, char *argv[])
     }
 #endif
 
+    // if  logSensitiveData log PmData
+    pmData.log();
+
   try // catching exceptions
   {  
     // init the translation of qt internal messages
@@ -174,8 +244,8 @@ int main(int argc, char *argv[])
     initTranslation(app);
 
     // init name
-    QCoreApplication::setApplicationName(QCoreApplication::translate("mainfunc", constPrivacyMachineName));
-    QCoreApplication::setApplicationVersion(constPrivacyMachineVersion);
+    QCoreApplication::setApplicationName(QCoreApplication::translate("mainfunc", PMRELEASENAME));
+    QCoreApplication::setApplicationVersion(PMVERSION);
 
     // Check if all is installed what will be needed to run the PrivacyMachine
     if (!checkSystemInstallation(vboxDefaultMachineFolder))

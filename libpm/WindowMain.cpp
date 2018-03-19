@@ -79,7 +79,7 @@ void WindowMain::slotShowAbout()
 
   QLabel *versionLabel = new QLabel(aboutWidget_);
   QString msg = "<html><head/><body><p align=\"center\"><span style=\" font-size:16pt;\"> ";
-  msg += constPrivacyMachineVersion;
+  msg += PMVERSION;
   msg += "</span><br/></p>";
   msg += "<p>The program is provided AS IS</p><p>with NO WARRANTY OF ANY KIND,</p>";
   msg += "<p>INCLUDING THE WARRANTY OF </p><p>DESIGN, MERCHANTABILITY AND</p>";
@@ -322,7 +322,7 @@ void WindowMain::slotTabCloseRequested(int parTabIndex)
     // Copy VPN logs before the machine shuts down.
     QList<PmCommand*> commandsList;
     PmCommand* pCurrentCommand = nullptr;
-    pCurrentCommand = GetPmCommandForScp2Host(constRootUser, constLocalIp, QString::number( vmMask->Instance->getConfig()->getSshPort()), constRootPwd,
+    pCurrentCommand = GetPmCommandForScp2Host(PmData::getInstance().getBaseDiskRootUser(), PmData::getInstance().getPmServerIp(), QString::number( vmMask->Instance->getConfig()->getSshPort()), PmData::getInstance().getBaseDiskRootUserPassword(),
                                               pmManager_->getPmConfigDir().path() + "/logs/vmMask_" + vmMask->Instance->getConfig()->getName() + "_vpnLog.txt",
                                               "/var/log/openvpn.log");
     pCurrentCommand->setDescription("Copy vpn logs of VM-Mask " + vmMask->Instance->getConfig()->getName());

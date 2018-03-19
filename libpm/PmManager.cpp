@@ -107,7 +107,7 @@ bool PmManager::initConfiguration(const QString& parPmInstallPath, const QString
   // determine the configuration directory (os dependend)
   pmConfigDir_ = PmData::getInstance().getPmConfigDir();
 
-  QString pmUserConfigFile = pmConfigDir_.path() + "/" + constPmUserConfigFileName;
+  QString pmUserConfigFile = PmData::getInstance().getPmUserConfigFilePath();
   firstStart_ = !QFile::exists(pmUserConfigFile);
 
   if(firstStart_)
@@ -144,7 +144,7 @@ bool PmManager::initConfiguration(const QString& parPmInstallPath, const QString
 
   // Internal Configuration
 
-  QString pmInternalConfigFile = pmConfigDir_.path() + "/" + constPmInternalConfigFileName;
+  QString pmInternalConfigFile = PmData::getInstance().getPmInternalConfigFilePath();
   configSystem_ = new SystemConfig(pmInternalConfigFile);
   configSystem_->readFromFileOrSetDefaults();
   // always set the Binary Version, Name and Path just to be sure
@@ -177,7 +177,7 @@ bool PmManager::initConfiguration(const QString& parPmInstallPath, const QString
 
 bool PmManager::readConfiguration()
 {
-  QString pmUserConfigFile = pmConfigDir_.path() + "/" + constPmUserConfigFileName;
+  QString pmUserConfigFile = PmData::getInstance().getPmUserConfigFilePath();
 
   configUser_ = new UserConfig(pmUserConfigFile, pmConfigDir_.path(), pmInstallDir_);
   if ( !configUser_->readFromFile() )
@@ -438,7 +438,7 @@ bool PmManager::createCommandsToCreateVmMask( VmMaskData* parVmMask,
   args.append("modifyvm");
   args.append(vmName);
   args.append("--natpf1");
-  QString natRule = "guestSSH,tcp," + QString(constLocalIp) + ",";  // ssh-server is only accessible from local machine
+  QString natRule = "guestSSH,tcp," + QString(PmData::getInstance().getPmServerIp()) + ",";  // ssh-server is only accessible from local machine
   natRule += QString::number(sshPort);                              // host port
   natRule += ",,22";                                                // guest port (default ssh port)
   args.append(natRule);
@@ -494,7 +494,7 @@ bool PmManager::createCommandsToCreateVmMask( VmMaskData* parVmMask,
   parCmdList.append(curCmd);
 
   desc = "Set password for liveuser in VM-Mask " + vmMaskFullName;
-  curCmd = genSshCmd( "usermod -p $(echo " + QString(constRootPwd) + " | openssl passwd -1 -stdin) " + QString(constLiveUser), sshPort);
+  curCmd = genSshCmd( "usermod -p $(echo " + QString(PmData::getInstance().getBaseDiskRootUserPassword()) + " | openssl passwd -1 -stdin) " + QString(PmData::getInstance().getBaseDiskLiveUser()), sshPort);
   curCmd->setType( pollingShellCommand );
   curCmd->setTimeoutMilliseconds( 500 );
   curCmd->setRetries( 5 );
@@ -532,7 +532,7 @@ bool PmManager::createCommandsToCreateVmMask( VmMaskData* parVmMask,
   args.append("snapshot");
   args.append(vmName);
   args.append("take");
-  args.append(constSnapshotName);
+  args.append(PmData::getInstance().getVmSnapshotName());
   if (!RunningOnWindows()) args.append("--pause");
   curCmd = new PmCommand( vboxManageCommand, args, true, false, desc );
   curCmd->setDescription( desc );
@@ -545,7 +545,7 @@ bool PmManager::createCommandsToCreateVmMask( VmMaskData* parVmMask,
   args.append("snapshot");
   args.append(vmName);
   args.append("showvminfo");
-  args.append(constSnapshotName);
+  args.append(PmData::getInstance().getVmSnapshotName());
   curCmd = new PmCommand( vboxManageCommand, args, true, false, desc, true);
   curCmd->setType( pollingShellCommand );
   curCmd->setTimeoutMilliseconds( 1000 );
@@ -662,7 +662,7 @@ bool PmManager::createCommandsToCloseAllVmMasks(QList<PmCommand*>& parCmdList)
   {
     // before closing copy VPN logs
     PmCommand* pCurrentCommand = nullptr;
-    pCurrentCommand = GetPmCommandForScp2Host(constRootUser, constLocalIp, QString::number( vmMask->StaticConfig->SshPort ), constRootPwd,
+    pCurrentCommand = GetPmCommandForScp2Host(PmData::getInstance().getBaseDiskRootUser(), PmData::getInstance().getPmServerIp(), QString::number( vmMask->StaticConfig->SshPort ), PmData::getInstance().getBaseDiskRootUserPassword(),
                                               pmConfigDir_.path() + "/logs/vmMask_" + vmMask->UserConfig->getName() + "_vpnLog.txt",
                                               "/var/log/openvpn.log");
     pCurrentCommand->setDescription("Copy vpn logs of VM-Mask " + vmMask->UserConfig->getName());
@@ -728,12 +728,12 @@ bool PmManager::createCommandsToStartVmMask(int parVmMaskId,
   curCmd->setIgnoreErrors( true );
   parCmdList.append(curCmd);
 
-  desc = "Attempt to reset VM for VM-Mask '" + vmMaskFullName + "' to snapshot'" + constSnapshotName + "'";
+  desc = "Attempt to reset VM for VM-Mask '" + vmMaskFullName + "' to snapshot'" + PmData::getInstance().getVmSnapshotName() + "'";
   args.clear();
   args.append("snapshot");
   args.append(vmName);
   args.append("restore");
-  args.append(constSnapshotName);
+  args.append(PmData::getInstance().getVmSnapshotName());
   curCmd = new PmCommand( vboxManageCommand, args, true, false, desc );
   // Ignore this error because on normal exit the snapshot is already restored
   // -> not possible to restore again
@@ -886,7 +886,7 @@ bool PmManager::createCommandsToCleanupAllVirtualMachines(QList<PmCommand*>& par
     return false;
   }
 
-  vboxDir.setNameFilters( QStringList( QString(constPmVmMaskPrefix) + "*" ) );
+  vboxDir.setNameFilters( QStringList( QString(PmData::getInstance().getPmVmMaskPrefix()) + "*" ) );
   QStringList foundVmMasks = vboxDir.entryList( QDir::Dirs | QDir::Readable | QDir::CaseSensitive );
 
   // Add folders/VmMask-names to the list which are in the way for new VmMask creation

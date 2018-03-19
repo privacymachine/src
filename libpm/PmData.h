@@ -33,31 +33,80 @@ class PmData
       return instance_;
     }
 
-    PmData(PmData const&)           = delete; // not allowed for Singeltons (feature of C++11)
-    void operator=(PmData const&)  = delete; // not allowed for Singeltons (feature of C++11)
+    PmData(PmData const&)             = delete; // not allowed for Singeltons (feature of C++11)
+    PmData(PmData&&)                  = delete; // not allowed for Singeltons (feature of C++11)
+    PmData& operator=(PmData const&)  = delete; // not allowed for Singeltons (feature of C++11)
+    PmData& operator=(PmData&&)       = delete; // not allowed for Singeltons (feature of C++11)
+
 
     /// getter / setter
 
     /// The install dir path is determined of the path of the running executeable
     void setInstallDirPath(QString path) { installDirPath_ = path; }
-    QString getInstallDirPath() { return installDirPath_; }
+    QString getInstallDirPath() const { return installDirPath_; }
 
     QString getVBoxCommand() { return vboxCommand_; }
 
-    /// Sets the configDir_ of the current instance and calculates the instanceId_
-    void setPmConfigDir(QString configDir);
+    /// Sets the configDir_ of the current instance and calculates the pmConfigId_
+    void setPmConfigDirPath(QString configDir) { configDirPath_ = configDir; }
+    QDir getPmConfigDir() const { return QDir{configDirPath_}; }
+    QString getPmConfigDirPath() const { return configDirPath_; }
 
-    QDir getPmConfigDir() { return configDir_; }
-    QString getInstanceId() { return instanceId_; }
+    void setPmServerIp(QString pmServerIp) { pmServerIp_ = pmServerIp; }
+    QString getPmServerIp() const { return pmServerIp_; }
+
+    void setBaseDiskRootUser(QString baseDiskRootUser) { baseDiskRootUser_ = baseDiskRootUser; }
+    QString getBaseDiskRootUser() const { return baseDiskRootUser_; }
+
+    void setBaseDiskRootUserPassword(QString baseDiskRootUserPassword) { baseDiskRootUserPassword_ = baseDiskRootUserPassword; }
+    QString getBaseDiskRootUserPassword() const { return baseDiskRootUserPassword_; }
+
+    void setBaseDiskLiveUser(QString baseDiskLiveUser) { baseDiskLiveUser_ = baseDiskLiveUser; }
+    QString getBaseDiskLiveUser() const { return baseDiskLiveUser_; }
+
+    void setBaseDiskLiveUserPassword(QString baseDiskLiveUserPassword) { baseDiskLiveUserPassword_ = baseDiskLiveUserPassword; }
+    QString getBaseDiskLiveUserPassword() const { return baseDiskLiveUserPassword_; }
+
+    void setVmMaskPrefix(QString vmMaskPrefix) { vmMaskPrefix_ = vmMaskPrefix; }
+    QString getVmMaskPrefix() const { return vmMaskPrefix_; }
+
+    void setPmVmMaskPrefix(QString vmPmMaskPrefix) { vmPmMaskPrefix_ = vmPmMaskPrefix; }
+    QString getPmVmMaskPrefix() const { return vmPmMaskPrefix_; }
+
+    void setVpnPrefix(QString vpnPrefix) { vpnPrefix_ = vpnPrefix; }
+    QString getVpnPrefix() const { return vpnPrefix_; }
+
+    void setVmSnapshotName(QString vmSnapshotName) { vmSnapshotName_ = vmSnapshotName; }
+    QString getVmSnapshotName() const { return vmSnapshotName_; }
+
+    void setPmUserConfigFilePath(QString pmUserConfigFilePath) { pmUserConfigFilePath_ = pmUserConfigFilePath; }
+    QString getPmUserConfigFilePath() const { return pmUserConfigFilePath_; }
+
+    void setPmInternalConfigFilePath(QString pmInternalConfigFilePath) { pmInternalConfigFilePath_ = pmInternalConfigFilePath; }
+    QString getPmInternalConfigFilePath() const { return pmInternalConfigFilePath_; }
+
+    bool completelyFilled();
+
+    void log();
 
   private:
     PmData();
     QString determineVBoxCommand();
 
-    QString installDirPath_;
-    QString vboxCommand_;
-    QString instanceId_;
-    QDir configDir_;
+    QString installDirPath_ = "NO VALID ENTRY";
+    QString vboxCommand_ = "NO VALID ENTRY";
+    QString pmServerIp_ = "NO VALID ENTRY";
+    QString baseDiskRootUser_ = "NO VALID ENTRY";
+    QString baseDiskRootUserPassword_ = "NO VALID ENTRY";
+    QString baseDiskLiveUser_ = "NO VALID ENTRY";
+    QString baseDiskLiveUserPassword_ = "NO VALID ENTRY";
+    QString vmMaskPrefix_ = "NO VALID ENTRY";
+    QString vmPmMaskPrefix_ = "NO VALID ENTRY";
+    QString vpnPrefix_ = "NO VALID ENTRY";
+    QString vmSnapshotName_ = "NO VALID ENTRY";
+    QString pmUserConfigFilePath_ = "NO VALID ENTRY";
+    QString pmInternalConfigFilePath_ = "NO VALID ENTRY";
+    QString configDirPath_ = "NO VALID ENTRY";
 };
 
 #endif // PMDATA_H

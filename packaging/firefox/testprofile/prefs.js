@@ -9,7 +9,7 @@
  */
 
 // PREF: start FF with a blanc page
-user_pref("browser.startup.homepage_override.mstone", "51.0.1");
+user_pref("browser.startup.homepage_override.mstone", "99.9.9");
 user_pref("browser.startup.page", 0);
 
 // PREF: dont archive pings locally

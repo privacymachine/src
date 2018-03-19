@@ -51,19 +51,7 @@ class VmMaskInstance;
 bool ExecShort(QString cmd, QString* outOutput, bool checkExitCode, int secondsToRespond = 3, bool doNotLog = false);
 bool ExecShort(QString parCmd, QStringList& parArgs, QString* parAllOutput, bool parCheckExitCode, int parSecondsToRespond = 3, bool parDoNotLog = false);
 
-extern const char *constPrivacyMachineName;
-extern const char *constPrivacyMachineVersion;
-extern const char *constLocalIp;
-extern const char *constRootUser;
-extern const char *constRootPwd;
-extern const char *constLiveUser;
-extern const char *constLiveUserPwd;
-extern const char *constVmMaskPrefix;
-extern const char *constPmVmMaskPrefix;
-extern const char *constIniVpnPrefix;
-extern const char *constSnapshotName;
-extern const char *constPmUserConfigFileName;
-extern const char *constPmInternalConfigFileName;
+
 
 
 // to display an endless loop i.e.: "for (;;)" -> "for(ever)"
@@ -125,5 +113,7 @@ template <typename T, int N> char( &dim_helper( T(&)[N] ) )[N];
 #define dim(x) (sizeof(dim_helper(x)))
 
 std::string getPmDefaultConfigQDir();
+
+std::string calculateConfigDirId(std::string configDir);
 
 #endif // UTILS_H

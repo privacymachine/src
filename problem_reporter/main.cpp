@@ -137,7 +137,7 @@ int main(int argc, char *argv[])
   qInstallMessageHandler(logMessages);
 
   QString startTime = currentTimeStampAsISO();
-  ILOG("Starting up at " + startTime + " Version: " + constPrivacyMachineVersion);
+  ILOG("Starting up at " + startTime + " Version: " + PMVERSION);
 
 
   try // catch all exceptions
@@ -157,7 +157,7 @@ int main(int argc, char *argv[])
     app.installTranslator(&pmTranslator);
     
     QCoreApplication::setApplicationName(QCoreApplication::translate("mainfunc", "ProblemReporter of the PrivacyMachine"));
-    QCoreApplication::setApplicationVersion(constPrivacyMachineVersion);
+    QCoreApplication::setApplicationVersion(PMVERSION);
 
 
     frmProblemReporter mainWindow(executableAbsDirectory);

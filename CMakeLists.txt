@@ -2,6 +2,10 @@ cmake_minimum_required (VERSION 2.8.11)
 
 project (PrivacyMachine-Project)
 
+# Set current Releasename and version
+add_definitions(-DPMVERSION="0.10.0.0")
+add_definitions(-DPMRELEASENAME="Schiach aba laft")
+
 # Add CMake submodules to the path
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake_modules ${CMAKE_MODULE_PATH})
 

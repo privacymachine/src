@@ -430,7 +430,7 @@ QString VmMaskUserConfig::getName() const
 void VmMaskUserConfig::setName(const QString& parName)
 {
   name_ = parName;
-  vmName_ = constPmVmMaskPrefix + parName;
+  vmName_ = PmData::getInstance().getPmVmMaskPrefix() + parName;
 }
 
 QString VmMaskUserConfig::getVmName() const
