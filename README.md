@@ -96,6 +96,12 @@ There are some potential pitfalls you have to know:
   ```
   apt install build-essential git-core cmake zlib1g-dev qt5-default qtmultimedia5-dev qttools5-dev-tools libssl-dev libsodium-dev sshpass p7zip-full libpopt-dev libbz2-dev doxygen graphviz xsltproc
   ```
+
+* Ubuntu 18.04 needs one additional package:
+  
+  ```
+  apt install qttools5-dev
+  ```
   
 
 ### Build-requirements Windows (tested on Win7)
